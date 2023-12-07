@@ -27,10 +27,10 @@
             <version>3.0.0</version>
         </dependency>
 <!--        gestion session -->
-        <dependency>
-            <groupId>org.springframework.session</groupId>
-            <artifactId>spring-session-jdbc</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.session</groupId>-->
+<!--            <artifactId>spring-session-jdbc</artifactId>-->
+<!--        </dependency>-->
 <!--        end -->
 <!--        gestion email-->
         <dependency>
