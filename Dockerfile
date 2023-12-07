@@ -1,4 +1,4 @@
-FROM maven:3.8.5-openjdk17 As build
+FROM maven:3.8.5-openjdk-17 As build
 COPY . .
 RUN mvn clean package -DskypeTests
 
