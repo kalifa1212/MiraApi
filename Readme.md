@@ -8,4 +8,4 @@ Projet islamique concus pour les musulamans et prise en charge utilisateur
 - pas de Bearer lors de la connexion avec swagger juste le jwtokens
 ## Endpoint non securiser
 - /muslimApi/v1/utilisateur/muslimApi/v1/authentication/authenticate
-- /logout
+- /logout ok
