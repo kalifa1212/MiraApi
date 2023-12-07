@@ -1,0 +1,94 @@
+package com.theh.moduleuser.Dto;
+
+import com.theh.moduleuser.Model.Mosque;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Date;
+
+
+@Data @Builder  @AllArgsConstructor @NoArgsConstructor
+public class MosqueDto {
+	
+	private Integer id;
+
+	private String nom;
+
+	private String code;
+
+	private int superficie;
+
+	private String photo;
+
+	private Date balte;
+
+	private Date asr;
+
+	private Date magrib;
+
+	private Date icha;
+
+	private Date soub;
+
+	private Date zour;
+
+	private Date djouma;
+
+	private Boolean isVendredi;
+
+	private String quartier;
+
+	private double longitude;
+
+	private double latitude;
+
+	private LocalisationDto localisation;
+	
+	public static MosqueDto fromEntity(Mosque mosque) {
+		if(mosque==null) {
+			return null;
+		}
+		return MosqueDto.builder()
+				.id(mosque.getId())
+				.nom(mosque.getNom())
+				.superficie(mosque.getSuperficie())
+				.isVendredi(mosque.getIsVendredi())
+				.photo(mosque.getPhoto())
+				.code(mosque.getCode())
+				.localisation(LocalisationDto.fromEntity(mosque.getLocalisation()))
+				.balte(mosque.getBalte())
+				.asr(mosque.getAsr())
+				.magrib(mosque.getMagrib())
+				.icha(mosque.getIcha())
+				.soub(mosque.getSoub())
+				.zour(mosque.getZour())
+				.djouma(mosque.getDjouma())
+				.quartier(mosque.getQuartier())
+				.build();
+	}
+	
+	public static Mosque toEntity(MosqueDto mosqueDto) {
+		if(mosqueDto==null) {
+			return null;
+		}
+		Mosque mosque = new Mosque();
+		mosque.setId(mosqueDto.getId());
+		mosque.setNom(mosqueDto.getNom());
+		mosque.setIsVendredi(mosqueDto.getIsVendredi());
+		mosque.setPhoto(mosqueDto.getPhoto());
+		mosque.setSuperficie(mosqueDto.getSuperficie());
+		mosque.setCode(mosque.getCode());
+		mosque.setLocalisation(LocalisationDto.toEntity(mosqueDto.getLocalisation()));
+		mosque.setBalte(mosqueDto.getBalte());
+		mosque.setAsr(mosqueDto.getAsr());
+		mosque.setMagrib(mosqueDto.getMagrib());
+		mosque.setIcha(mosqueDto.getIcha());
+		mosque.setSoub(mosqueDto.getSoub());
+		mosque.setZour(mosqueDto.getZour());
+		mosque.setDjouma(mosqueDto.getDjouma());
+		mosque.setQuartier(mosqueDto.getQuartier());
+		return mosque;
+	}
+}

@@ -1,0 +1,67 @@
+spring:
+  security:
+    user:
+      name: admin
+      password: admin
+  ##  database info
+  datasource:
+    url: jdbc:postgresql://localhost:5432/modeluser?createDatabaseIfNotExist=true
+    username: postgres
+    password: dancali
+    driver-class-name: org.postgresql.Driver
+    #render connexion reussi
+#    url: jdbc:postgresql://dpg-cl4gdsiuuipc73a8dal0-a.oregon-postgres.render.com:5432/muslembd
+#    username: muslembd_user
+#    password: 6TNb3FBLLsVq2adCAZAAuVItWE1Pc1Uu
+#    driver-class-name: org.postgresql.Driver
+    #connexion a neon Test toujours encours
+#         url: jdbc:postgresql://ep-solitary-wind-02190521-pooler.us-east-2.aws.neon.tech/muslembd?sslmode=require
+#         username: ibrahimsandah12
+#         password: 7MYyUVThqta8
+#         driver-class-name: org.postgresql.Driver
+        #  gestion des session jdbc
+#  session:
+#    jdbc:
+#      initialize-schema: always
+      ## Gmail configuration for sending email
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    protoco: smtps
+    username: ibrahimsandah12@gmail.com
+    password: Dancalikalifa12
+    properties:
+      mail:
+        transport:
+          protocol: smtps
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          timeout: 8000
+    ## End
+  jpa:
+    ##show-sql: true
+    ##  Hibernate DDL create, update...
+    hibernate:
+      ddl-auto: create
+    ## Generation du schemat de la base de donnee;
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        ## configuration de envers
+        org:
+          hibernate:
+            envers:
+              default_schema: m_app_audit
+    ## to allow circular and override bean definition
+  main:
+    allow-circular-references: true
+    allow-bean-definition-overriding: true
+    ## end
+server:
+  port: 8080
+# application information
+application:
+  title: muslimApp
+  version: 1.0
