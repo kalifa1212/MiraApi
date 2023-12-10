@@ -1,5 +1,6 @@
 package com.theh.moduleuser.Controller.Api;
 import com.theh.moduleuser.Dto.DocumentsDto;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +10,8 @@ import java.io.IOException;
 import java.util.List;
 import static com.theh.moduleuser.Constant.Constants.APP_ROOT;
 
+
+@SecurityRequirement(name = "Bearer Authentication")
 
 public interface DocumentsApi {
 

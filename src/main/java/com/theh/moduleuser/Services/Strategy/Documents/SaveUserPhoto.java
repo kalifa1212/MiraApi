@@ -30,7 +30,7 @@ public class SaveUserPhoto implements StrategyPhoto{
             throw new EntityNotFoundException("Aucun imam pour l'id entrer");
         }
 
-        utilisateur.setPhoto(uploadDir+FileName);
+        utilisateur.setImageUrl(uploadDir+FileName);
 
         FileUpload.saveFile(uploadDir, FileName,multipartFile);
         boolean update=true;

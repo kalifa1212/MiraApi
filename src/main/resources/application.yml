@@ -59,8 +59,19 @@ spring:
     allow-circular-references: true
     allow-bean-definition-overriding: true
     ## end
+#    actuator
+#management:
+#  endpoints:
+#    jmx:
+#      exposure:
+#        include: health,info
+#    end
 server:
   port: 8080
+  # erreur : desactivé page blanche
+#  error:
+#    whitelabel:
+#      enabled: false
 # application information
 application:
   title: muslimApp
