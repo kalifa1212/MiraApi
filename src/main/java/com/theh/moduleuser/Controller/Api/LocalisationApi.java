@@ -12,7 +12,7 @@ import java.util.List;
 import static com.theh.moduleuser.Constant.Constants.APP_ROOT;
 
 
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @SecurityRequirement(name = "Bearer Authentication")
 public interface LocalisationApi {
 	

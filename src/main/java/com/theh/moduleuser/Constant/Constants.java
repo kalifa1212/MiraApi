@@ -6,6 +6,7 @@ public interface Constants {
 	public static String IMAM_ENDPOINT=APP_ROOT+"imam/";
 	public static String AUTHENTICATION_ENDPOINT=APP_ROOT+"authentication/";
 	public static String FILE_ENDPOINT=APP_ROOT+"file/";
+	public static String IMAGE_ENDPOINT=APP_ROOT+"image/";
 	public static String MOSQUE_ENDPOINT=APP_ROOT+"mosque/";
 	public static String NOTIFICATION_ENDPOINT=APP_ROOT+"notification/";
 	public static String SERMONT_ENDPOINT=APP_ROOT+"sermont/";

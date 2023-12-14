@@ -23,7 +23,7 @@ import java.util.List;
 import static com.theh.moduleuser.Constant.Constants.*;
 
 
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @RestController
 @SecurityRequirement(name = "Bearer Authentication")
 @RequestMapping(UTILISATEUR_ENDPOINT)

@@ -35,4 +35,9 @@ public class SavePreche implements StrategyPhoto<PredicationDto> {
         FileUpload.saveFile(uploadDir, FileName,multipartFile);
         return predicationService.save(predicationDto);
     }
+
+    @Override
+    public PredicationDto downloadPhoto(Integer id) {
+        return null;
+    }
 }

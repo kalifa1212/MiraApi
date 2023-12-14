@@ -12,7 +12,7 @@ import static com.theh.moduleuser.Constant.Constants.APP_ROOT;
 
 
 @SecurityRequirement(name = "Bearer Authentication")
-
+@CrossOrigin(origins = "*")
 public interface DocumentsApi {
 
 	// save Documents

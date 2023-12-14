@@ -35,4 +35,9 @@ public class SaveMosquePhoto implements StrategyPhoto{
         Boolean update=true;
         return mosqueService.save(mosque,update);
     }
+
+    @Override
+    public Object downloadPhoto(Integer id) {
+        return null;
+    }
 }
