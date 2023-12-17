@@ -16,15 +16,15 @@ import static com.theh.moduleuser.Constant.Constants.APP_ROOT;
 public interface DocumentsApi {
 
 	// save Documents
-	@PostMapping(value=APP_ROOT+"documents/nouveau/", consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(value=APP_ROOT+"documents/nouveau/{idPredication}", consumes=MediaType.MULTIPART_FORM_DATA_VALUE,produces= MediaType.APPLICATION_JSON_VALUE)
 
-	ResponseEntity<DocumentsDto> save(@RequestPart("image") MultipartFile multipartFile, @RequestBody DocumentsDto  dto)throws IOException ;
+	ResponseEntity<DocumentsDto> save(@RequestPart("file") MultipartFile multipartFile ,@PathVariable (value = "idPredication") Integer  idPredication)throws IOException ;
 	
 	//Download Documents
 	
-	@GetMapping(value=APP_ROOT+"documents/downloads/{filename}/{nom}")
+	@GetMapping(value=APP_ROOT+"documents/downloads/{id}/",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
 
-	ResponseEntity<?> downloadFileFromLocal(@PathVariable (value = "filename") String  filename,@PathVariable (value = "nom") char  nom);
+	ResponseEntity<?> downloadFileFromLocal(@PathVariable (value = "id") Integer id);
 	
 	// find by id
 

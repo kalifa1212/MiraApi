@@ -1,6 +1,7 @@
 package com.theh.moduleuser.Controller;
 
 import com.theh.moduleuser.Controller.Api.FileApi;
+import com.theh.moduleuser.Dto.MosqueDto;
 import com.theh.moduleuser.Dto.UtilisateurDto;
 import com.theh.moduleuser.Exceptions.ErrorCodes;
 import com.theh.moduleuser.Exceptions.InvalidEntityException;
@@ -50,16 +51,15 @@ public class FileController implements FileApi {
             case "user":
                 UtilisateurDto utilisateur= (UtilisateurDto) strategyPhotoContext.displayPhoto(id,context);
                 return ResponseEntity.ok()
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + utilisateur.getPrenom() + "\"")
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + utilisateur.getPrenom() + "\"")
                         .body(utilisateur.getImagedata());
             case "mosque":
-                Mosque mosque=(Mosque) strategyPhotoContext.displayPhoto(id,context);
-                break;
-            case "sermont":
-                break;
+                MosqueDto mosque=(MosqueDto) strategyPhotoContext.displayPhoto(id,context);
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + mosque.getPhoto() + "\"")
+                        .body(mosque.getImagedata());
             default: throw new InvalidEntityException("Context inconnue pour l'enregistrement de la photo", ErrorCodes.UNKNOW_CONTEXT);
         }
-        return (ResponseEntity<byte[]>) ResponseEntity.badRequest();
     }
 
 }

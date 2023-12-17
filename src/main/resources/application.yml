@@ -5,15 +5,15 @@ spring:
       password: admin
   ##  database info
   datasource:
-     url: jdbc:postgresql://localhost:5432/modeluser?createDatabaseIfNotExist=true
-     username: postgres
-     password: dancali
-     driver-class-name: org.postgresql.Driver
+#     url: jdbc:postgresql://localhost:5432/modeluser?createDatabaseIfNotExist=true
+#     username: postgres
+#     password: dancali
+#     driver-class-name: org.postgresql.Driver
     #render connexion reussi
-#   url: jdbc:postgresql://dpg-cl4gdsiuuipc73a8dal0-a.oregon-postgres.render.com:5432/muslembd
-#   username: muslembd_user
-#   password: 6TNb3FBLLsVq2adCAZAAuVItWE1Pc1Uu
-#   driver-class-name: org.postgresql.Driver
+   url: jdbc:postgresql://dpg-cl4gdsiuuipc73a8dal0-a.oregon-postgres.render.com:5432/muslembd
+   username: muslembd_user
+   password: 6TNb3FBLLsVq2adCAZAAuVItWE1Pc1Uu
+   driver-class-name: org.postgresql.Driver
     #connexion a neon Test toujours encours
 #         url: jdbc:postgresql://ep-solitary-wind-02190521-pooler.us-east-2.aws.neon.tech/muslembd?sslmode=require
 #         username: ibrahimsandah12
@@ -44,7 +44,7 @@ spring:
     ##show-sql: true
     ##  Hibernate DDL create, update...
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     ## Generation du schemat de la base de donnee;
     properties:
       hibernate:
@@ -58,6 +58,13 @@ spring:
   main:
     allow-circular-references: true
     allow-bean-definition-overriding: true
+    ## multipart file configuration
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 5MB
+      max-file-size: 5MB
+      max-request-size: 20MB
     ## end
 #    actuator
 #management:
@@ -73,6 +80,11 @@ server:
 #    whitelabel:
 #      enabled: false
 # application information
+#file stage location
+file:
+  storage:
+    location: fileStorage
+#end
 application:
   title: muslimApp
   version: 1.0
