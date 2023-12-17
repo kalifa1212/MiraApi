@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.theh.moduleuser.Model.Role;
 import com.theh.moduleuser.Model.Utilisateur;
 import jakarta.persistence.Column;
+import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,6 +29,7 @@ public class UtilisateurDto {
     private String phone;
     private String imageUrl;
     private String secret;
+    private byte[] imagedata;
     private LocalisationDto localisation;
 
     private boolean enabled;
@@ -51,6 +53,7 @@ public class UtilisateurDto {
                 .localisation(LocalisationDto.fromEntity(utilisateur.getLocalisation()))
                 .imageUrl(utilisateur.getImageUrl())
                 .typecompte(utilisateur.getTypecompte())
+                .imagedata(utilisateur.getImagedata())
                 .roles(
                                 //utilisateur.getRoles().stream().toList()
                         utilisateur.getRoles() != null ?
@@ -73,6 +76,7 @@ public class UtilisateurDto {
         utilisateur.setMotDePasse(utilisateurDto.getMotDePasse());
         utilisateur.setDateDeNaissance(utilisateurDto.getDateDeNaissance());
         utilisateur.setTypecompte(utilisateurDto.getTypecompte());
+        utilisateur.setImagedata(utilisateurDto.getImagedata());
         utilisateur.setLocalisation(LocalisationDto.toEntity(utilisateurDto.getLocalisation()));
         utilisateur.setRoles(utilisateurDto.getRoles().stream().map(RoleDto::toEntity).collect(Collectors.toList()));
         return utilisateur;

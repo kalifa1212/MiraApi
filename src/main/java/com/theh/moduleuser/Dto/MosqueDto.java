@@ -1,5 +1,6 @@
 package com.theh.moduleuser.Dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.theh.moduleuser.Model.Mosque;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,6 +40,8 @@ public class MosqueDto {
 	private Boolean isVendredi;
 
 	private String quartier;
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	private byte[] imagedata;
 
 	private double longitude;
 
@@ -66,6 +69,7 @@ public class MosqueDto {
 				.zour(mosque.getZour())
 				.djouma(mosque.getDjouma())
 				.quartier(mosque.getQuartier())
+				.imagedata(mosque.getImagedata())
 				.build();
 	}
 	
@@ -89,6 +93,7 @@ public class MosqueDto {
 		mosque.setZour(mosqueDto.getZour());
 		mosque.setDjouma(mosqueDto.getDjouma());
 		mosque.setQuartier(mosqueDto.getQuartier());
+		mosque.setImagedata(mosqueDto.getImagedata());
 		return mosque;
 	}
 }

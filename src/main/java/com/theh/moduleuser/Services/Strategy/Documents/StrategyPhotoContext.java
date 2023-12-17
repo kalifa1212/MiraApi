@@ -28,8 +28,9 @@ public class StrategyPhotoContext {
         determinContext(context);
         return strategyPhoto.savePhoto(id,multipartFile);
     }
-    public void UploadData(String context, MultipartFile multipartFile) throws IOException {
-
+    public Object displayPhoto(Integer id,String context){
+        determinContext(context);
+        return strategyPhoto.downloadPhoto(id);
     }
 
     private void determinContext(String Context){

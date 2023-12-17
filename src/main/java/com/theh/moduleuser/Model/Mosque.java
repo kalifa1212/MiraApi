@@ -29,6 +29,9 @@ public class Mosque extends AbstractEntity {
 	
 	@Column(name="photo")
 	private String photo;
+
+	@Lob
+	private byte[] imagedata;
 	
 	@Column(name="balte")
 	@Temporal(TemporalType.TIME)

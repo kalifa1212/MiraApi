@@ -3,6 +3,7 @@ package com.theh.moduleuser.File;
 import jakarta.annotation.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,9 +28,13 @@ public class FileUploader {
 		}
 	}
 	
-	public static Resource Download() {
+	public static Resource Download(String fileName) {
 		String url ="G://HAMIDOU/Projets/ProjetPersonnel/API/test/Documents/photo/19/";
 		Path path = Paths.get(url).toAbsolutePath().resolve("img.jpg");
+		String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+				.path("/downloadFile/")
+				.path(fileName)
+				.toUriString();
 		
 		Resource resource = null;
 		try {

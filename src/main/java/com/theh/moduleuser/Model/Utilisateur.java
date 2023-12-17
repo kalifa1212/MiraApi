@@ -37,6 +37,9 @@ public class Utilisateur extends AbstractEntity{
     @Column(name="photo")
     private String photo;
 
+    @Lob
+    private byte[] imagedata;
+
     @Column(name="typecompte")
     private String typecompte;
 

@@ -7,16 +7,20 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.HttpMethod;
 import org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -47,12 +51,28 @@ public class SecurityConfiguration {
         return new ProviderManager(authenticationProvider);
     }
     // TODO bean pour la hierarchie des role et implementation
+//    @Bean
+//    public RoleHierarchy roleHierarchy(){
+//        RoleHierarchyImpl roleHierarchy=new RoleHierarchyImpl();
+//        String hierarchie="ROLE_ADMIN > ROLE_USER";
+//        roleHierarchy.setHierarchy(hierarchie);
+//        return roleHierarchy;
+//    }
     @Bean
-    public RoleHierarchy roleHierarchy(){
-        RoleHierarchyImpl roleHierarchy=new RoleHierarchyImpl();
-        String hierarchie="ROLE_ADMIN > ROLE_USER";
-        roleHierarchy.setHierarchy(hierarchie);
-        return roleHierarchy;
+    static RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
+        hierarchy.setHierarchy("ROLE_ROOT > ROLE_ADMIN\n" +
+                "ROLE_ADMIN > ROLE_STAFF\n" +
+                "ROLE_STAFF > ROLE_USER"); // TODO implementé le role guest plutard
+        return hierarchy;
+    }
+
+    // and, if using method security also add
+    @Bean
+    static MethodSecurityExpressionHandler methodSecurityExpressionHandler(RoleHierarchy roleHierarchy) {
+        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+        expressionHandler.setRoleHierarchy(roleHierarchy);
+        return expressionHandler;
     }
     @Bean
     public DefaultWebSecurityExpressionHandler customWebSecurityExpressionHandler() {
@@ -83,6 +103,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST,"/nouveau/").hasRole("ADMIN")
                         .requestMatchers("/muslimApi/v1/utilisateur/muslimApi/v1/authentication/authenticate",
                                 "/v2/api-docs/**",
+                                "/health",
                                 "/swagger-ui.html",
                                 "/swagger-ui/index.html/**",
                                 "/swagger-resources",
@@ -99,6 +120,7 @@ public class SecurityConfiguration {
 //                .sessionManagement(session->
 //                        session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
 //                )
+                .cors(Customizer.withDefaults())
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(applicationRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
