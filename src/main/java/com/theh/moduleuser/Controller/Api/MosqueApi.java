@@ -14,7 +14,7 @@ import static com.theh.moduleuser.Constant.Constants.MOSQUE_ENDPOINT;
 @CrossOrigin(origins = "*")
 @RequestMapping(MOSQUE_ENDPOINT)
 @SecurityRequirement(name = "Bearer Authentication")
-public interface MosqueApi {
+public interface MosqueApi {//kjlkjskfsfskdfksjdfkl
 
 	@PostMapping(value = "nouveau/{update}",consumes=MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<MosqueDto> save(@RequestBody MosqueDto  dto, @PathVariable("update") Boolean update);

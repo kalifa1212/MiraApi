@@ -28,6 +28,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -51,13 +57,7 @@ public class SecurityConfiguration {
         return new ProviderManager(authenticationProvider);
     }
     // TODO bean pour la hierarchie des role et implementation
-//    @Bean
-//    public RoleHierarchy roleHierarchy(){
-//        RoleHierarchyImpl roleHierarchy=new RoleHierarchyImpl();
-//        String hierarchie="ROLE_ADMIN > ROLE_USER";
-//        roleHierarchy.setHierarchy(hierarchie);
-//        return roleHierarchy;
-//    }
+
     @Bean
     static RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
@@ -95,13 +95,25 @@ public class SecurityConfiguration {
 //        return new InMemoryUserDetailsManager(admin, user);
         return new MyUserDetailsService();
     }
+
+    //TODO desactivation du cors avant spring security
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(Arrays.asList("*"));
+//        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.disable())
                 .authorizeHttpRequests((authz) -> authz
                         .requestMatchers(HttpMethod.POST,"/nouveau/").hasRole("ADMIN")
-                        .requestMatchers("/muslimApi/v1/utilisateur/muslimApi/v1/authentication/authenticate",
+                        .requestMatchers("/muslimApi/v1/authentication/authenticate",
                                 "/v2/api-docs/**",
                                 "/health",
                                 "/swagger-ui.html",
@@ -120,7 +132,7 @@ public class SecurityConfiguration {
 //                .sessionManagement(session->
 //                        session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
 //                )
-                .cors(Customizer.withDefaults())
+
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(applicationRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

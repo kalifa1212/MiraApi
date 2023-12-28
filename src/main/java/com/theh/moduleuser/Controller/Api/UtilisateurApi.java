@@ -22,14 +22,12 @@ import java.util.List;
 
 import static com.theh.moduleuser.Constant.Constants.*;
 
-
-@CrossOrigin(origins = "*")
+@CrossOrigin(value = "*") // juste le cors ici suffi de resoudre le pb
 @RestController
 @SecurityRequirement(name = "Bearer Authentication")
-@RequestMapping(UTILISATEUR_ENDPOINT)
 public interface UtilisateurApi {
+
     // TODO Non fontionnel
-    @CrossOrigin
     @PostMapping(value = AUTHENTICATION_ENDPOINT+"authenticate")
     ResponseEntity<AuthenticationResponse> authentification(@RequestBody AuthenticationRequest authenticationRequest, HttpSession session,HttpServletRequest request, HttpServletResponse response);
 
@@ -41,7 +39,7 @@ public interface UtilisateurApi {
             @ApiResponse(responseCode = "401",description = "Utilisateur non Autoriser",content = @Content),
             @ApiResponse(responseCode = "400",description = "Utilisateur Invalide",content = @Content)
     })
-    @PostMapping(value = AUTHENTICATION_ENDPOINT+"nouveau/{update}")
+    @PostMapping(value = UTILISATEUR_ENDPOINT+"nouveau/{update}")
     ResponseEntity<UtilisateurDto> save(@RequestBody UtilisateurDto  dto, @PathVariable("update") Boolean update);
 
     @SecurityRequirement(name = "Bearer Authentication")
@@ -49,28 +47,28 @@ public interface UtilisateurApi {
     @GetMapping()
     String test();
 
-    @GetMapping(value="/find/id/{idutilisateur}")
+    @GetMapping(value=UTILISATEUR_ENDPOINT+"/find/id/{idutilisateur}")
     UtilisateurDto findById(@PathVariable("idutilisateur") Integer id);
 
-    @GetMapping(value="/find/email/{email}")
+    @GetMapping(value=UTILISATEUR_ENDPOINT+"/find/email/{email}")
     UtilisateurDto findByEmail(@PathVariable("email") String email, HttpServletRequest request);
     //  HttpServletRequest request to implement ip addresse of user
 
-    @GetMapping(value="/grantrole/{email}/{role}")
+    @GetMapping(value=UTILISATEUR_ENDPOINT+"/grantrole/{email}/{role}")
     Boolean GranteCompteRole(@PathVariable("email") String email,@PathVariable("role") String role);
     //find all
-    @GetMapping(value="/grantcompte/{email}/{type}")
+    @GetMapping(value=UTILISATEUR_ENDPOINT+"/grantcompte/{email}/{type}")
     UtilisateurDto GranteCompteType(@PathVariable("email") String email,@PathVariable("type") char type);
     //find all
 
-    @GetMapping(value="find/all",produces=MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value=UTILISATEUR_ENDPOINT+"find/all",produces=MediaType.APPLICATION_JSON_VALUE)
     List<UtilisateurDto> findAll();
 
-    @GetMapping(value="find/all/type/{typecompte}",produces=MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value=UTILISATEUR_ENDPOINT+"find/all/type/{typecompte}",produces=MediaType.APPLICATION_JSON_VALUE)
     List<UtilisateurDto> findAllByType(@PathVariable("typecompte") String type);
 
     // delete
 
-    @DeleteMapping(value="supprimer/{id}")
+    @DeleteMapping(value=UTILISATEUR_ENDPOINT+"supprimer/{id}")
     void delete(@PathVariable("id")Integer id);
 }
