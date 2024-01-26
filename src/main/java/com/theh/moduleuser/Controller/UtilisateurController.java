@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RestController
 @OpenAPIDefinition(info = @Info(title = "Muslem API", version = "1.2.0"))
 @Slf4j
@@ -66,8 +67,7 @@ public class UtilisateurController  implements UtilisateurApi {
     }
 
 
-    public ResponseEntity<AuthenticationResponse> authentification(@RequestBody AuthenticationRequest authenticationRequestrequest,
-                                                                   HttpSession session,HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<AuthenticationResponse> authentification(@RequestBody AuthenticationRequest authenticationRequestrequest) {
 
         final UserDetails userDetails= userDetailsService.loadUserByUsername(authenticationRequestrequest.getLogin());
 //        Authentication authentication = authenticationManager.authenticate(
@@ -118,7 +118,7 @@ public class UtilisateurController  implements UtilisateurApi {
 
     @Override
     public UtilisateurDto findByEmail(String email, HttpServletRequest request) {
-        // TODO Recherche Utilisateur by email
+        // TODO Recherche  Utilisateur by email
 //        List greetings = (List) request.getSession().getAttribute("GREETING_MESSAGES");
 //        if(greetings == null) {
 //            greetings = new ArrayList<>();

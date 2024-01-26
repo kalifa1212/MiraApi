@@ -12,7 +12,7 @@ import java.util.List;
 import static com.theh.moduleuser.Constant.Constants.APP_ROOT;
 
 
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = {"Requestor-Type", "Authorization"}, exposedHeaders = "X-Get-Header",allowCredentials = "true") // juste le cors ici suffi de resoudre le pb
 @SecurityRequirement(name = "Bearer Authentication")
 public interface LocalisationApi {
 	

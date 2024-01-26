@@ -16,7 +16,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @RestController
 @Slf4j
 public class MosqueController implements MosqueApi {

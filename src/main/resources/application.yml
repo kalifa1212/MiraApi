@@ -66,6 +66,9 @@ spring:
       max-file-size: 5MB
       max-request-size: 20MB
     ## end
+    ## allow OPTIONS request
+#  mvc:
+#  dispatch-options-request: true
 #    actuator
 #management:
 #  endpoints:

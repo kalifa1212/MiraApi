@@ -3,10 +3,7 @@ package com.theh.moduleuser.Config.Security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.HttpMethod;
-import org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -15,12 +12,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -98,22 +92,40 @@ public class SecurityConfiguration {
 
     //TODO desactivation du cors avant spring security
 //    @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
+//    public CorsConfigurationSource corsConfigurationSource() {
 //        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowCredentials(false);
 //        configuration.setAllowedOrigins(Arrays.asList("*"));
-//        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+//        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
+//        configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
 //        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 //        source.registerCorsConfiguration("/**", configuration);
 //        return source;
 //    }
+    //@Bean
+//    public CorsWebFilter corsWebFilter() {
+//        CorsConfiguration config = new CorsConfiguration();
+//        config.setAllowCredentials(true);
+//        config.addAllowedMethod("*");
+//        config.addAllowedHeader("*");
+//        config.addAllowedOrigin("*");
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", config);
+//        return new CorsWebFilter((CorsConfigurationSource) source);
+//    }
+//
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf-> csrf.disable())
                 .cors(cors -> cors.disable())
                 .authorizeHttpRequests((authz) -> authz
                         .requestMatchers(HttpMethod.POST,"/nouveau/").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                         .requestMatchers("/muslimApi/v1/authentication/authenticate",
+                                //"/muslimApi/v1/utilisateur/find/all",
                                 "/v2/api-docs/**",
                                 "/health",
                                 "/swagger-ui.html",
@@ -129,10 +141,9 @@ public class SecurityConfiguration {
                 )
 
                 //TODO logout implementation fonctionne mais pas a 100%
-//                .sessionManagement(session->
-//                        session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-//                )
-
+                .sessionManagement(session->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(applicationRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
