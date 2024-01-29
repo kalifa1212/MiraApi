@@ -1,7 +1,10 @@
 package com.theh.moduleuser.Dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.theh.moduleuser.Model.Mosque;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,18 +26,25 @@ public class MosqueDto {
 
 	private String photo;
 
+	@JsonFormat(pattern="HH:mm:ss")
 	private Date balte;
 
+	@JsonFormat(pattern="HH:mm:ss")
 	private Date asr;
 
+	@JsonFormat(pattern="HH:mm:ss")
 	private Date magrib;
 
+	@JsonFormat(pattern="HH:mm:ss")
 	private Date icha;
 
+	@JsonFormat(pattern="HH:mm:ss")
 	private Date soub;
 
+	@JsonFormat(pattern="HH:mm:ss")
 	private Date zour;
 
+	@JsonFormat(pattern="HH:mm:ss")
 	private Date djouma;
 
 	private Boolean isVendredi;

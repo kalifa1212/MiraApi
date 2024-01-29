@@ -49,16 +49,16 @@ public interface UtilisateurApi {
     UtilisateurDto findById(@PathVariable("idutilisateur") Integer id);
 
     @SecurityRequirement(name = "Bearer Authentication")
-    @GetMapping(value=UTILISATEUR_ENDPOINT+"/find/email/{email}")
+    @GetMapping(value=UTILISATEUR_ENDPOINT+"find/email/{email}")
     UtilisateurDto findByEmail(@PathVariable("email") String email, HttpServletRequest request);
     //  HttpServletRequest request to implement ip addresse of user
 
     @SecurityRequirement(name = "Bearer Authentication")
-    @GetMapping(value=UTILISATEUR_ENDPOINT+"/grantrole/{email}/{role}")
+    @GetMapping(value=UTILISATEUR_ENDPOINT+"grantrole/{email}/{role}")
     Boolean GranteCompteRole(@PathVariable("email") String email,@PathVariable("role") String role);
     //find all
     @SecurityRequirement(name = "Bearer Authentication")
-    @GetMapping(value=UTILISATEUR_ENDPOINT+"/grantcompte/{email}/{type}")
+    @GetMapping(value=UTILISATEUR_ENDPOINT+"grantcompte/{email}/{type}")
     UtilisateurDto GranteCompteType(@PathVariable("email") String email,@PathVariable("type") char type);
     //find all
     @SecurityRequirement(name = "Bearer Authentication")

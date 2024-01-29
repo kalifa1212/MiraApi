@@ -1,5 +1,6 @@
 package com.theh.moduleuser.Dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.theh.moduleuser.Model.Predication;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +14,7 @@ public class PredicationDto {
 
     private Integer id;
 
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date date;
 
 	private String theme;
