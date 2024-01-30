@@ -251,6 +251,9 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         Role role=new Role();
         role=roleRepository.findByName("ROLE_USER");
         if(update){
+            Optional<Utilisateur> util= utilisateurRepository.findById(dto.getId());
+            UtilisateurDto user= UtilisateurDto.fromEntity(util.get());
+            dto.setRoles(user.getRoles());
             return UtilisateurDto.fromEntity(utilisateurRepository.save(UtilisateurDto.toEntity(dto)));
         }
         List<String> errors = UtilisateurValidation.validate(dto);

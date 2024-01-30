@@ -1,5 +1,6 @@
 package com.theh.moduleuser.Dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.theh.moduleuser.Model.Role;
@@ -23,6 +24,7 @@ public class UtilisateurDto {
     private String prenom;
     private String email;
     private String motDePasse;
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date dateDeNaissance;
     private String photo;
     private String typecompte;

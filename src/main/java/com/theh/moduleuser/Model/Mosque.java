@@ -21,7 +21,7 @@ public class Mosque extends AbstractEntity {
 	@Column(name="nom",length = 50)
 	private String nom;
 
-	@Column(name="code",length = 10)
+	@Column(name="code",length = 20)
 	private String code;
 	
 	@Column(name="superficie")

@@ -93,7 +93,7 @@ public class MosqueDto {
 		mosque.setIsVendredi(mosqueDto.getIsVendredi());
 		mosque.setPhoto(mosqueDto.getPhoto());
 		mosque.setSuperficie(mosqueDto.getSuperficie());
-		mosque.setCode(mosque.getCode());
+		mosque.setCode(mosqueDto.getCode());
 		mosque.setLocalisation(LocalisationDto.toEntity(mosqueDto.getLocalisation()));
 		mosque.setBalte(mosqueDto.getBalte());
 		mosque.setAsr(mosqueDto.getAsr());
