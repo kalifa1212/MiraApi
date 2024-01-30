@@ -28,7 +28,7 @@ public interface UtilisateurApi {
     ResponseEntity<AuthenticationResponse> authentification(@RequestBody AuthenticationRequest authenticationRequest);
 
     @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(summary = "Enregistrer un utilisateur ")
+    @Operation(summary = "Enregistrer un utilisateur ",description = "permet d'enregistrer un utilisateur")
     @ApiResponses(value={
             @ApiResponse(responseCode = "200",description = "Enregistrer",content = {
                     @Content(mediaType ="application/json",schema = @Schema(implementation = UtilisateurDto.class))

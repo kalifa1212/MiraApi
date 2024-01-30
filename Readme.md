@@ -1,6 +1,6 @@
 ## MUSLEM API AND USER IMPLEMENTATION 
 Projet islamique concus pour les musulamans et prise en charge utilisateur
-## Etat Operationnel 95%
+## Etat Operationnel 98%
 - Hebergement sur render reussi
 - base de donnée postgresql sur render reusssi
 ## Connexion
@@ -9,3 +9,5 @@ Projet islamique concus pour les musulamans et prise en charge utilisateur
 ## Endpoint non securiser
 - /muslimApi/v1/utilisateur/muslimApi/v1/authentication/authenticate
 - /logout
+## Reste a faire
+- Documentation openApi (description pour chaque endpoint)
