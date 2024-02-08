@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -63,7 +64,10 @@ public interface UtilisateurApi {
     //find all
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping(value=UTILISATEUR_ENDPOINT+"find/all",produces=MediaType.APPLICATION_JSON_VALUE)
-    List<UtilisateurDto> findAll();
+    Page<UtilisateurDto> findAll(@RequestParam(required = false) String sortColumn,
+                                 @RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "2") int taille,
+                                 @RequestParam(defaultValue = "ascending") String sortDirection);
 
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping(value=UTILISATEUR_ENDPOINT+"find/all/type/{typecompte}",produces=MediaType.APPLICATION_JSON_VALUE)

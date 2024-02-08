@@ -1,5 +1,6 @@
 package com.theh.moduleuser.Services.Impl;
 
+import com.fasterxml.jackson.databind.util.Converter;
 import com.theh.moduleuser.Dto.RoleDto;
 import com.theh.moduleuser.Dto.UtilisateurDto;
 import com.theh.moduleuser.Exceptions.EntityNotFoundException;
@@ -19,6 +20,8 @@ import com.theh.moduleuser.Validation.UtilisateurValidation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -303,11 +306,9 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     }
 
     @Override
-    public List<UtilisateurDto> findAll() {
+    public Page<UtilisateurDto> findAll(Pageable page) {
         // TODO Auto-generated method stub
-        return utilisateurRepository.findAll().stream()
-                .map(UtilisateurDto::fromEntity)
-                .collect(Collectors.toList());
+        return utilisateurRepository.findAll(page).map(UtilisateurDto::fromEntity);
     }
 
     @Override

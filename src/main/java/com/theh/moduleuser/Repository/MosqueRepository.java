@@ -2,6 +2,10 @@ package com.theh.moduleuser.Repository;
 
 import com.theh.moduleuser.Dto.MosqueDto;
 import com.theh.moduleuser.Model.Mosque;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.Instant;
@@ -39,4 +43,8 @@ public interface MosqueRepository extends JpaRepository<Mosque,Integer>{
 //	List<MosqueDto> findByLastModifiedDateBetween(Instant start, Instant end);
 	List<Mosque> findByLastModifiedDateGreaterThanEqual(Instant date);
 
+	//TODO test de pagination
+	Pageable firstPageWithTwoElements = PageRequest.of(0, 10);
+	List<Mosque> findAll(Sort sort);
+	Page<Mosque> findAll(Pageable page);
 }

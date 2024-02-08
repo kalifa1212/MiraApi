@@ -18,6 +18,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -156,9 +160,10 @@ public class UtilisateurController  implements UtilisateurApi {
     }
 
     @Override
-    public List<UtilisateurDto> findAll() {
+    public Page<UtilisateurDto> findAll(String sortColumn, int page, int taille, String sortDirection) {
+        Pageable paging = PageRequest.of(page, taille, Sort.by(sortColumn).ascending());
         // TODO afficher tout les utilisateurs
-        return utilisateurService.findAll();
+        return utilisateurService.findAll(paging);
     }
 
     @Override

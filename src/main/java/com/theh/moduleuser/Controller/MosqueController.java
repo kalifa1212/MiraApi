@@ -8,6 +8,10 @@ import com.theh.moduleuser.Repository.MosqueRepository;
 import com.theh.moduleuser.Services.MosqueService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
@@ -77,6 +81,25 @@ public class MosqueController implements MosqueApi {
 		//  Auto-generated method stub
 		//return mosqueService.findAll();
 
+	}
+
+	@Override
+	public Page<Mosque> findAllPagingAndSorting(String sortColumn, int page, int taille, String sortDirection) {
+		String ascending="ascending";String descending="descending";
+
+		if(sortDirection.equals("ascending")){
+			Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).ascending());
+			Page<Mosque> test =mosqueRepository.findAll(paging);
+			return test;
+		} else if (sortDirection.equals("descending")) {
+			Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).descending());
+			Page<Mosque> test =mosqueRepository.findAll(paging);
+			return test;
+		}else {
+			Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).ascending());
+			Page<Mosque> test =mosqueRepository.findAll(paging);
+			return test;
+		}
 	}
 
 	@Override
