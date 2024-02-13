@@ -33,42 +33,69 @@ public interface MosqueApi {//kjlkjskfsfskdfksjdfkl
 	})
 	@PostMapping(value = "nouveau/{update}",consumes=MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<MosqueDto> save(@RequestBody MosqueDto  dto, @PathVariable("update") Boolean update);
-	
 
+
+    @Operation(summary = "Rechercher par id",description = "Permet de rechercher un element ")
 	@GetMapping(value="find/{idmosque}")
 	MosqueDto findById(@PathVariable("idmosque") Integer id);
 
+    @Operation(summary = "Recherche Par localisation ",description = " Entrer la ville ou le pays ")
 	@GetMapping(value="find/localisation/{villeOrPays}",produces=MediaType.APPLICATION_JSON_VALUE)
-	List<MosqueDto> findMosqueByVilleOrPays(@PathVariable("villeOrPays")String str);
-
-	@GetMapping(value="find/vendredi/{vendredi}",produces=MediaType.APPLICATION_JSON_VALUE)
-	List<MosqueDto> findByVendredis(@PathVariable("vendredi") Boolean a);
-
-	@GetMapping(value="find/all/{type}",produces=MediaType.APPLICATION_JSON_VALUE)
-	List<Mosque> findAll(@PathVariable("type") String type);
-
-	@GetMapping(value="find/",produces=MediaType.APPLICATION_JSON_VALUE)
-	Page<Mosque> findAllPagingAndSorting(@RequestParam(required = false) String sortColumn,
+	Page<MosqueDto> findMosqueByVilleOrPays(@PathVariable("villeOrPays")String str,
+											@RequestParam(required = false,defaultValue = "nom") String sortColumn,
 											@RequestParam(defaultValue = "0") int page,
 											@RequestParam(defaultValue = "2") int taille,
 											@RequestParam(defaultValue = "ascending") String sortDirection);
+
+    @Operation(summary = "Recherche Mosque du vendredi ",description = "True pour les mosque du Vendredi et false pour les autres ")
+	@GetMapping(value="find/vendredi/{vendredi}",produces=MediaType.APPLICATION_JSON_VALUE)
+	Page<MosqueDto> findByVendredis(@PathVariable("vendredi") Boolean a,
+									@RequestParam(required = false,defaultValue = "nom") String sortColumn,
+									@RequestParam(defaultValue = "0") int page,
+									@RequestParam(defaultValue = "2") int taille,
+									@RequestParam(defaultValue = "ascending") String sortDirection);
+
+    @Operation(summary = "Tout afficher ",description = "Paramettre old/new  pour l'ordre d'affichage ")
+	@GetMapping(value="find/all/{type}",produces=MediaType.APPLICATION_JSON_VALUE)
+	Page<MosqueDto> findAll(@PathVariable("type") String type,
+							@RequestParam(required = false,defaultValue = "nom") String sortColumn,
+							@RequestParam(defaultValue = "0") int page,
+							@RequestParam(defaultValue = "2") int taille,
+							@RequestParam(defaultValue = "ascending") String sortDirection);
+
+    @Operation(summary = "Test",description = "Test")
+	@GetMapping(value="find/",produces=MediaType.APPLICATION_JSON_VALUE)
+	Page<MosqueDto> findAllPagingAndSorting(@RequestParam(required = false,defaultValue = "nom") String sortColumn,
+											@RequestParam(defaultValue = "0") int page,
+											@RequestParam(defaultValue = "2") int taille,
+											@RequestParam(defaultValue = "ascending") String sortDirection);
+
+    @Operation(summary = "Count ",description = "le nombre total des mosques enregistrer")
 	@GetMapping(value="count",produces=MediaType.APPLICATION_JSON_VALUE)
 	int countAll();
 
+    @Operation(summary = "count",description = "nombre des mosquée du vendredi ")
 	@GetMapping(value="count/vendredi/{bool}",produces=MediaType.APPLICATION_JSON_VALUE)
 	int countAllMosqueVendredi(@PathVariable("bool") Boolean bool);
 
+    @Operation(summary = "Count",description = "le nombre des mosque du vendredi par localisation ")
 	@GetMapping(value="count/vendredi/{bool}/{ville}",produces=MediaType.APPLICATION_JSON_VALUE)
 	int countAllMosqueVendrediByLocation(@PathVariable("bool") Boolean bool,@PathVariable("ville") String ville);
 
 
+    @Operation(summary = "count ",description = "nombre des mosque par localisation")
 	@GetMapping(value="count/localisation/{string}",produces=MediaType.APPLICATION_JSON_VALUE)
 	int countAllMosqueByLocalisation(@PathVariable("string") String bool);
 
-
+    @Operation(summary = "Tout rechercher ",description = "Recherchepar nom")
 	@GetMapping(value="find/nom/{nom}",produces=MediaType.APPLICATION_JSON_VALUE)
-	List<MosqueDto> find(@PathVariable("nom") String str);
+	Page<MosqueDto> find(@PathVariable("nom") String str,
+						 @RequestParam(required = false,defaultValue = "nom") String sortColumn,
+						 @RequestParam(defaultValue = "0") int page,
+						 @RequestParam(defaultValue = "2") int taille,
+						 @RequestParam(defaultValue = "ascending") String sortDirection);
 
+    @Operation(summary = "Recherche par date",description = "Recherche apres la date, yyyy-MM-ddThh:mm:ss.sssZ type=(create ou modified)")
 	@GetMapping(value="find/date/{date}/{type}",produces=MediaType.APPLICATION_JSON_VALUE)
 	MosqueInfoDto findByDate(@PathVariable("date") String date, @PathVariable("type") String type);
 

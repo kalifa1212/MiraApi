@@ -1,8 +1,15 @@
 package com.theh.moduleuser.Services.File;
 
+import com.theh.moduleuser.Dto.PredicationDto;
+import com.theh.moduleuser.Services.DocumentsService;
+import com.theh.moduleuser.Services.PredicationService;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -40,5 +47,8 @@ public class FileUpload {
         return resource;
 
     }
-
+    public static InputStream getRessourceAsStream(String path,PredicationDto predicationDto)throws FileNotFoundException {
+        String filepath=path+"predication/"+predicationDto.getType()+"/"+predicationDto.getFichier();
+        return  new FileInputStream(filepath);
+    }
 }

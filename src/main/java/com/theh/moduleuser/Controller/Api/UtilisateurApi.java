@@ -25,6 +25,7 @@ import static com.theh.moduleuser.Constant.Constants.*;
 public interface UtilisateurApi {
 
     // TODO Non fontionnel
+    @Operation(summary = "Authentication ",description = "Connexion")
     @PostMapping(value = AUTHENTICATION_ENDPOINT+"authenticate")
     ResponseEntity<AuthenticationResponse> authentification(@RequestBody AuthenticationRequest authenticationRequest);
 
@@ -45,33 +46,45 @@ public interface UtilisateurApi {
     @GetMapping()
     String test();
 
+    @Operation(summary = "Recherche ",description = "Recherche par ID")
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping(value=UTILISATEUR_ENDPOINT+"find/id/{idutilisateur}")
     UtilisateurDto findById(@PathVariable("idutilisateur") Integer id);
 
+    @Operation(summary = "Recherche ",description = "Recherche par Email")
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping(value=UTILISATEUR_ENDPOINT+"find/email/{email}")
     UtilisateurDto findByEmail(@PathVariable("email") String email, HttpServletRequest request);
     //  HttpServletRequest request to implement ip addresse of user
 
+    @Operation(summary = "Grant ",description = "Grante role {root,admin,staff,user }")
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping(value=UTILISATEUR_ENDPOINT+"grantrole/{email}/{role}")
     Boolean GranteCompteRole(@PathVariable("email") String email,@PathVariable("role") String role);
     //find all
+
+    @Operation(summary = "Grant ",description = "Grant type Compte, U for User and I for Imam")
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping(value=UTILISATEUR_ENDPOINT+"grantcompte/{email}/{type}")
     UtilisateurDto GranteCompteType(@PathVariable("email") String email,@PathVariable("type") char type);
     //find all
+
+    @Operation(summary = "Recherche ",description = "afficher tout les utilisateur")
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping(value=UTILISATEUR_ENDPOINT+"find/all",produces=MediaType.APPLICATION_JSON_VALUE)
-    Page<UtilisateurDto> findAll(@RequestParam(required = false) String sortColumn,
+    Page<UtilisateurDto> findAll(@RequestParam(required = false,defaultValue = "nom") String sortColumn,
                                  @RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "2") int taille,
                                  @RequestParam(defaultValue = "ascending") String sortDirection);
 
+    @Operation(summary = "Recherche ",description = "Recherche par Type compte (USER, IMAM )")
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping(value=UTILISATEUR_ENDPOINT+"find/all/type/{typecompte}",produces=MediaType.APPLICATION_JSON_VALUE)
-    List<UtilisateurDto> findAllByType(@PathVariable("typecompte") String type);
+    Page<UtilisateurDto> findAllByType(@PathVariable("typecompte") String type,
+                                       @RequestParam(required = false,defaultValue = "nom") String sortColumn,
+                                       @RequestParam(defaultValue = "0") int page,
+                                       @RequestParam(defaultValue = "2") int taille,
+                                       @RequestParam(defaultValue = "ascending") String sortDirection);
 
     // delete
 

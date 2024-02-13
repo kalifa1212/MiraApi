@@ -167,12 +167,11 @@ public class UtilisateurController  implements UtilisateurApi {
     }
 
     @Override
-    public List<UtilisateurDto> findAllByType(String type) {
-        type.toUpperCase();
-        return utilisateurRepository.findUtilisateurByTypecompte(type)
-                .stream()
-                .map(UtilisateurDto::fromEntity)
-                .collect(Collectors.toList());
+    public Page<UtilisateurDto> findAllByType(String type,String sortColumn, int page, int taille, String sortDirection) {
+        type=type.toUpperCase();
+        Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).ascending());
+        return utilisateurRepository.findUtilisateurByTypecompte(type,paging)
+                .map(UtilisateurDto::fromEntity);
     }
 
     @Override

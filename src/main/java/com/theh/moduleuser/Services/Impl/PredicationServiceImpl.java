@@ -15,6 +15,8 @@ import com.theh.moduleuser.Services.PredicationService;
 import com.theh.moduleuser.Validation.PredicationValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -110,11 +112,10 @@ public class PredicationServiceImpl implements PredicationService {
 	}
 
 	@Override
-	public List<PredicationDto> findAll() {
+	public Page<PredicationDto> findAll(Pageable pageable) {
 		// TODO implementation afficher tout
-		return predicationRepository.findAll().stream()
-				.map(PredicationDto::fromEntity)
-				.collect(Collectors.toList());
+		return predicationRepository.findAll(pageable)
+				.map(PredicationDto::fromEntity);
 	}
 
 	@Override
@@ -136,80 +137,88 @@ public class PredicationServiceImpl implements PredicationService {
 		return listPredication;
 	}
 	@Override
-	public List<Predication> findByImam(String nom) {
+	public Page<Predication> findByImam(String nom,Pageable pageable) {
 		// TODO find by imam
 		// TODO list des imam avec le nom fourni
-		List<Utilisateur> imam = utilisateurRepository.findByNom(nom);
-		Utilisateur imamR;
-		List<Predication> ListPredication =predicationRepository.findById(22);
-		
-		int a=imam.size();	    	// taille de la list des imam
-		int test=0;				   // pour testé la list des predication
-		for(int i=0; i<a;i++) {
-			// TODO recherche des predication par imam
-			imamR=imam.get(i);
-			//log.error("Recherche d'une predication par nom Imam Fonction Recherche Par Imam Trouver N°1  {}",imamR.getNom());
-			List<Predication> pred =predicationRepository.findPredicationByIdImam(imamR.getId());
-			if(!pred.isEmpty()) {
-				//TODO concatenation des liste trouvé
-				Predication predication = pred.get(0); 
-				addToList(ListPredication,predication,test);
-				test=test+1;
-			}
-			
-		}
-		if(imam.isEmpty()) {
-			throw new EntityNotFoundException("Aucune predication avec pour nom de l'imam <<"+nom+">> n'a ete trouver");
-		}
-		
-		return ListPredication;
+//		List<Utilisateur> imam = utilisateurRepository.findByNom(nom);
+//		Utilisateur imamR;
+//		List<Predication> ListPredication =predicationRepository.findById(22);
+//
+//		int a=imam.size();	    	// taille de la list des imam
+//		int test=0;				   // pour testé la list des predication
+//		for(int i=0; i<a;i++) {
+//			// TODO recherche des predication par imam
+//			imamR=imam.get(i);
+//			//log.error("Recherche d'une predication par nom Imam Fonction Recherche Par Imam Trouver N°1  {}",imamR.getNom());
+//			List<Predication> pred =predicationRepository.findPredicationByIdImam(imamR.getId());
+//			if(!pred.isEmpty()) {
+//				//TODO concatenation des liste trouvé
+//				Predication predication = pred.get(0);
+//				addToList(ListPredication,predication,test);
+//				test=test+1;
+//			}
+//
+//		}
+//		if(imam.isEmpty()) {
+//			throw new EntityNotFoundException("Aucune predication avec pour nom de l'imam <<"+nom+">> n'a ete trouver");
+//		}
+//
+//		return ListPredication;
+		return null;
 	}
 
 	@Override
-	public List<PredicationDto> findByThemeImamNom(String str) {
-		// TODO recherche des predication par theme et nom imam en meme temps
-		 if(!StringUtils.hasLength(str)) {
-			throw new InvalidEntityException("Le nom entrée est NULL");
-		}
-		List<Predication> listParThem=predicationRepository.findPredicationByThemeContaining(str);
-		List<Predication> listParType=predicationRepository.findPredicationByTypeContaining(str);
-		//List<Utilisateur> listParImam=utilisateurRepository.findByNom(str);
+	public Page<PredicationDto> findByThemeImamNom(String str,Pageable pageable) {
+		// TODO recherche des predication nom imam (nom predicateur)
 		List<Utilisateur> listParImam=utilisateurRepository.findUtilisateurByNomAndTypecompte(str,"IMAM");
-		List<Predication> Concatenation = Stream.concat(listParThem.stream(),listParType.stream())
-				.collect(Collectors.toList());
 
-		List<Predication> test=new ArrayList<>();
-
-		int a=listParImam.size();
-		//log.error(" taille imam{}",a);
-		if (a!=0){
-			for (int i=0; i<a; i++){
-				//TODO Verification de l'existance des preche pour chaque imam trouver par le nom donné
-				//log.error(" taille imam{} iteration {}",a,i);
-				List<Predication> optionalPredication=predicationRepository.findPredicationByIdImam(listParImam.get(i).getId());
-				if (!optionalPredication.isEmpty()){
-					Concatenation.addAll(optionalPredication);
-				}
-			}
+		if (listParImam.size()!=0){
+			return predicationRepository.findPredicationByIdImam(listParImam.get(0).getId(),pageable)
+					.map(PredicationDto::fromEntity);
 		}
+		throw new EntityNotFoundException("Aucune predication avec pour predicateur<<"+str+">> avec role admin  n'a ete trouver");
 
-		return Concatenation.stream().map(PredicationDto::fromEntity)
-				.collect(Collectors.toList());
+
+//		 if(!StringUtils.hasLength(str)) {
+//			throw new InvalidEntityException("Le nom entrée est NULL");
+//		}
+//		List<Predication> listParThem=predicationRepository.findPredicationByThemeContaining(str);
+//		List<Predication> listParType=predicationRepository.findPredicationByTypeContaining(str);
+//		//List<Utilisateur> listParImam=utilisateurRepository.findByNom(str);
+//		List<Utilisateur> listParImam=utilisateurRepository.findUtilisateurByNomAndTypecompte(str,"IMAM");
+//		List<Predication> Concatenation = Stream.concat(listParThem.stream(),listParType.stream())
+//				.collect(Collectors.toList());
+//
+//		List<Predication> test=new ArrayList<>();
+//
+//		int a=listParImam.size();
+//		//log.error(" taille imam{}",a);
+//		if (a!=0){
+//			for (int i=0; i<a; i++){
+//				//TODO Verification de l'existance des preche pour chaque imam trouver par le nom donné
+//				//log.error(" taille imam{} iteration {}",a,i);
+//				List<Predication> optionalPredication=predicationRepository.findPredicationByIdImam(listParImam.get(i).getId());
+//				if (!optionalPredication.isEmpty()){
+//					Concatenation.addAll(optionalPredication);
+//				}
+//			}
+//		}
+//
+//		return Concatenation.stream().map(PredicationDto::fromEntity)
+//				.collect(Collectors.toList());
 	}
 
 	@Override
-	public List<PredicationDto> findByTheme(String str) {
-		return predicationRepository.findPredicationByThemeContaining(str).stream()
-				.map(PredicationDto::fromEntity)
-				.collect(Collectors.toList());
+	public Page<PredicationDto> findByTheme(String str,Pageable pageable) {
+		return predicationRepository.findPredicationByThemeContaining(str,pageable)
+				.map(PredicationDto::fromEntity);
 	}
 
 	@Override
-	public List<PredicationDto> findByType(String type) {
+	public Page<PredicationDto> findByType(String type, Pageable page) {
 		type =type.toUpperCase();
-		return predicationRepository.findPredicationByTypeContaining(type).stream()
-				.map(PredicationDto::fromEntity)
-				.collect(Collectors.toList());
+		return predicationRepository.findPredicationByTypeContaining(type,page)
+				.map(PredicationDto::fromEntity);
 	}
 	void Notification(int mosq, int imam,Utilisateur util,PredicationDto dto,Optional<Mosque> mosque){
 		if(imam==0){

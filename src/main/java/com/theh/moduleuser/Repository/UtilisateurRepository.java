@@ -14,7 +14,7 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Intege
     Utilisateur findByEmail(String email);
     @Query(value = "select u from Utilisateur u where u.email=:email")
     Optional<Utilisateur> findUtilisateurByEmail(@Param("email") String email);
-    List<Utilisateur> findUtilisateurByTypecompte(String typecompte);
+    Page<Utilisateur> findUtilisateurByTypecompte(String typecompte,Pageable page);
     List<Utilisateur> findByNom(String nom);
     List<Utilisateur> findUtilisateurByLocalisationId(Integer id);
     List<Utilisateur> findUtilisateurByNomAndTypecompte(String nom, String typcompte);
@@ -24,4 +24,5 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Intege
 
     @Override
     Page<Utilisateur> findAll(Pageable pageable);
+
 }

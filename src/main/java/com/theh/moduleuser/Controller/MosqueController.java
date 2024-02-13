@@ -50,32 +50,37 @@ public class MosqueController implements MosqueApi {
 
 
 	@Override
-	public List<MosqueDto> findMosqueByVilleOrPays(String str) {
+	public Page<MosqueDto> findMosqueByVilleOrPays(String str,String sortColumn, int page, int taille, String sortDirection) {
 		// TODO Rechercher des mosque par ville ou pays
-		List<MosqueDto> mosqueList=mosqueRepository.findMosqueByLocalisationVilleContaining(str).stream()
-				.map(MosqueDto::fromEntity)
-				.collect(Collectors.toList());
-		mosqueList.addAll(mosqueRepository.findMosqueByLocalisationPaysContaining(str).stream()
-				.map(MosqueDto::fromEntity)
-				.collect(Collectors.toList()));
+		Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).ascending());
+		String pays=str;
+		Page<MosqueDto> mosqueList=mosqueRepository.findMosqueByLocalisationVilleContainingOrLocalisationPays(str,pays,paging).map(MosqueDto::fromEntity);
+//		mosqueList.addAll(mosqueRepository.findMosqueByLocalisationPaysContaining(str,paging).stream()
+//				.map(MosqueDto::fromEntity)
+//				.collect(Collectors.toList()));
 		//return mosqueService.findMosqueByVilleOrQuartier(str);
+
 		return mosqueList;
 	}
 
 	@Override
-	public List<MosqueDto> findByVendredis(Boolean a) {
+	public Page<MosqueDto> findByVendredis(Boolean a,String sortColumn, int page, int taille, String sortDirection) {
+
 		// TODO Rechercher des mosqué par leur type : mosque du vendredi
-		return  mosqueService.findByVendredis(a);
+		Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).ascending());
+
+		return  mosqueService.findByVendredis(a,paging);
 	}
 	
 	@Override
-	public List<Mosque> findAll(String type) {
+	public Page<MosqueDto> findAll(String type,String sortColumn, int page, int taille, String sortDirection) {
 		// TODO afficher toutes les mosque par nouveauté et ancienneté
+		Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).ascending());
 		if(type.contentEquals("old")){
-			return mosqueRepository.findByOrderByCreationDateAsc(); // TODO a implementé dans service Mosque
+			return mosqueRepository.findByOrderByCreationDateAsc(paging).map(MosqueDto::fromEntity); // TODO a implementé dans service Mosque
 		}
 			else if(type.contentEquals("new")){
-			return mosqueRepository.findByOrderByCreationDateDesc();// TODO idem
+			return mosqueRepository.findByOrderByCreationDateDesc(paging).map(MosqueDto::fromEntity);// TODO idem
 		}
 				else {throw new InvalidEntityException("Le type entrée n'est pas en compte (new or old)");}
 		//  Auto-generated method stub
@@ -84,21 +89,18 @@ public class MosqueController implements MosqueApi {
 	}
 
 	@Override
-	public Page<Mosque> findAllPagingAndSorting(String sortColumn, int page, int taille, String sortDirection) {
+	public Page<MosqueDto> findAllPagingAndSorting(String sortColumn, int page, int taille, String sortDirection) {
 		String ascending="ascending";String descending="descending";
 
 		if(sortDirection.equals("ascending")){
 			Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).ascending());
-			Page<Mosque> test =mosqueRepository.findAll(paging);
-			return test;
+			return mosqueRepository.findAll(paging).map(MosqueDto::fromEntity);
 		} else if (sortDirection.equals("descending")) {
 			Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).descending());
-			Page<Mosque> test =mosqueRepository.findAll(paging);
-			return test;
+			return mosqueRepository.findAll(paging).map(MosqueDto::fromEntity);
 		}else {
 			Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).ascending());
-			Page<Mosque> test =mosqueRepository.findAll(paging);
-			return test;
+			return mosqueRepository.findAll(paging).map(MosqueDto::fromEntity);
 		}
 	}
 
@@ -127,17 +129,11 @@ public class MosqueController implements MosqueApi {
 	}
 
 	@Override
-	public List<MosqueDto> find(String str) {
+	public Page<MosqueDto> find(String str,String sortColumn, int page, int taille, String sortDirection) {
 		// TODO rechercher les mosque par nom et localisation
-		List<MosqueDto> mosqueList=mosqueRepository.findMosqueByNomContaining(str).stream()
-				.map(MosqueDto::fromEntity)
-				.collect(Collectors.toList());
-		mosqueList.addAll(mosqueRepository.findMosqueByLocalisationVilleContaining(str).stream()
-				.map(MosqueDto::fromEntity)
-				.collect(Collectors.toList()));
-		mosqueList.addAll(mosqueRepository.findMosqueByLocalisationPaysContaining(str).stream()
-				.map(MosqueDto::fromEntity)
-				.collect(Collectors.toList()));
+		Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).ascending());
+		Page<MosqueDto> mosqueList=mosqueRepository.findMosqueByNomContaining(str,paging)
+				.map(MosqueDto::fromEntity);
 		return mosqueList;
 	}
 

@@ -4,6 +4,10 @@ import com.theh.moduleuser.Dto.LocalisationDto;
 import com.theh.moduleuser.Services.EmailService;
 import com.theh.moduleuser.Services.LocalisationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,21 +41,18 @@ public class LocalisationController implements LocalisationApi {
 	}
 
 	@Override
-	public List<LocalisationDto> findByVilleLocalisation(String str) {
+	public Page<LocalisationDto> findByVilleLocalisation(String str, String sortColumn, int page, int taille, String sortDirection) {
 		// TODO rechercher par ville
-		return localisationService.findLocalisationByVille(str);
+		Pageable paging = PageRequest.of(page, taille, Sort.by(sortColumn).ascending());
+		return localisationService.findLocalisationByVille(str,paging);
 	}
-	
-//	@Override
-//	public List<LocalisationDto> findByQuartierLocalisation(String str) {
-//		// TODO rechercher par quartier
-//		return  localisationService.findLocalisationByQuartier(str);
-//	}
 
 	@Override
-	public List<LocalisationDto> findAllLocalisation() {
+	public Page<LocalisationDto> findAllLocalisation(String sortColumn, int page, int taille, String sortDirection) {
 		// TODO rechercher tout les localisations
-		return localisationService.findAll();
+		Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).ascending());
+
+		return localisationService.findAll(paging);
 	}
 
 	@Override

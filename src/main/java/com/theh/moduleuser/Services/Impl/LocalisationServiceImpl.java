@@ -10,6 +10,8 @@ import com.theh.moduleuser.Services.EmailService;
 import com.theh.moduleuser.Services.LocalisationService;
 import com.theh.moduleuser.Validation.LocalisationValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -62,16 +64,15 @@ public class LocalisationServiceImpl implements LocalisationService {
 	}
 
 	@Override
-	public  List<LocalisationDto> findLocalisationByVille(String ville) {
+	public Page<LocalisationDto> findLocalisationByVille(String ville, Pageable page) {
 		//  Auto-generated method stub
 		if(!StringUtils.hasLength(ville)) {
 			throw new InvalidEntityException("La ville entrée est NULL");
 		}
 		//Optional<Localisation> localisation= localisationRepository.findLocalisationByVille(ville);
 		
-		return this.localisationRepository.findLocalisationByVilleLike(ville).stream()
-				.map(LocalisationDto::fromEntity)
-				.collect(Collectors.toList());
+		return this.localisationRepository.findLocalisationByVilleLike(ville,page)
+				.map(LocalisationDto::fromEntity);
 	}
 
 	@Override
@@ -84,11 +85,10 @@ public class LocalisationServiceImpl implements LocalisationService {
 	}
 
 	@Override
-	public List<LocalisationDto> findAll() {
+	public Page<LocalisationDto> findAll(Pageable page) {
 		//  Auto-generated method stub
-		return localisationRepository.findAll().stream()
-				.map(LocalisationDto::fromEntity)
-				.collect(Collectors.toList());
+		return localisationRepository.findAll(page)
+				.map(LocalisationDto::fromEntity);
 	}
 
 	@Override

@@ -90,6 +90,9 @@ server:
 file:
   storage:
     location: fileStorage
+  ## File path config
+project:
+  poster: fileStorage/
 #end
 application:
   title: muslimApp

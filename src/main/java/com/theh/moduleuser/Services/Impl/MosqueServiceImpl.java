@@ -13,6 +13,8 @@ import com.theh.moduleuser.Services.MosqueService;
 import com.theh.moduleuser.Validation.MosqueValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -97,11 +99,10 @@ public class MosqueServiceImpl implements MosqueService {
 	}
 
 	@Override
-	public List<MosqueDto> findByVendredis(Boolean vendredi) {
+	public Page<MosqueDto> findByVendredis(Boolean vendredi, Pageable page) {
 		
-		return this.mosqueRepository.findMosqueByIsVendredi(vendredi).stream()
-				.map(MosqueDto::fromEntity)
-				.collect(Collectors.toList());
+		return this.mosqueRepository.findMosqueByIsVendredi(vendredi,page)
+				.map(MosqueDto::fromEntity);
 	}
 
 	@Override
