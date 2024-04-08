@@ -48,11 +48,17 @@ public class LocalisationController implements LocalisationApi {
 	}
 
 	@Override
-	public Page<LocalisationDto> findAllLocalisation(String sortColumn, int page, int taille, String sortDirection) {
+	public Page<LocalisationDto> findAllLocalisationByPages(String sortColumn, int page, int taille, String sortDirection) {
 		// TODO rechercher tout les localisations
 		Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).ascending());
 
-		return localisationService.findAll(paging);
+		return localisationService.findAllByPages(paging);
+	}
+	@Override
+	public List<LocalisationDto> findAllLocalisation() {
+		// TODO rechercher tout les localisations
+
+		return localisationService.findAll();
 	}
 
 	@Override

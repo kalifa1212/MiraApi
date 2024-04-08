@@ -2,6 +2,7 @@ package com.theh.moduleuser.Controller;
 import com.theh.moduleuser.Controller.Api.MosqueApi;
 import com.theh.moduleuser.Dto.MosqueDto;
 import com.theh.moduleuser.Dto.MosqueInfoDto;
+import com.theh.moduleuser.Exceptions.ErrorCodes;
 import com.theh.moduleuser.Exceptions.InvalidEntityException;
 import com.theh.moduleuser.Model.Mosque;
 import com.theh.moduleuser.Repository.MosqueRepository;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
@@ -64,6 +66,18 @@ public class MosqueController implements MosqueApi {
 	}
 
 	@Override
+	public ResponseEntity getFile(Integer id) {
+		MosqueDto mosque= mosqueService.findById(id);
+		//log.error("image data {} ",mosque.getImagedata());
+		if(mosque.getImagedata()==null){
+			throw new InvalidEntityException("Image non disponible", ErrorCodes.FILE_NOT_FOUND);
+		}
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + mosque.getPhoto() + "\"")
+				.body(mosque.getImagedata());
+	}
+
+	@Override
 	public Page<MosqueDto> findByVendredis(Boolean a,String sortColumn, int page, int taille, String sortDirection) {
 
 		// TODO Rechercher des mosqué par leur type : mosque du vendredi
@@ -77,12 +91,15 @@ public class MosqueController implements MosqueApi {
 		// TODO afficher toutes les mosque par nouveauté et ancienneté
 		Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).ascending());
 		if(type.contentEquals("old")){
-			return mosqueRepository.findByOrderByCreationDateAsc(paging).map(MosqueDto::fromEntity); // TODO a implementé dans service Mosque
+			//return mosqueRepository.findByOrderByCreationDateAsc(paging).map(MosqueDto::fromEntity); // TODO a implementé dans service Mosque
+			return mosqueService.findAll(paging);
 		}
 			else if(type.contentEquals("new")){
-			return mosqueRepository.findByOrderByCreationDateDesc(paging).map(MosqueDto::fromEntity);// TODO idem
-		}
-				else {throw new InvalidEntityException("Le type entrée n'est pas en compte (new or old)");}
+			//return mosqueRepository.findByOrderByCreationDateDesc(paging).map(MosqueDto::fromEntity);// TODO idem
+			return mosqueService.findAll(paging);
+			}
+				else {
+					throw new InvalidEntityException("Le type entrée n'est pas en compte (new or old)");}
 		//  Auto-generated method stub
 		//return mosqueService.findAll();
 
@@ -132,9 +149,9 @@ public class MosqueController implements MosqueApi {
 	public Page<MosqueDto> find(String str,String sortColumn, int page, int taille, String sortDirection) {
 		// TODO rechercher les mosque par nom et localisation
 		Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).ascending());
-		Page<MosqueDto> mosqueList=mosqueRepository.findMosqueByNomContaining(str,paging)
-				.map(MosqueDto::fromEntity);
-		return mosqueList;
+		//Page<MosqueDto> mosqueList=mosqueRepository.findMosqueByNomContaining(str,paging).map(MosqueDto::fromEntity);
+		//log.info("test lob strem {}",mosqueList);
+		return mosqueService.findAllByName(str,paging);
 	}
 
 	@Override

@@ -10,10 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 import static com.theh.moduleuser.Constant.Constants.APP_ROOT;
-import static com.theh.moduleuser.Constant.Constants.IMAGE_ENDPOINT;
 
 
 @SecurityRequirement(name = "Bearer Authentication")
@@ -27,10 +26,15 @@ public interface DocumentsApi {
 	
 	//Download Documents
 	@Operation(summary = "Download ",description = "Download Document")
-	@GetMapping(value=APP_ROOT+"documents/downloads/{id}/",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@GetMapping(value=APP_ROOT+"documents/downloads/{idDocument}/",produces=MediaType.APPLICATION_OCTET_STREAM_VALUE)
 
-	ResponseEntity<?> downloadFileFromLocal(@PathVariable (value = "id") Integer id);
-	
+	ResponseEntity<?> downloadFileFromLocal(@PathVariable (value = "idDocument") Integer id) throws FileNotFoundException;
+
+	@Operation(summary = "Download ",description = "Download Document by id predication")
+	@GetMapping(value=APP_ROOT+"documents/downloads/by/{idPredicationt}/",produces=MediaType.APPLICATION_OCTET_STREAM_VALUE)
+
+	ResponseEntity<?> downloadFileFromLocalBypredication(@PathVariable (value = "idPredicationt") Integer id) throws FileNotFoundException;
+
 	// find by id
 
 	@Operation(summary = "Recherche ",description = "id du document")

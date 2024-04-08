@@ -64,12 +64,12 @@ public class DocumentsServiceImpl implements DocumentsService {
 		}
 		String FileName= StringUtils.cleanPath(multipartFile.getOriginalFilename());
 		String extension=FileName.substring(FileName.lastIndexOf(".")+1);
-		String uploadDir=path+"predication/"+predication.getType();
+		String uploadDir=path+"predication/"+predication.getType()+"/";
 		dto.setType_doc(multipartFile.getContentType());
 		dto.setNom(predication.getTheme()+"-"+predication.getDate());
 		dto.setPredication(predication);
 		FileName=predication.getId()+"."+extension;
-		dto.setFichier(FileName);
+		dto.setFichier(uploadDir+FileName);
 		dto=DocumentsDto.fromEntity(documentsRepository.save(DocumentsDto.toEntity(dto)));
 		FileUpload.saveFile(uploadDir,FileName,multipartFile);
 		return dto;
@@ -85,6 +85,21 @@ public class DocumentsServiceImpl implements DocumentsService {
 		Optional<Documents> documents= documentsRepository.findById(id);
 		
 		return Optional.of(DocumentsDto.fromEntity(documents.get())).orElseThrow(() ->
+				new EntityNotFoundException(
+						"Aucune documents avec l'id ="+id+"n'a ete trouver dans la BD",
+						ErrorCodes.MOSQUE_NOT_FOUND)
+		);
+	}
+
+	@Override
+	public DocumentsDto findByPredication(Integer id) {
+		if(id==null) {
+			log.error("l'id de la documents est null");
+			return null;
+		}
+		Documents documents= documentsRepository.findDocumentsByPredicationId(id);
+
+		return Optional.of(DocumentsDto.fromEntity(documents)).orElseThrow(() ->
 				new EntityNotFoundException(
 						"Aucune documents avec l'id ="+id+"n'a ete trouver dans la BD",
 						ErrorCodes.MOSQUE_NOT_FOUND)

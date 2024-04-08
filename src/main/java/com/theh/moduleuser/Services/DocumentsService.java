@@ -16,6 +16,7 @@ public interface DocumentsService {
 //	int countAll();
 //	int countAllByTypeDoc(String typedoc);
 	DocumentsDto findById(Integer id);
+	DocumentsDto findByPredication(Integer id);
 	Page<DocumentsDto> findAll(Pageable pageable);
 	void delete(Integer id);
 }

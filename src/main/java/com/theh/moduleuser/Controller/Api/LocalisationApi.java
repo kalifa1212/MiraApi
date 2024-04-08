@@ -33,12 +33,16 @@ public interface LocalisationApi {
 												  @RequestParam(defaultValue = "2") int taille,
 												  @RequestParam(defaultValue = "ascending") String sortDirection);
 
-	@Operation(summary = "Tout afficher ",description = "tout afficher ")
-	@GetMapping(value=APP_ROOT+"localisation/all")
-	Page<LocalisationDto> findAllLocalisation(@RequestParam(required = false,defaultValue = "pays") String sortColumn,
+	@Operation(summary = "Tout afficher Pages",description = "tout afficher pages ")
+	@GetMapping(value=APP_ROOT+"localisation/all/pages/")
+	Page<LocalisationDto> findAllLocalisationByPages(@RequestParam(required = false,defaultValue = "pays") String sortColumn,
 											  @RequestParam(defaultValue = "0") int page,
 											  @RequestParam(defaultValue = "2") int taille,
 											  @RequestParam(defaultValue = "ascending") String sortDirection);
+
+	@Operation(summary = "Tout afficher ",description = "tout afficher ")
+	@GetMapping(value=APP_ROOT+"localisation/all")
+	List<LocalisationDto> findAllLocalisation();
 
 	@DeleteMapping(value=APP_ROOT+"localisation/supprimer/{id}",produces=MediaType.APPLICATION_JSON_VALUE)
 	void deleteLocalisation(@PathVariable("id")Integer id);

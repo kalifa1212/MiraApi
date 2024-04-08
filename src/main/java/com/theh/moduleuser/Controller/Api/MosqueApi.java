@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.theh.moduleuser.Constant.Constants.IMAGE_ENDPOINT;
 import static com.theh.moduleuser.Constant.Constants.MOSQUE_ENDPOINT;
 
 @CrossOrigin(origins = "*")
@@ -47,6 +48,10 @@ public interface MosqueApi {//kjlkjskfsfskdfksjdfkl
 											@RequestParam(defaultValue = "2") int taille,
 											@RequestParam(defaultValue = "ascending") String sortDirection);
 
+	@Operation(summary = "Display ",description = "Display Mosque Image ")
+	@GetMapping(value = "display/")
+	ResponseEntity getFile(@RequestParam Integer id);
+
     @Operation(summary = "Recherche Mosque du vendredi ",description = "True pour les mosque du Vendredi et false pour les autres ")
 	@GetMapping(value="find/vendredi/{vendredi}",produces=MediaType.APPLICATION_JSON_VALUE)
 	Page<MosqueDto> findByVendredis(@PathVariable("vendredi") Boolean a,
@@ -56,8 +61,8 @@ public interface MosqueApi {//kjlkjskfsfskdfksjdfkl
 									@RequestParam(defaultValue = "ascending") String sortDirection);
 
     @Operation(summary = "Tout afficher ",description = "Paramettre old/new  pour l'ordre d'affichage ")
-	@GetMapping(value="find/all/{type}",produces=MediaType.APPLICATION_JSON_VALUE)
-	Page<MosqueDto> findAll(@PathVariable("type") String type,
+	@GetMapping(value="find/all/",produces=MediaType.APPLICATION_JSON_VALUE)
+	Page<MosqueDto> findAll(@RequestParam(defaultValue = "new") String type,
 							@RequestParam(required = false,defaultValue = "nom") String sortColumn,
 							@RequestParam(defaultValue = "0") int page,
 							@RequestParam(defaultValue = "2") int taille,
@@ -87,7 +92,7 @@ public interface MosqueApi {//kjlkjskfsfskdfksjdfkl
 	@GetMapping(value="count/localisation/{string}",produces=MediaType.APPLICATION_JSON_VALUE)
 	int countAllMosqueByLocalisation(@PathVariable("string") String bool);
 
-    @Operation(summary = "Tout rechercher ",description = "Recherchepar nom")
+    @Operation(summary = "Rechercher par nom ",description = "Recherchepar nom")
 	@GetMapping(value="find/nom/{nom}",produces=MediaType.APPLICATION_JSON_VALUE)
 	Page<MosqueDto> find(@PathVariable("nom") String str,
 						 @RequestParam(required = false,defaultValue = "nom") String sortColumn,

@@ -102,6 +102,14 @@ public class UtilisateurController  implements UtilisateurApi {
             return ResponseEntity.ok(AuthenticationResponse.builder().accessToken(jwt).email(email).build());
         }
     }
+
+    @Override
+    public ResponseEntity<Boolean> VerifyToken(String jwtToken) {
+        boolean isExpired=jwtUtil.isTokenExpired(jwtToken);
+        log.error("test verification {}",isExpired);
+        return ResponseEntity.ok(isExpired);
+    }
+
     @Override
     public ResponseEntity<UtilisateurDto> save(UtilisateurDto dto,Boolean update) {
         // TODO Enregistrement d'un utilisateur ou mis a jour utilisateur

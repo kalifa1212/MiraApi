@@ -37,6 +37,9 @@ public class ApplicationRequestFilter extends OncePerRequestFilter {
         }
         if(StringUtils.hasLength(username) && SecurityContextHolder.getContext().getAuthentication()==null){
             UserDetails userDetails=userDetailsService.loadUserByUsername(username);
+            if(jwtUtil.isTokenExpired(jwt)) {
+                log.info("Token expirer  {}",userDetails);
+            }
             if (jwtUtil.validToken(jwt,userDetails)){
                 //log.info("Validation du Token par  {}",userDetails);
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken=new UsernamePasswordAuthenticationToken(

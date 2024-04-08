@@ -15,6 +15,7 @@ public interface LocalisationService {
 	Page<LocalisationDto> findLocalisationByVille(String str, Pageable page);
 	List<LocalisationDto> findLocalisationByQuartier(String str);
 	
-	Page<LocalisationDto> findAll( Pageable page);
+	Page<LocalisationDto> findAllByPages( Pageable page);
+	List<LocalisationDto> findAll();
 	void delete(Integer id);
 }

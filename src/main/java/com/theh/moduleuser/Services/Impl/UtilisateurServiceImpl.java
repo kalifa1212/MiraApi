@@ -257,6 +257,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
             Optional<Utilisateur> util= utilisateurRepository.findById(dto.getId());
             UtilisateurDto user= UtilisateurDto.fromEntity(util.get());
             dto.setRoles(user.getRoles());
+            //log.error("enregistrement {} ",dto);
             return UtilisateurDto.fromEntity(utilisateurRepository.save(UtilisateurDto.toEntity(dto)));
         }
         List<String> errors = UtilisateurValidation.validate(dto);

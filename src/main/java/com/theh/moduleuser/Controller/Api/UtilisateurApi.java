@@ -29,6 +29,10 @@ public interface UtilisateurApi {
     @PostMapping(value = AUTHENTICATION_ENDPOINT+"authenticate")
     ResponseEntity<AuthenticationResponse> authentification(@RequestBody AuthenticationRequest authenticationRequest);
 
+    @Operation(summary = "Authentication ",description = "Veritfy token true pour valid and false to obselet")
+    @PostMapping(value = AUTHENTICATION_ENDPOINT+"token/verify/{jwtToken}")
+    ResponseEntity<Boolean> VerifyToken(@PathVariable("jwtToken") String jwtToken);
+
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Enregistrer un utilisateur ",description = "permet d'enregistrer un utilisateur")
     @ApiResponses(value={

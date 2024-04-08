@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
@@ -27,8 +28,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -91,11 +91,13 @@ public class DocumentsController implements DocumentsApi {
 		 return ResponseEntity.ok(documentsDto);
 	}
 
+	//ResponseEntity<InputStreamResource>
 	@Override
-	public ResponseEntity<Resource> downloadFileFromLocal(Integer id) {
+	public ResponseEntity<Resource> downloadFileFromLocal(Integer id) throws FileNotFoundException {
 		
 		//String fileBasePath ="Documents/Predication/";
 		DocumentsDto documentsDto =documentsService.findById(id);
+		//log.error("doc log {}",documentsDto);
     	Path path = Paths.get(documentsDto.getFichier());
     	Resource resource = null;
     	try {
@@ -103,10 +105,36 @@ public class DocumentsController implements DocumentsApi {
     	} catch (MalformedURLException e) {
     		e.printStackTrace();
     	}
+		//
+//		File fileVideo= new File("D:\\HAMIDOU\\Projets\\Projet_Personnel\\Api\\ModuleUser\\fileStorage\\predication\\SERMON\\3.mp4");
+//		InputStream inputStream =new FileInputStream(fileVideo);
+//		InputStreamResource inputStreamResource=new InputStreamResource(inputStream);
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setContentType(MediaType.valueOf(MediaType.APPLICATION_OCTET_STREAM_VALUE));
+//		headers.setContentLength(fileVideo.length());
+//		headers.setContentDispositionFormData("attachment",fileVideo.getName());
     	return ResponseEntity.ok()
-    			.contentType(MediaType.parseMediaType("")) //attachment
+    			.contentType(MediaType.APPLICATION_OCTET_STREAM) //attachment
     			.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+				//.headers(headers)
     			.body(resource);
     }
+
+	@Override
+	public ResponseEntity<Resource> downloadFileFromLocalBypredication(Integer id) throws FileNotFoundException {
+
+			DocumentsDto documentsDto =documentsService.findByPredication(id);
+			Path path = Paths.get(documentsDto.getFichier());
+			Resource resource = null;
+			try {
+				resource = (Resource) new UrlResource(path.toUri());
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+			return ResponseEntity.ok()
+					.contentType(MediaType.APPLICATION_OCTET_STREAM) //attachment
+					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+					.body(resource);
+	}
 
 }

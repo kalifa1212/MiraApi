@@ -13,6 +13,7 @@ public interface MosqueService {
 	List<MosqueDto> findByNom(String str);
 	List<MosqueDto> findMosqueByVilleOrQuartier(String str);
 	Page<MosqueDto> findByVendredis(Boolean a, Pageable page);
-	List<MosqueDto> findAll();
+	Page<MosqueDto> findAll(Pageable page);
+	Page<MosqueDto> findAllByName(String str,Pageable page);
 	void delete(Integer id);
 }

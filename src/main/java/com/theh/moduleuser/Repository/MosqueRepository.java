@@ -49,6 +49,6 @@ public interface MosqueRepository extends JpaRepository<Mosque,Integer>{
 	Page<Mosque> findAll(Pageable page);
 	Page<Mosque> findByOrderByCreationDateAsc(Pageable page);
 	Page<Mosque> findByOrderByCreationDateDesc(Pageable page);
-	Page<Mosque> findMosqueByNomContaining(String nom,Pageable page);
+	Page<Mosque> findMosqueByNomContaining(Pageable page,String nom);
 	Page<Mosque> findMosqueByIsVendredi(Boolean Vendredi,Pageable page);
 }

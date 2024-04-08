@@ -85,10 +85,18 @@ public class LocalisationServiceImpl implements LocalisationService {
 	}
 
 	@Override
-	public Page<LocalisationDto> findAll(Pageable page) {
+	public Page<LocalisationDto> findAllByPages(Pageable page) {
 		//  Auto-generated method stub
 		return localisationRepository.findAll(page)
 				.map(LocalisationDto::fromEntity);
+	}
+
+	@Override
+	public List<LocalisationDto> findAll() {
+		//  Auto-generated method stub
+		return localisationRepository.findAll()
+				.stream().map(LocalisationDto::fromEntity)
+				.collect(Collectors.toList());
 	}
 
 	@Override
