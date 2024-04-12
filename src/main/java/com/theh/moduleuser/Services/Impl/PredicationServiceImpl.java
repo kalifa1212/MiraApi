@@ -78,9 +78,6 @@ public class PredicationServiceImpl implements PredicationService {
 			}
 			//TODO implementation a verifier
 			util=imam.get();
-//			if(util.getTypecompte().!="IMAM"){
-//				throw new EntityNotFoundException("l'id ne correspond pas a un imam. id: "+dto.getIdImam()+" ",ErrorCodes.IMAM_NOT_FOUND);
-//			}
 		}
 		//TODO Condition de verification de l'existance de la mosque
 		Optional<Mosque> mosque= Optional.of(new Mosque());
@@ -91,7 +88,7 @@ public class PredicationServiceImpl implements PredicationService {
 			}
 		}
 		//TODO Notification
-		Notification(dto.getIdMosque(),dto.getIdImam(),util,dto,mosque);
+		Notification(util,dto,mosque);
 
 		return PredicationDto.fromEntity(predicationRepository.save(PredicationDto.toEntity(dto)));
 	}
@@ -220,8 +217,8 @@ public class PredicationServiceImpl implements PredicationService {
 		return predicationRepository.findPredicationByTypeContaining(type,page)
 				.map(PredicationDto::fromEntity);
 	}
-	void Notification(int mosq, int imam,Utilisateur util,PredicationDto dto,Optional<Mosque> mosque){
-		if(imam==0){
+	void Notification(Utilisateur util,PredicationDto dto,Optional<Mosque> mosque){
+		if(util==null){
 			//TODO configuration de la notification pour ceux qui suive les info d'une mosque
 			log.info("Envois des notifications");
 			List<Suivre> suivreMosque=suivreRepository.findSuivreByMosque(dto.getIdMosque());
@@ -237,7 +234,7 @@ public class PredicationServiceImpl implements PredicationService {
 				notificationDto.setMessage(NotificationMessage);
 				notificationRepository.save(NotificationDto.toEntity(notificationDto));
 			}
-		} else if (mosq==0) {
+		} else if (mosque.isEmpty()) {
 			//TODO configuration de la notification pour nouveau sermont/preche des imam qu'ils suivent
 			log.info("Envois des notifications");
 			List<Suivre> suivreDto=suivreRepository.findByIdimamsuivie(util.getId());
@@ -247,7 +244,7 @@ public class PredicationServiceImpl implements PredicationService {
 			for(int i=0; i<suivreDto.size(); i++){
 				tst=suivreDto.get(i);
 				NotificationMessage="Une nouvelle predication de votre imam que vous suivé Imam "+util.getNom();
-				log.warn("message {}",NotificationMessage);
+				log.info("message {}",NotificationMessage);
 				ut=utilisateurRepository.findById(tst.getUtilisateur());
 				Utilisateur utilisateur=ut.get();
 				NotificationDto notificationDto=new NotificationDto();

@@ -125,7 +125,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST,"/nouveau/").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                         .requestMatchers("/muslimApi/v1/authentication/authenticate",
-                                "/muslimApi/v1/authentication/token/verify/",
+                                "/muslimApi/v1/authentication/token/verify/{jwtToken}",
                                 "/muslimApi/v1/image/display/{id}/{context}",
                                 "/muslimApi/v1/documents/downloads/{id}/",
                                 "/v2/api-docs/**",

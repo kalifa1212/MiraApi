@@ -29,7 +29,7 @@ public interface UtilisateurApi {
     @PostMapping(value = AUTHENTICATION_ENDPOINT+"authenticate")
     ResponseEntity<AuthenticationResponse> authentification(@RequestBody AuthenticationRequest authenticationRequest);
 
-    @Operation(summary = "Authentication ",description = "Veritfy token true pour valid and false to obselet")
+    @Operation(summary = "Authentication ",description = "Veritfy token : False pour valid and true to obselet")
     @PostMapping(value = AUTHENTICATION_ENDPOINT+"token/verify/{jwtToken}")
     ResponseEntity<Boolean> VerifyToken(@PathVariable("jwtToken") String jwtToken);
 
@@ -45,8 +45,8 @@ public interface UtilisateurApi {
     @PostMapping(value = UTILISATEUR_ENDPOINT+"nouveau/{update}")
     ResponseEntity<UtilisateurDto> save(@RequestBody UtilisateurDto  dto, @PathVariable("update") Boolean update);
 
-    @SecurityRequirement(name = "Bearer Authentication")
-    @PreAuthorize("hasAuthority('READ_PRIVILEGE')")
+    //@SecurityRequirement(name = "Bearer Authentication")
+   // @PreAuthorize("hasAuthority('READ_PRIVILEGE')")
     @GetMapping()
     String test();
 

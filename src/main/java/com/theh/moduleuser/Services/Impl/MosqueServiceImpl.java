@@ -153,22 +153,22 @@ public class MosqueServiceImpl implements MosqueService {
 	}
 	void Notification(MosqueDto dto,Boolean update){
 		dto.getLocalisation().getVille();
+		String type="Nouvelle Mosque";
 		List<Utilisateur> utilisateur= utilisateurRepository.findUtilisateurByLocalisationId(dto.getLocalisation().getId());
 		//log.warn("la taille {} utilisateurs : {}",utilisateur.size(),utilisateur);
 		Boolean isvendredi=dto.getIsVendredi();
 		if(update){
-			String type="Mise a jour d'une mosque";
+			type="Mise a jour d'une mosque";
 		}
-		String type="Nouvelle Mosque";
 		for (int i=0; i<utilisateur.size();i++){
 			Notification notification=new Notification();
-			if(isvendredi){
-				notification.setMessage("Nouvelle mosque dans votre ville du nom "+dto.getNom()+" une Mosque qui fait la priere du vendredi");
+			if(isvendredi && update){
+				notification.setMessage("La mosquée "+dto.getNom()+" du vendredi a modifier certains information.");
 			}else {
-				notification.setMessage("Nouvelle mosque dans votre ville du nom "+dto.getNom()+ ". ");
+				notification.setMessage("La Mosque "+dto.getNom()+ " de votre localitée a du nouveau. ");
 			}
 			notification.setType(type);
-			log.warn("tour {} ,notification : ",i,utilisateur.get(i));
+			// log.warn("tour {} ,notification : ",i,utilisateur.get(i));
 			notification.setUtilisateur(utilisateur.get(i));
 			notificationRepository.save(notification);
 		}

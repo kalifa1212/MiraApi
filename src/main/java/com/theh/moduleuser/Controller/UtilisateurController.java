@@ -106,7 +106,7 @@ public class UtilisateurController  implements UtilisateurApi {
     @Override
     public ResponseEntity<Boolean> VerifyToken(String jwtToken) {
         boolean isExpired=jwtUtil.isTokenExpired(jwtToken);
-        log.error("test verification {}",isExpired);
+        //log.error("test verification {}",isExpired);
         return ResponseEntity.ok(isExpired);
     }
 

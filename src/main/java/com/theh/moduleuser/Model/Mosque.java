@@ -30,6 +30,12 @@ public class Mosque extends AbstractEntity {
 	@Column(name="photo")
 	private String photo;
 
+	@Column(name="description")
+	private String description;
+
+	@Column(name="imam")
+	private String imam;
+
 	@Lob
 	//@Column(name = "imagedata", columnDefinition="BLOB")
 	private byte[] imagedata;

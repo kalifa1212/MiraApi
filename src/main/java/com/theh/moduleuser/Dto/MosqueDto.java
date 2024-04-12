@@ -23,9 +23,13 @@ public class MosqueDto {
 
 	private String code;
 
+	private String imam;
+
 	private int superficie;
 
 	private String photo;
+
+	private String description;
 
 	@JsonFormat(pattern="HH:mm:ss")
 	private Date balte;
@@ -82,6 +86,8 @@ public class MosqueDto {
 				.djouma(mosque.getDjouma())
 				.quartier(mosque.getQuartier())
 				.imagedata(mosque.getImagedata())
+				.imam(mosque.getImam())
+				.description(mosque.getDescription())
 				.build();
 	}
 	
@@ -106,6 +112,8 @@ public class MosqueDto {
 		mosque.setDjouma(mosqueDto.getDjouma());
 		mosque.setQuartier(mosqueDto.getQuartier());
 		mosque.setImagedata(mosqueDto.getImagedata());
+		mosque.setImam(mosqueDto.getImam());
+		mosque.setDescription(mosqueDto.getDescription());
 		return mosque;
 	}
 }

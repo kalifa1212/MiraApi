@@ -2,6 +2,9 @@ package com.theh.moduleuser.Dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.theh.moduleuser.Model.Predication;
+import jakarta.persistence.Column;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,8 +24,17 @@ public class PredicationDto {
 
 	private String fichier;
 
-	// type (sermon ou predication)
+	@JsonFormat(pattern="HH:mm:ss")
+	private Date heure;
+
+	@JsonFormat(pattern="HH:mm:ss")
+	private Date duree;
+
 	private String type;
+
+	private String  nomImam;
+
+	private String  nomMosque;
 
 	private Integer idImam;
 
@@ -40,13 +52,16 @@ public class PredicationDto {
 				.id(predication.getId())
 				.date(predication.getDate())
 				.theme(predication.getTheme())
-				//.duree(predication.getDuree())
+				.duree(predication.getDuree())
 				.fichier(predication.getFichier())
                 .type(predication.getType())
                 .idImam(predication.getIdImam())
                 .idMosque(predication.getIdMosque())
 				.info(predication.getInfo())
 				.type_doc(predication.getType_doc())
+				.nomImam(predication.getNomImam())
+				.nomMosque(predication.getNomMosque())
+				.heure(predication.getHeure())
 				.build();
 	}
 	
@@ -57,7 +72,7 @@ public class PredicationDto {
 		Predication predication = new Predication();
 		predication.setId(predicationDto.getId());
 		predication.setDate(predicationDto.getDate());
-		//predication.setDuree(predicationDto.getDuree());
+		predication.setDuree(predicationDto.getDuree());
 		predication.setFichier(predicationDto.getFichier());
 		predication.setTheme(predicationDto.getTheme());
 		predication.setType(predicationDto.getType());
@@ -65,6 +80,9 @@ public class PredicationDto {
 		predication.setIdImam(predicationDto.getIdImam());
 		predication.setIdMosque(predicationDto.getIdMosque());
 		predication.setInfo(predicationDto.getInfo());
+		predication.setNomImam(predicationDto.getNomImam());
+		predication.setNomMosque(predicationDto.getNomMosque());
+		predication.setHeure(predicationDto.getHeure());
         return predication;
 	}
 }
