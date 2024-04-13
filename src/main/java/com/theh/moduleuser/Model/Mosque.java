@@ -7,6 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="mosque")
@@ -82,5 +84,18 @@ public class Mosque extends AbstractEntity {
 
 	@ManyToOne
 	private Localisation localisation;
-	
+
+	@ManyToMany(mappedBy = "followedMosques")
+	private Set<Utilisateur> followers = new HashSet<>();
+
+	public void addFollower(Utilisateur utilisateur) {
+		followers.add(utilisateur);
+		utilisateur.getFollowedMosques().add(this);
+	}
+
+	public void removeFollower(Utilisateur utilisateur) {
+		followers.remove(utilisateur);
+		utilisateur.getFollowedMosques().remove(this);
+	}
+
 }

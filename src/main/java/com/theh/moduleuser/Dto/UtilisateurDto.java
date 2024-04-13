@@ -3,6 +3,7 @@ package com.theh.moduleuser.Dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.theh.moduleuser.Model.Mosque;
 import com.theh.moduleuser.Model.Role;
 import com.theh.moduleuser.Model.Utilisateur;
 import jakarta.persistence.Column;
@@ -14,6 +15,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Data @Builder
@@ -40,6 +43,8 @@ public class UtilisateurDto {
     private boolean isUsing2FA;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Collection<RoleDto> roles;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Set<Mosque> followedMosques;
 
     public static UtilisateurDto fromEntity(Utilisateur utilisateur) {
         if(utilisateur==null) {
@@ -56,6 +61,7 @@ public class UtilisateurDto {
                 .imageUrl(utilisateur.getImageUrl())
                 .typecompte(utilisateur.getTypecompte())
                 .imagedata(utilisateur.getImagedata())
+                .followedMosques(utilisateur.getFollowedMosques())
                 .roles(
                                 //utilisateur.getRoles().stream().toList()
                         utilisateur.getRoles() != null ?
@@ -64,7 +70,6 @@ public class UtilisateurDto {
                 )
                 .build();
     }
-
     public static Utilisateur toEntity(UtilisateurDto utilisateurDto) {
         if(utilisateurDto==null) {
             return null;
@@ -81,6 +86,7 @@ public class UtilisateurDto {
         utilisateur.setImagedata(utilisateurDto.getImagedata());
         utilisateur.setLocalisation(LocalisationDto.toEntity(utilisateurDto.getLocalisation()));
         utilisateur.setRoles(utilisateurDto.getRoles().stream().map(RoleDto::toEntity).collect(Collectors.toList()));
+        utilisateur.setFollowedMosques(utilisateurDto.getFollowedMosques());
         return utilisateur;
     }
 

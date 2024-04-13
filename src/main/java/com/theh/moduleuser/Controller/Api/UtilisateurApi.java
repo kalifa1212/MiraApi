@@ -33,6 +33,17 @@ public interface UtilisateurApi {
     @PostMapping(value = AUTHENTICATION_ENDPOINT+"token/verify/{jwtToken}")
     ResponseEntity<Boolean> VerifyToken(@PathVariable("jwtToken") String jwtToken);
 
+    //------------
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Suivre une mosque ",description = "")
+    @PostMapping("/{utilisateurId}/mosquée/{mosquéeId}/suivre")
+    boolean suivreMosque(@PathVariable("utilisateurId") int utilisateurId, @PathVariable("mosquéeId") int mosquéeId);
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Ne plus suivre ",description = "")
+    @DeleteMapping(value = UTILISATEUR_ENDPOINT+"suivre/{utilisateurId}/mosquée/{mosquéeId}/ne-plus-suivre")
+     boolean nePlusSuivreMosque(@PathVariable("utilisateurId") int utilisateurId, @PathVariable("mosquéeId") int mosquéeId);
+    //--------
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Enregistrer un utilisateur ",description = "permet d'enregistrer un utilisateur")
     @ApiResponses(value={

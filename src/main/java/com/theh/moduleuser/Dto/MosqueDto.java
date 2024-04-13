@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.theh.moduleuser.Model.Mosque;
+import com.theh.moduleuser.Model.Utilisateur;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
@@ -12,23 +13,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Data @Builder  @AllArgsConstructor @NoArgsConstructor
 public class MosqueDto {
 	
 	private Integer id;
-
 	private String nom;
-
 	private String code;
-
 	private String imam;
-
 	private int superficie;
-
 	private String photo;
-
 	private String description;
 
 	@JsonFormat(pattern="HH:mm:ss")
@@ -64,6 +61,9 @@ public class MosqueDto {
 	private double latitude;
 
 	private LocalisationDto localisation;
+
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	private Set<Utilisateur> followers ;
 	
 	public static MosqueDto fromEntity(Mosque mosque) {
 		if(mosque==null) {
@@ -88,6 +88,7 @@ public class MosqueDto {
 				.imagedata(mosque.getImagedata())
 				.imam(mosque.getImam())
 				.description(mosque.getDescription())
+				.followers(mosque.getFollowers())
 				.build();
 	}
 	
@@ -114,6 +115,7 @@ public class MosqueDto {
 		mosque.setImagedata(mosqueDto.getImagedata());
 		mosque.setImam(mosqueDto.getImam());
 		mosque.setDescription(mosqueDto.getDescription());
+		mosque.setFollowers(mosqueDto.getFollowers());
 		return mosque;
 	}
 }

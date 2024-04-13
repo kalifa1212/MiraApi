@@ -9,6 +9,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Table(name = "utilisateur")
 @Entity @EqualsAndHashCode(callSuper=true)
@@ -66,4 +68,22 @@ public class Utilisateur extends AbstractEntity{
     @ManyToOne
     private Localisation localisation;
 
+    // TODO Impl suivre
+    @ManyToMany
+    @JoinTable(name = "utilisateur_mosquee_suivie",
+            joinColumns = @JoinColumn(name = "utilisateur_id"),
+            inverseJoinColumns = @JoinColumn(name = "mosquée_id"))
+    private Set<Mosque> followedMosques = new HashSet<>();
+
+    // ...
+
+    public void addMosqueSuivie(Mosque mosque,Utilisateur utilisateur) {
+        followedMosques.add(mosque);
+        //mosque.addFollower(utilisateur);
+    }
+
+    public void removeMosqueSuivie(Mosque mosque) {
+        followedMosques.remove(mosque);
+        mosque.removeFollower(this);
+    }
 }

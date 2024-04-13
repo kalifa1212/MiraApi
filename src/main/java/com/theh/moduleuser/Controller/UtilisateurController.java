@@ -3,12 +3,16 @@ package com.theh.moduleuser.Controller;
 import com.theh.moduleuser.Config.Security.JwtUtil;
 import com.theh.moduleuser.Config.Security.MyUserDetailsService;
 import com.theh.moduleuser.Controller.Api.UtilisateurApi;
+import com.theh.moduleuser.Dto.MosqueDto;
 import com.theh.moduleuser.Dto.auth.AuthenticationRequest;
 import com.theh.moduleuser.Dto.auth.AuthenticationResponse;
 import com.theh.moduleuser.Dto.UtilisateurDto;
 import com.theh.moduleuser.Exceptions.InvalidEntityException;
+import com.theh.moduleuser.Model.Mosque;
 import com.theh.moduleuser.Model.Utilisateur;
+import com.theh.moduleuser.Repository.MosqueRepository;
 import com.theh.moduleuser.Repository.UtilisateurRepository;
+import com.theh.moduleuser.Services.MosqueService;
 import com.theh.moduleuser.Services.UtilisateurService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -57,17 +61,23 @@ public class UtilisateurController  implements UtilisateurApi {
     private final SecurityContextHolderStrategy securityContextHolderStrategy =
             SecurityContextHolder.getContextHolderStrategy();
     private UtilisateurRepository utilisateurRepository;
+    private MosqueRepository mosqueRepository;
+    private MosqueService mosqueService;
     private UtilisateurService utilisateurService;
 
     @Autowired
     public UtilisateurController(
             UtilisateurRepository utilisateurRepository,
             UtilisateurService utilisateurService,
-            AuthenticationManager authenticationManager
+            AuthenticationManager authenticationManager,
+            MosqueRepository mosqueRepository,
+            MosqueService mosqueService
     ) {
         this.utilisateurRepository = utilisateurRepository;
         this.utilisateurService=utilisateurService;
         this.authenticationManager=authenticationManager;
+        this.mosqueRepository=mosqueRepository;
+        this.mosqueService=mosqueService;
     }
 
 
@@ -108,6 +118,33 @@ public class UtilisateurController  implements UtilisateurApi {
         boolean isExpired=jwtUtil.isTokenExpired(jwtToken);
         //log.error("test verification {}",isExpired);
         return ResponseEntity.ok(isExpired);
+    }
+
+    @Override
+    public boolean suivreMosque(int utilisateurId, int mosqueId) {
+        boolean update=true;
+            UtilisateurDto utilisateur = utilisateurService.findById(utilisateurId);
+            MosqueDto mosque = mosqueService.findById(mosqueId);
+            Utilisateur util= UtilisateurDto.toEntity(utilisateur);
+            util.addMosqueSuivie(MosqueDto.toEntity(mosque),UtilisateurDto.toEntity(utilisateur));
+            //mosquée.addFollower(utilisateur);
+            utilisateurRepository.save(util);
+            //mosqueRepository.save(mosquée);
+
+        return false;
+    }
+
+    @Override
+    public boolean nePlusSuivreMosque(int utilisateurId, int mosqueId) {
+        Utilisateur utilisateur = utilisateurRepository.findById(utilisateurId).orElseThrow();
+        Mosque mosque = mosqueRepository.findById(mosqueId).orElseThrow();
+
+        utilisateur.removeMosqueSuivie(mosque);
+        mosque.removeFollower(utilisateur);
+
+        utilisateurRepository.save(utilisateur);
+        mosqueRepository.save(mosque);
+        return false;
     }
 
     @Override
