@@ -5,9 +5,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.theh.moduleuser.Model.Mosque;
 import com.theh.moduleuser.Model.Role;
+import com.theh.moduleuser.Model.Suivre;
 import com.theh.moduleuser.Model.Utilisateur;
 import jakarta.persistence.Column;
 import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -43,8 +45,10 @@ public class UtilisateurDto {
     private boolean isUsing2FA;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Collection<RoleDto> roles;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Set<Mosque> followedMosques;
+
+    private Set<SuivreDto> followedMosques;
+//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+//    private Set<Mosque> followedMosques  = new HashSet<>();
 
     public static UtilisateurDto fromEntity(Utilisateur utilisateur) {
         if(utilisateur==null) {
@@ -61,7 +65,7 @@ public class UtilisateurDto {
                 .imageUrl(utilisateur.getImageUrl())
                 .typecompte(utilisateur.getTypecompte())
                 .imagedata(utilisateur.getImagedata())
-                .followedMosques(utilisateur.getFollowedMosques())
+                .followedMosques(utilisateur.getFollowedMosques().stream().map(SuivreDto::fromEntity).collect(Collectors.toSet()))
                 .roles(
                                 //utilisateur.getRoles().stream().toList()
                         utilisateur.getRoles() != null ?
@@ -86,7 +90,8 @@ public class UtilisateurDto {
         utilisateur.setImagedata(utilisateurDto.getImagedata());
         utilisateur.setLocalisation(LocalisationDto.toEntity(utilisateurDto.getLocalisation()));
         utilisateur.setRoles(utilisateurDto.getRoles().stream().map(RoleDto::toEntity).collect(Collectors.toList()));
-        utilisateur.setFollowedMosques(utilisateurDto.getFollowedMosques());
+        utilisateur.setFollowedMosques(utilisateurDto.getFollowedMosques().stream().map(SuivreDto::toEntity).collect(Collectors.toSet()));
+        //utilisateur.setFollowers(mosqueDto.getFollowers().stream().map(SuivreDto::toEntity).collect(Collectors.toSet()));
         return utilisateur;
     }
 

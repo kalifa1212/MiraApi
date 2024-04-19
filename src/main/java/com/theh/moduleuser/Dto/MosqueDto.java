@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.theh.moduleuser.Model.Mosque;
+import com.theh.moduleuser.Model.Suivre;
 import com.theh.moduleuser.Model.Utilisateur;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
@@ -15,6 +17,7 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Data @Builder  @AllArgsConstructor @NoArgsConstructor
@@ -62,13 +65,23 @@ public class MosqueDto {
 
 	private LocalisationDto localisation;
 
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
-	private Set<Utilisateur> followers ;
-	
+	private Set<SuivreDto> followers;
+
+//	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+//	private Set<Utilisateur> followers = new HashSet<>() ;
+//
+Set test(Set<Suivre> suivre){
+	Set<SuivreDto> suivreDto = null;
+//	Set<Suivre> s;
+//	s.add(suivre.)
+//	suivreDto.add(suivre);
+	return suivre;
+};
 	public static MosqueDto fromEntity(Mosque mosque) {
 		if(mosque==null) {
 			return null;
 		}
+
 		return MosqueDto.builder()
 				.id(mosque.getId())
 				.nom(mosque.getNom())
@@ -88,7 +101,7 @@ public class MosqueDto {
 				.imagedata(mosque.getImagedata())
 				.imam(mosque.getImam())
 				.description(mosque.getDescription())
-				.followers(mosque.getFollowers())
+				.followers(mosque.getFollowers().stream().map(SuivreDto::fromEntity).collect(Collectors.toSet()))
 				.build();
 	}
 	
@@ -115,7 +128,7 @@ public class MosqueDto {
 		mosque.setImagedata(mosqueDto.getImagedata());
 		mosque.setImam(mosqueDto.getImam());
 		mosque.setDescription(mosqueDto.getDescription());
-		mosque.setFollowers(mosqueDto.getFollowers());
+		mosque.setFollowers(mosqueDto.getFollowers().stream().map(SuivreDto::toEntity).collect(Collectors.toSet()));
 		return mosque;
 	}
 }

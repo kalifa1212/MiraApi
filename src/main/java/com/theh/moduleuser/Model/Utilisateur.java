@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Collection;
@@ -69,21 +70,25 @@ public class Utilisateur extends AbstractEntity{
     private Localisation localisation;
 
     // TODO Impl suivre
-    @ManyToMany
-    @JoinTable(name = "utilisateur_mosquee_suivie",
-            joinColumns = @JoinColumn(name = "utilisateur_id"),
-            inverseJoinColumns = @JoinColumn(name = "mosquée_id"))
-    private Set<Mosque> followedMosques = new HashSet<>();
+//    @ManyToMany
+//    @JoinTable(name = "utilisateur_mosquee_suivie",
+//            joinColumns = @JoinColumn(name = "utilisateur_id"),
+//            inverseJoinColumns = @JoinColumn(name = "mosquée_id"))
+//    private Set<Mosque> followedMosques = new HashSet<>();
 
+    // test
+    @OneToMany(mappedBy = "user")
+    private Set<Suivre> followedMosques;
     // ...
 
-    public void addMosqueSuivie(Mosque mosque,Utilisateur utilisateur) {
-        followedMosques.add(mosque);
-        //mosque.addFollower(utilisateur);
-    }
-
-    public void removeMosqueSuivie(Mosque mosque) {
-        followedMosques.remove(mosque);
-        mosque.removeFollower(this);
-    }
+//    public void addMosqueSuivie(Mosque mosque) {
+//
+//        followedMosques.add(mosque);
+//        //mosque.addFollower(utilisateur);
+//    }
+//
+//    public void removeMosqueSuivie(Mosque mosque) {
+//        followedMosques.remove(mosque);
+//        mosque.removeFollower(this);
+//    }
 }

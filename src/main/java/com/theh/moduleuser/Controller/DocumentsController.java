@@ -105,14 +105,7 @@ public class DocumentsController implements DocumentsApi {
     	} catch (MalformedURLException e) {
     		e.printStackTrace();
     	}
-		//
-//		File fileVideo= new File("D:\\HAMIDOU\\Projets\\Projet_Personnel\\Api\\ModuleUser\\fileStorage\\predication\\SERMON\\3.mp4");
-//		InputStream inputStream =new FileInputStream(fileVideo);
-//		InputStreamResource inputStreamResource=new InputStreamResource(inputStream);
-//		HttpHeaders headers = new HttpHeaders();
-//		headers.setContentType(MediaType.valueOf(MediaType.APPLICATION_OCTET_STREAM_VALUE));
-//		headers.setContentLength(fileVideo.length());
-//		headers.setContentDispositionFormData("attachment",fileVideo.getName());
+
     	return ResponseEntity.ok()
     			.contentType(MediaType.APPLICATION_OCTET_STREAM) //attachment
     			.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")

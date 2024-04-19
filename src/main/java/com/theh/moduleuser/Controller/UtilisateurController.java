@@ -4,13 +4,16 @@ import com.theh.moduleuser.Config.Security.JwtUtil;
 import com.theh.moduleuser.Config.Security.MyUserDetailsService;
 import com.theh.moduleuser.Controller.Api.UtilisateurApi;
 import com.theh.moduleuser.Dto.MosqueDto;
+import com.theh.moduleuser.Dto.SuivreDto;
 import com.theh.moduleuser.Dto.auth.AuthenticationRequest;
 import com.theh.moduleuser.Dto.auth.AuthenticationResponse;
 import com.theh.moduleuser.Dto.UtilisateurDto;
 import com.theh.moduleuser.Exceptions.InvalidEntityException;
 import com.theh.moduleuser.Model.Mosque;
+import com.theh.moduleuser.Model.Suivre;
 import com.theh.moduleuser.Model.Utilisateur;
 import com.theh.moduleuser.Repository.MosqueRepository;
+import com.theh.moduleuser.Repository.SuivreRepository;
 import com.theh.moduleuser.Repository.UtilisateurRepository;
 import com.theh.moduleuser.Services.MosqueService;
 import com.theh.moduleuser.Services.UtilisateurService;
@@ -42,6 +45,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @CrossOrigin
@@ -64,6 +68,7 @@ public class UtilisateurController  implements UtilisateurApi {
     private MosqueRepository mosqueRepository;
     private MosqueService mosqueService;
     private UtilisateurService utilisateurService;
+    private SuivreRepository suivreRepository;
 
     @Autowired
     public UtilisateurController(
@@ -71,13 +76,15 @@ public class UtilisateurController  implements UtilisateurApi {
             UtilisateurService utilisateurService,
             AuthenticationManager authenticationManager,
             MosqueRepository mosqueRepository,
-            MosqueService mosqueService
+            MosqueService mosqueService,
+            SuivreRepository suivreRepository
     ) {
         this.utilisateurRepository = utilisateurRepository;
         this.utilisateurService=utilisateurService;
         this.authenticationManager=authenticationManager;
         this.mosqueRepository=mosqueRepository;
         this.mosqueService=mosqueService;
+        this.suivreRepository=suivreRepository;
     }
 
 
@@ -125,11 +132,23 @@ public class UtilisateurController  implements UtilisateurApi {
         boolean update=true;
             UtilisateurDto utilisateur = utilisateurService.findById(utilisateurId);
             MosqueDto mosque = mosqueService.findById(mosqueId);
-            Utilisateur util= UtilisateurDto.toEntity(utilisateur);
-            util.addMosqueSuivie(MosqueDto.toEntity(mosque),UtilisateurDto.toEntity(utilisateur));
-            //mosquée.addFollower(utilisateur);
-            utilisateurRepository.save(util);
-            //mosqueRepository.save(mosquée);
+            SuivreDto suivre = new SuivreDto();
+            suivre.setMosq(mosque);
+            suivre.setUser(utilisateur);
+            mosque.setFollowers((Set<SuivreDto>) suivre);
+            utilisateur.setFollowedMosques((Set<SuivreDto>) suivre);
+            Suivre S =suivreRepository.save(SuivreDto.toEntity(suivre));
+//            Utilisateur util= UtilisateurDto.toEntity(utilisateur);
+//            Mosque mosq=MosqueDto.toEntity(mosque);
+
+            //util.setFollowedMosques(mosq);
+           // util.addMosqueSuivie(MosqueDto.toEntity(mosque));
+           //log.error("utilisateur follow {}",util);
+           // mosq.addFollower(UtilisateurDto.toEntity(utilisateur));
+           // log.error("mosque follow {}",util);
+
+            utilisateurRepository.save(UtilisateurDto.toEntity(utilisateur));
+            //mosqueRepository.save(mosq);
 
         return false;
     }
@@ -139,7 +158,7 @@ public class UtilisateurController  implements UtilisateurApi {
         Utilisateur utilisateur = utilisateurRepository.findById(utilisateurId).orElseThrow();
         Mosque mosque = mosqueRepository.findById(mosqueId).orElseThrow();
 
-        utilisateur.removeMosqueSuivie(mosque);
+        //utilisateur.removeMosqueSuivie(mosque);
         mosque.removeFollower(utilisateur);
 
         utilisateurRepository.save(utilisateur);
