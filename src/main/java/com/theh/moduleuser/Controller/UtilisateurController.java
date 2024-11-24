@@ -42,10 +42,7 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @CrossOrigin
@@ -91,12 +88,7 @@ public class UtilisateurController  implements UtilisateurApi {
     public ResponseEntity<AuthenticationResponse> authentification(@RequestBody AuthenticationRequest authenticationRequestrequest) {
 
         final UserDetails userDetails= userDetailsService.loadUserByUsername(authenticationRequestrequest.getLogin());
-//        Authentication authentication = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(
-//                        request.getLogin(),
-//                        request.getPassword()
-//                )
-//        );
+
         Authentication authenticationRequest =
                 UsernamePasswordAuthenticationToken.unauthenticated(
                         authenticationRequestrequest.getLogin(), authenticationRequestrequest.getPassword());
@@ -127,39 +119,30 @@ public class UtilisateurController  implements UtilisateurApi {
         return ResponseEntity.ok(isExpired);
     }
 
+    //TODO fonctionnalité a revoir
     @Override
     public boolean suivreMosque(int utilisateurId, int mosqueId) {
-        boolean update=true;
-            UtilisateurDto utilisateur = utilisateurService.findById(utilisateurId);
-            MosqueDto mosque = mosqueService.findById(mosqueId);
-            SuivreDto suivre = new SuivreDto();
+        //boolean update=true;
+            Utilisateur utilisateur = utilisateurRepository.findById(utilisateurId).get();
+            Mosque mosque = mosqueRepository.findById(mosqueId).get();
+            Suivre suivre=new Suivre();
             suivre.setMosq(mosque);
             suivre.setUser(utilisateur);
-            mosque.setFollowers((Set<SuivreDto>) suivre);
-            utilisateur.setFollowedMosques((Set<SuivreDto>) suivre);
-            Suivre S =suivreRepository.save(SuivreDto.toEntity(suivre));
-//            Utilisateur util= UtilisateurDto.toEntity(utilisateur);
-//            Mosque mosq=MosqueDto.toEntity(mosque);
-
-            //util.setFollowedMosques(mosq);
-           // util.addMosqueSuivie(MosqueDto.toEntity(mosque));
-           //log.error("utilisateur follow {}",util);
-           // mosq.addFollower(UtilisateurDto.toEntity(utilisateur));
-           // log.error("mosque follow {}",util);
-
-            utilisateurRepository.save(UtilisateurDto.toEntity(utilisateur));
-            //mosqueRepository.save(mosq);
-
-        return false;
+            utilisateur.getFollowedMosques().add(suivre);
+            mosque.getFollowers().add(suivre);
+            utilisateurRepository.save(utilisateur);
+            mosqueRepository.save(mosque);
+        return true;
     }
 
+    //TODO fonctionnalité a revoir
     @Override
     public boolean nePlusSuivreMosque(int utilisateurId, int mosqueId) {
         Utilisateur utilisateur = utilisateurRepository.findById(utilisateurId).orElseThrow();
         Mosque mosque = mosqueRepository.findById(mosqueId).orElseThrow();
 
         //utilisateur.removeMosqueSuivie(mosque);
-        mosque.removeFollower(utilisateur);
+       // mosque.removeFollower(utilisateur);
 
         utilisateurRepository.save(utilisateur);
         mosqueRepository.save(mosque);

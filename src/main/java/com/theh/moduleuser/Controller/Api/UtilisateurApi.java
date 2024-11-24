@@ -33,12 +33,13 @@ public interface UtilisateurApi {
     @PostMapping(value = AUTHENTICATION_ENDPOINT+"token/verify/{jwtToken}")
     ResponseEntity<Boolean> VerifyToken(@PathVariable("jwtToken") String jwtToken);
 
-    //------------
+    //TODO fonctionnalité a revoir
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Suivre une mosque ",description = "")
     @PostMapping("/{utilisateurId}/mosquée/{mosquéeId}/suivre")
     boolean suivreMosque(@PathVariable("utilisateurId") int utilisateurId, @PathVariable("mosquéeId") int mosquéeId);
 
+    //TODO fonctionnalité a revoir
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Ne plus suivre ",description = "")
     @DeleteMapping(value = UTILISATEUR_ENDPOINT+"suivre/{utilisateurId}/mosquée/{mosquéeId}/ne-plus-suivre")

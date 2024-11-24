@@ -92,13 +92,13 @@ public class Mosque extends AbstractEntity {
 	private Set<Suivre> followers;
 
 //	public void addFollower(Utilisateur utilisateur) {
-//		followers.add(utilisateur);
+//		this.followers.add(utilisateur);
 //		//utilisateur.getFollowedMosques().add(this);
 //	}
 
-	public void removeFollower(Utilisateur utilisateur) {
-		followers.remove(utilisateur);
-		utilisateur.getFollowedMosques().remove(this);
-	}
+//	public void removeFollower(Utilisateur utilisateur) {
+//		followers.remove(utilisateur);
+//		//utilisateur.getFollowedMosques().remove(this);
+//	}
 
 }

@@ -125,6 +125,24 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST,"/nouveau/").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                         .requestMatchers("/muslimApi/v1/authentication/authenticate",
+                                //--
+                                "/muslimApi/v1/mosque/find/{idmosque}",
+                                "/muslimApi/v1/mosque/find/localisation/{villeOrPays}",
+                                "/muslimApi/v1/mosque/find/vendredi/{vendredi}",
+                                "/muslimApi/v1/mosque/find/all/",
+                                "/muslimApi/v1/mosque/find/",
+                                "/muslimApi/v1/mosque/find/nom/{nom}",
+                                "/muslimApi/v1/localisation/all",
+                                "/muslimApi/v1/localisation/all/pages/",
+                                "/muslimApi/v1/localisation/{idmosque}",
+                                "/muslimApi/v1/predication/{idpredication}",
+                                "/muslimApi/v1/predication/find/{nom}",
+                                "/muslimApi/v1/predication/find/type/{type}",
+                                "/muslimApi/v1/predication/find/theme/{theme}",
+                                "/muslimApi/v1/predication/all",
+                                "/muslimApi/v1/mosque/",
+                                "/muslimApi/v1/mosque/",
+                                //--
                                 "/muslimApi/v1/authentication/token/verify/{jwtToken}",
                                 "/muslimApi/v1/image/display/{id}/{context}",
                                 "/muslimApi/v1/documents/downloads/{id}/",

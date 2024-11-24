@@ -83,12 +83,12 @@ public class Utilisateur extends AbstractEntity{
 
 //    public void addMosqueSuivie(Mosque mosque) {
 //
-//        followedMosques.add(mosque);
+//        this.followedMosques.add(mosque);
 //        //mosque.addFollower(utilisateur);
 //    }
 //
 //    public void removeMosqueSuivie(Mosque mosque) {
-//        followedMosques.remove(mosque);
-//        mosque.removeFollower(this);
+//        this.followedMosques.remove(mosque);
+//        //mosque.removeFollower(this);
 //    }
 }

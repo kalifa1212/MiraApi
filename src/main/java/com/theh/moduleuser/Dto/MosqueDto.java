@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.theh.moduleuser.Model.Mosque;
 import com.theh.moduleuser.Model.Suivre;
 import com.theh.moduleuser.Model.Utilisateur;
+import com.theh.moduleuser.Services.MosqueService;
+import com.theh.moduleuser.Services.UtilisateurService;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -13,9 +15,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -65,18 +69,10 @@ public class MosqueDto {
 
 	private LocalisationDto localisation;
 
-	private Set<SuivreDto> followers;
+	//private List<SuivreDto> followers;
 
 //	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 //	private Set<Utilisateur> followers = new HashSet<>() ;
-//
-Set test(Set<Suivre> suivre){
-	Set<SuivreDto> suivreDto = null;
-//	Set<Suivre> s;
-//	s.add(suivre.)
-//	suivreDto.add(suivre);
-	return suivre;
-};
 	public static MosqueDto fromEntity(Mosque mosque) {
 		if(mosque==null) {
 			return null;
@@ -101,7 +97,8 @@ Set test(Set<Suivre> suivre){
 				.imagedata(mosque.getImagedata())
 				.imam(mosque.getImam())
 				.description(mosque.getDescription())
-				.followers(mosque.getFollowers().stream().map(SuivreDto::fromEntity).collect(Collectors.toSet()))
+				//.followers(mosque.getFollowers().stream().map(SuivreDto::fromEntity).collect(Collectors.toList()))
+				//.followers(mosque.getFollowers().stream().map(Utilisateur::getId).collect(Collectors.toSet()))
 				.build();
 	}
 	
@@ -128,7 +125,8 @@ Set test(Set<Suivre> suivre){
 		mosque.setImagedata(mosqueDto.getImagedata());
 		mosque.setImam(mosqueDto.getImam());
 		mosque.setDescription(mosqueDto.getDescription());
-		mosque.setFollowers(mosqueDto.getFollowers().stream().map(SuivreDto::toEntity).collect(Collectors.toSet()));
+		//mosque.setFollowers(retourneUtilisateur(mosqueDto.getFollowers()));
+		//mosque.setFollowers(mosqueDto.getFollowers().stream().map(SuivreDto::toEntity).collect(Collectors.toSet()));
 		return mosque;
 	}
 }

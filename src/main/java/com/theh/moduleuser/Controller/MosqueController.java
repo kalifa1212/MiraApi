@@ -9,6 +9,8 @@ import com.theh.moduleuser.Repository.MosqueRepository;
 import com.theh.moduleuser.Services.MosqueService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,16 +70,31 @@ public class MosqueController implements MosqueApi {
 		return mosqueList;
 	}
 
+
 	@Override
 	public ResponseEntity getFile(Integer id) {
 		MosqueDto mosque= mosqueService.findById(id);
 		//log.error("image data {} ",mosque.getImagedata());
-		if(mosque.getImagedata()==null){
+		if(mosque==null){
 			throw new InvalidEntityException("Image non disponible", ErrorCodes.FILE_NOT_FOUND);
 		}
+		Resource resourceM=uploadingFile(mosque);
+//		return ResponseEntity.ok()
+//				.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + mosque.getPhoto() + "\"")
+//				.body(mosque.getImagedata());
 		return ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + mosque.getPhoto() + "\"")
-				.body(mosque.getImagedata());
+				.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\" profile \"")
+				.body(resourceM);
+	}
+	public Resource uploadingFile(MosqueDto mosqueDto){
+		Path path = Paths.get(mosqueDto.getPhoto());
+		Resource resource = null;
+		try {
+			resource = (Resource) new UrlResource(path.toUri());
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return  resource;
 	}
 
 	@Override
