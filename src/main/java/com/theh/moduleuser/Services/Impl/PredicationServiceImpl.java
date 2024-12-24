@@ -60,17 +60,18 @@ public class PredicationServiceImpl implements PredicationService {
 		if(!errors.isEmpty()) {
 			throw new InvalidEntityException("Predication non valide ", ErrorCodes.PREDICATION_NOT_VALID,errors);
 		}
-		dto.setType(dto.getType().toUpperCase());
-		if(!dto.getType().equals("SERMON")){
-			if(!dto.getType().equals("PRECHE")){
-				if(!dto.getType().equals("CONFERENCE")){
-			throw new EntityNotFoundException("champ Type non valide SERMON/CONFERENCE.",ErrorCodes.PREDICATION_NOT_VALID);
-				}
-			}
-		}
+//		dto.setType(dto.getType().toUpperCase());
+//		if(!dto.getType().equals("SERMON")){
+//			if(!dto.getType().equals("PRECHE")){
+//				if(!dto.getType().equals("CONFERENCE")){
+//			throw new EntityNotFoundException("champ Type non valide SERMON/CONFERENCE.",ErrorCodes.PREDICATION_NOT_VALID);
+//				}
+//			}
+//		}
 		//TODO Condition de verification de l'existance de l'imam
 		Utilisateur util=new Utilisateur();
 		Optional<Utilisateur> imam= Optional.of(new Utilisateur());
+		Optional<Mosque> mosque= Optional.of(new Mosque());
 		if(dto.getIdImam()!=0){
 			 imam=utilisateurRepository.findById(dto.getIdImam());
 			if(imam.isEmpty()) {
@@ -79,9 +80,7 @@ public class PredicationServiceImpl implements PredicationService {
 			//TODO implementation a verifier
 			util=imam.get();
 		}
-		//TODO Condition de verification de l'existance de la mosque
-		Optional<Mosque> mosque= Optional.of(new Mosque());
-		if(dto.getIdMosque()!=0){
+		else if(dto.getIdMosque()!=0){ //TODO Condition de verification de l'existance de la mosque
 			mosque=mosqueRepository.findById(dto.getIdMosque());
 			if(mosque.isEmpty()) {
 				throw new EntityNotFoundException("Aucune mosque avec l'id "+dto.getIdMosque()+" n'a ete trouver",ErrorCodes.MOSQUE_NOT_EXIST);
@@ -137,30 +136,6 @@ public class PredicationServiceImpl implements PredicationService {
 	public Page<Predication> findByImam(String nom,Pageable pageable) {
 		// TODO find by imam
 		// TODO list des imam avec le nom fourni
-//		List<Utilisateur> imam = utilisateurRepository.findByNom(nom);
-//		Utilisateur imamR;
-//		List<Predication> ListPredication =predicationRepository.findById(22);
-//
-//		int a=imam.size();	    	// taille de la list des imam
-//		int test=0;				   // pour testé la list des predication
-//		for(int i=0; i<a;i++) {
-//			// TODO recherche des predication par imam
-//			imamR=imam.get(i);
-//			//log.error("Recherche d'une predication par nom Imam Fonction Recherche Par Imam Trouver N°1  {}",imamR.getNom());
-//			List<Predication> pred =predicationRepository.findPredicationByIdImam(imamR.getId());
-//			if(!pred.isEmpty()) {
-//				//TODO concatenation des liste trouvé
-//				Predication predication = pred.get(0);
-//				addToList(ListPredication,predication,test);
-//				test=test+1;
-//			}
-//
-//		}
-//		if(imam.isEmpty()) {
-//			throw new EntityNotFoundException("Aucune predication avec pour nom de l'imam <<"+nom+">> n'a ete trouver");
-//		}
-//
-//		return ListPredication;
 		return null;
 	}
 
@@ -175,34 +150,6 @@ public class PredicationServiceImpl implements PredicationService {
 		}
 		throw new EntityNotFoundException("Aucune predication avec pour predicateur<<"+str+">> avec role admin  n'a ete trouver");
 
-
-//		 if(!StringUtils.hasLength(str)) {
-//			throw new InvalidEntityException("Le nom entrée est NULL");
-//		}
-//		List<Predication> listParThem=predicationRepository.findPredicationByThemeContaining(str);
-//		List<Predication> listParType=predicationRepository.findPredicationByTypeContaining(str);
-//		//List<Utilisateur> listParImam=utilisateurRepository.findByNom(str);
-//		List<Utilisateur> listParImam=utilisateurRepository.findUtilisateurByNomAndTypecompte(str,"IMAM");
-//		List<Predication> Concatenation = Stream.concat(listParThem.stream(),listParType.stream())
-//				.collect(Collectors.toList());
-//
-//		List<Predication> test=new ArrayList<>();
-//
-//		int a=listParImam.size();
-//		//log.error(" taille imam{}",a);
-//		if (a!=0){
-//			for (int i=0; i<a; i++){
-//				//TODO Verification de l'existance des preche pour chaque imam trouver par le nom donné
-//				//log.error(" taille imam{} iteration {}",a,i);
-//				List<Predication> optionalPredication=predicationRepository.findPredicationByIdImam(listParImam.get(i).getId());
-//				if (!optionalPredication.isEmpty()){
-//					Concatenation.addAll(optionalPredication);
-//				}
-//			}
-//		}
-//
-//		return Concatenation.stream().map(PredicationDto::fromEntity)
-//				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -217,59 +164,39 @@ public class PredicationServiceImpl implements PredicationService {
 		return predicationRepository.findPredicationByTypeContaining(type,page)
 				.map(PredicationDto::fromEntity);
 	}
-	void Notification(Utilisateur util,PredicationDto dto,Optional<Mosque> mosque){
-		if(util==null){
+	void Notification(Utilisateur imam,PredicationDto dto,Optional<Mosque> mosque){
+		if(imam==null){
 			//TODO configuration de la notification pour ceux qui suive les info d'une mosque
 			log.info("Envois des notifications");
 			List<Suivre> suivreMosque=suivreRepository.findSuivreByMosque(dto.getIdMosque());
-			Suivre test=new Suivre();
-			Optional<Utilisateur> u= Optional.of(new Utilisateur());
+			Suivre test;
+			Optional<Utilisateur> u;
 			for(int i=0; i<suivreMosque.size(); i++){
 				test=suivreMosque.get(i);
-				NotificationMessage="Une nouvelle predication Dans la mosque "+mosque.get().getNom()+" que vous suivé ";
+				NotificationMessage="Une nouvelle predication Dans votre mosque "+mosque.get().getNom()+" .";
 				u=utilisateurRepository.findById(test.getUtilisateur());
-				Utilisateur utilisateur=u.get();
 				NotificationDto notificationDto=new NotificationDto();
-				notificationDto.setUtilisateurDto(UtilisateurDto.fromEntity(utilisateur));
+				notificationDto.setUtilisateurDto(UtilisateurDto.fromEntity(u.get()));
 				notificationDto.setMessage(NotificationMessage);
 				notificationRepository.save(NotificationDto.toEntity(notificationDto));
 			}
 		} else if (mosque.isEmpty()) {
 			//TODO configuration de la notification pour nouveau sermont/preche des imam qu'ils suivent
 			log.info("Envois des notifications");
-			List<Suivre> suivreDto=suivreRepository.findByIdimamsuivie(util.getId());
+			List<Suivre> suivreDto=suivreRepository.findByIdimamsuivie(imam.getId());
 
 			Suivre tst=new Suivre();
 			Optional<Utilisateur> ut= Optional.of(new Utilisateur());
 			for(int i=0; i<suivreDto.size(); i++){
 				tst=suivreDto.get(i);
-				NotificationMessage="Une nouvelle predication de votre imam que vous suivé Imam "+util.getNom();
-				log.info("message {}",NotificationMessage);
+				NotificationMessage="Une nouvelle predication de votre imam que vous suivé Imam "+imam.getNom();
+				//log.info("message {}",NotificationMessage);
 				ut=utilisateurRepository.findById(tst.getUtilisateur());
-				Utilisateur utilisateur=ut.get();
 				NotificationDto notificationDto=new NotificationDto();
-				notificationDto.setUtilisateurDto(UtilisateurDto.fromEntity(utilisateur));
+				notificationDto.setUtilisateurDto(UtilisateurDto.fromEntity(ut.get()));
 				notificationDto.setMessage(NotificationMessage);
 				notificationRepository.save(NotificationDto.toEntity(notificationDto));
 			}
-		}else {
-			//TODO Notification pour toute type
-
-			log.info("Notification");
-			List<Suivre> suivre=suivreRepository.findSuivreByMosqueOrUtilisateur(dto.getIdMosque(),util.getId());
-			Suivre test=new Suivre();
-			Optional<Utilisateur> user= Optional.of(new Utilisateur());
-			for(int i=0; i<suivre.size(); i++){
-				test=suivre.get(i);
-				NotificationMessage="Une nouvelle predication disponible  ";
-				user=utilisateurRepository.findById(test.getUtilisateur());
-				Utilisateur utilisateur=user.get();
-				NotificationDto notificationDto=new NotificationDto();
-				notificationDto.setUtilisateurDto(UtilisateurDto.fromEntity(utilisateur));
-				notificationDto.setMessage(NotificationMessage);
-				notificationRepository.save(NotificationDto.toEntity(notificationDto));
-			}
-
 		}
 }
 }

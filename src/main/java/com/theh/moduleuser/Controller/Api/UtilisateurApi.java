@@ -32,18 +32,6 @@ public interface UtilisateurApi {
     @Operation(summary = "Authentication ",description = "Veritfy token : False pour valid and true to obselet")
     @PostMapping(value = AUTHENTICATION_ENDPOINT+"token/verify/{jwtToken}")
     ResponseEntity<Boolean> VerifyToken(@PathVariable("jwtToken") String jwtToken);
-
-    //TODO fonctionnalité a revoir
-//    @SecurityRequirement(name = "Bearer Authentication")
-//    @Operation(summary = "Suivre une mosque ",description = "")
-//    @PostMapping("/{utilisateurId}/mosquée/{mosquéeId}/suivre")
-//    boolean suivreMosque(@PathVariable("utilisateurId") int utilisateurId, @PathVariable("mosquéeId") int mosquéeId);
-//
-//    //TODO fonctionnalité a revoir
-//    @SecurityRequirement(name = "Bearer Authentication")
-//    @Operation(summary = "Ne plus suivre ",description = "")
-//    @DeleteMapping(value = UTILISATEUR_ENDPOINT+"suivre/{utilisateurId}/mosquée/{mosquéeId}/ne-plus-suivre")
-//     boolean nePlusSuivreMosque(@PathVariable("utilisateurId") int utilisateurId, @PathVariable("mosquéeId") int mosquéeId);
     //--------
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Enregistrer un utilisateur ",description = "permet d'enregistrer un utilisateur")

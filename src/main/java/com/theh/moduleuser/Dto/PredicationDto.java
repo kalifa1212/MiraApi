@@ -30,7 +30,7 @@ public class PredicationDto {
 	@JsonFormat(pattern="HH:mm:ss")
 	private Date duree;
 
-	private String type;
+	private TypePredication type;
 
 	private String  nomImam;
 

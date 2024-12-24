@@ -1,5 +1,6 @@
 package com.theh.moduleuser.Model;
 
+import com.theh.moduleuser.Dto.TypePredication;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,7 +37,7 @@ public class Predication extends AbstractEntity {
 	private String fichier;
 	
 	@Column(name="type")// sermon, preche ou conference.
-	private String type;
+	private TypePredication type;
 	
 	@Column(name="idimam")
 	private Integer idImam;
