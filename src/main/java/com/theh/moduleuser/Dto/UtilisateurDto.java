@@ -70,7 +70,7 @@ public class UtilisateurDto {
                 .imageUrl(utilisateur.getImageUrl())
                 .typecompte(utilisateur.getTypecompte())
                 .imagedata(utilisateur.getImagedata())
-                .followedMosques(utilisateur.getFollowedMosques().stream().map(SuivreDto::fromEntity).collect(Collectors.toList()))
+//                .followedMosques(utilisateur.getFollowedMosques().stream().map(SuivreDto::fromEntity).collect(Collectors.toList()))
                 //.followedMosques(utilisateur.getFollowedMosques().stream().map(Mosque::getId).collect(Collectors.toSet()))
                 //.followedMosques(utilisateur.getFollowedMosques().stream().map(SuivreDto::fromEntity).collect(Collectors.toSet()))
                 .roles(
@@ -99,7 +99,7 @@ public class UtilisateurDto {
         utilisateur.setLocalisation(LocalisationDto.toEntity(utilisateurDto.getLocalisation()));
         utilisateur.setRoles(utilisateurDto.getRoles().stream().map(RoleDto::toEntity).collect(Collectors.toList()));
         //utilisateur.setFollowedMosques(retourneMosque(utilisateurDto.getFollowedMosques()));
-        utilisateur.setFollowedMosques( utilisateurDto.getFollowedMosques().stream().map(SuivreDto::toEntity).collect(Collectors.toSet()));
+//        utilisateur.setFollowedMosques( utilisateurDto.getFollowedMosques().stream().map(SuivreDto::toEntity).collect(Collectors.toSet()));
         return utilisateur;
     }
 }

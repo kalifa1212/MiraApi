@@ -52,15 +52,12 @@ public class Suivre_Utilisateur_MosqueServiceImpl implements Suivre_Utilisateur_
             if(mosque.isEmpty()) {
                 throw new EntityNotFoundException("Aucune mosque avec l'id "+dto.getMosque()+" n'a ete trouver",ErrorCodes.MOSQUE_NOT_EXIST);
             }
-        }else {
-            MosqueDto mosqueDto= new MosqueDto();
-
         }
 
         if(dto.getUtilisateur()!=0){
             utilisateur=utilisateurRepository.findById(dto.getUtilisateur());
             if(utilisateur.isEmpty()) {
-                throw new EntityNotFoundException("Aucune mosque avec l'id "+dto.getUtilisateur()+" n'a ete trouver",ErrorCodes.MOSQUE_NOT_EXIST);
+                throw new EntityNotFoundException("Aucun utilisateur avec l'id "+dto.getUtilisateur()+" n'a ete trouver",ErrorCodes.MOSQUE_NOT_EXIST);
             }
         }
 

@@ -126,10 +126,10 @@ public class UtilisateurController  implements UtilisateurApi {
             Utilisateur utilisateur = utilisateurRepository.findById(utilisateurId).get();
             Mosque mosque = mosqueRepository.findById(mosqueId).get();
             Suivre suivre=new Suivre();
-            suivre.setMosq(mosque);
-            suivre.setUser(utilisateur);
-            utilisateur.getFollowedMosques().add(suivre);
-            mosque.getFollowers().add(suivre);
+//            suivre.setMosq(mosque);
+//            suivre.setUser(utilisateur);
+//            utilisateur.getFollowedMosques().add(suivre);
+//            mosque.getFollowers().add(suivre);
             utilisateurRepository.save(utilisateur);
             mosqueRepository.save(mosque);
         return true;

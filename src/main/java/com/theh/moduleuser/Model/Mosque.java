@@ -85,20 +85,9 @@ public class Mosque extends AbstractEntity {
 	@ManyToOne
 	private Localisation localisation;
 
-//	@ManyToMany(mappedBy = "followedMosques")
-//	private Set<Utilisateur> followers = new HashSet<>();
 	// test
-	@OneToMany(mappedBy = "mosq")
-	private Set<Suivre> followers;
+//	@OneToMany(mappedBy = "mosq")
+//	private Set<Suivre> followers;
 
-//	public void addFollower(Utilisateur utilisateur) {
-//		this.followers.add(utilisateur);
-//		//utilisateur.getFollowedMosques().add(this);
-//	}
-
-//	public void removeFollower(Utilisateur utilisateur) {
-//		followers.remove(utilisateur);
-//		//utilisateur.getFollowedMosques().remove(this);
-//	}
 
 }

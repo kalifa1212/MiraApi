@@ -69,26 +69,9 @@ public class Utilisateur extends AbstractEntity{
     @ManyToOne
     private Localisation localisation;
 
-    // TODO Impl suivre
-//    @ManyToMany
-//    @JoinTable(name = "utilisateur_mosquee_suivie",
-//            joinColumns = @JoinColumn(name = "utilisateur_id"),
-//            inverseJoinColumns = @JoinColumn(name = "mosquée_id"))
-//    private Set<Mosque> followedMosques = new HashSet<>();
 
     // test
-    @OneToMany(mappedBy = "user")
-    private Set<Suivre> followedMosques;
-    // ...
+//    @OneToMany(mappedBy = "user")
+//    private Set<Suivre> followedMosques;
 
-//    public void addMosqueSuivie(Mosque mosque) {
-//
-//        this.followedMosques.add(mosque);
-//        //mosque.addFollower(utilisateur);
-//    }
-//
-//    public void removeMosqueSuivie(Mosque mosque) {
-//        this.followedMosques.remove(mosque);
-//        //mosque.removeFollower(this);
-//    }
 }
