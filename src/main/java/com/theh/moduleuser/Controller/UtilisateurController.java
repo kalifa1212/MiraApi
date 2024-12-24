@@ -8,6 +8,7 @@ import com.theh.moduleuser.Dto.SuivreDto;
 import com.theh.moduleuser.Dto.auth.AuthenticationRequest;
 import com.theh.moduleuser.Dto.auth.AuthenticationResponse;
 import com.theh.moduleuser.Dto.UtilisateurDto;
+import com.theh.moduleuser.Dto.auth.ChangePassWordDto;
 import com.theh.moduleuser.Exceptions.InvalidEntityException;
 import com.theh.moduleuser.Model.Mosque;
 import com.theh.moduleuser.Model.Suivre;
@@ -114,41 +115,17 @@ public class UtilisateurController  implements UtilisateurApi {
     }
 
     @Override
+    public ResponseEntity<Boolean> PasswordReset(ChangePassWordDto changePassWordDto) {
+
+        return ResponseEntity.ok(utilisateurService.passwordReset(changePassWordDto));
+    }
+
+    @Override
     public ResponseEntity<Boolean> VerifyToken(String jwtToken) {
         boolean isExpired=jwtUtil.isTokenExpired(jwtToken);
         //log.error("test verification {}",isExpired);
         return ResponseEntity.ok(isExpired);
     }
-
-    //TODO fonctionnalité a revoir
-//    @Override
-//    public boolean suivreMosque(int utilisateurId, int mosqueId) {
-//        //boolean update=true;
-//            Utilisateur utilisateur = utilisateurRepository.findById(utilisateurId).get();
-//            Mosque mosque = mosqueRepository.findById(mosqueId).get();
-//            Suivre suivre=new Suivre();
-////            suivre.setMosq(mosque);
-////            suivre.setUser(utilisateur);
-////            utilisateur.getFollowedMosques().add(suivre);
-////            mosque.getFollowers().add(suivre);
-//            utilisateurRepository.save(utilisateur);
-//            mosqueRepository.save(mosque);
-//        return true;
-//    }
-//
-//    //TODO fonctionnalité a revoir
-//    @Override
-//    public boolean nePlusSuivreMosque(int utilisateurId, int mosqueId) {
-//        Utilisateur utilisateur = utilisateurRepository.findById(utilisateurId).orElseThrow();
-//        Mosque mosque = mosqueRepository.findById(mosqueId).orElseThrow();
-//
-//        //utilisateur.removeMosqueSuivie(mosque);
-//       // mosque.removeFollower(utilisateur);
-//
-//        utilisateurRepository.save(utilisateur);
-//        mosqueRepository.save(mosque);
-//        return false;
-//    }
 
     @Override
     public ResponseEntity<UtilisateurDto> save(UtilisateurDto dto,Boolean update) {
@@ -171,13 +148,7 @@ public class UtilisateurController  implements UtilisateurApi {
     @Override
     public UtilisateurDto findByEmail(String email, HttpServletRequest request) {
         // TODO Recherche  Utilisateur by email
-//        List greetings = (List) request.getSession().getAttribute("GREETING_MESSAGES");
-//        if(greetings == null) {
-//            greetings = new ArrayList<>();
-//            request.getSession().setAttribute("GREETING_MESSAGES", greetings);
-//        }
-//        greetings.add(greetings);
-        //log.error("ip addesse is {}",request.getLocalAddr());
+
         Optional<Utilisateur> util = utilisateurRepository.findUtilisateurByEmail(email);
         if(util.isEmpty()){
             throw new InvalidEntityException("L'email n'existe pas");

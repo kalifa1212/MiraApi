@@ -3,6 +3,7 @@ package com.theh.moduleuser.Controller.Api;
 import com.theh.moduleuser.Dto.UtilisateurDto;
 import com.theh.moduleuser.Dto.auth.AuthenticationRequest;
 import com.theh.moduleuser.Dto.auth.AuthenticationResponse;
+import com.theh.moduleuser.Dto.auth.ChangePassWordDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,6 +29,11 @@ public interface UtilisateurApi {
     @Operation(summary = "Authentication ",description = "Connexion")
     @PostMapping(value = AUTHENTICATION_ENDPOINT+"authenticate")
     ResponseEntity<AuthenticationResponse> authentification(@RequestBody AuthenticationRequest authenticationRequest);
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Password reset ",description = "password reset")
+    @PostMapping(value = UTILISATEUR_ENDPOINT+"account/password/reset")
+    ResponseEntity<Boolean> PasswordReset(@RequestBody ChangePassWordDto changePassWordDto);
 
     @Operation(summary = "Authentication ",description = "Veritfy token : False pour valid and true to obselet")
     @PostMapping(value = AUTHENTICATION_ENDPOINT+"token/verify/{jwtToken}")

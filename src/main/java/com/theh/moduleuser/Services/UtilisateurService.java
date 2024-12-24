@@ -1,6 +1,7 @@
 package com.theh.moduleuser.Services;
 
 import com.theh.moduleuser.Dto.UtilisateurDto;
+import com.theh.moduleuser.Dto.auth.ChangePassWordDto;
 import com.theh.moduleuser.Model.MetaData.PasswordResetToken;
 import com.theh.moduleuser.Model.Utilisateur;
 import com.theh.moduleuser.Model.MetaData.VerificationToken;
@@ -61,4 +62,6 @@ public interface    UtilisateurService {
     Page<UtilisateurDto> findAll(Pageable page);
     Boolean GranteRole(String Email,String role);
     void delete(Integer id);
+
+    boolean passwordReset(ChangePassWordDto changePassWordDto);
 }

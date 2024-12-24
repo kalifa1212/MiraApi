@@ -1,8 +1,8 @@
 package com.theh.moduleuser.Services.Impl;
 
-import com.fasterxml.jackson.databind.util.Converter;
 import com.theh.moduleuser.Dto.RoleDto;
 import com.theh.moduleuser.Dto.UtilisateurDto;
+import com.theh.moduleuser.Dto.auth.ChangePassWordDto;
 import com.theh.moduleuser.Exceptions.EntityNotFoundException;
 import com.theh.moduleuser.Exceptions.ErrorCodes;
 import com.theh.moduleuser.Exceptions.InvalidEntityException;
@@ -31,7 +31,6 @@ import org.springframework.stereotype.Service;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -264,7 +263,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         List<String> errors = UtilisateurValidation.validate(dto);
 
         if(!errors.isEmpty()) {
-            log.error("L'utilisateur est non valide {}",dto);
+            log.error("L'utilisateur est non valide ");
             throw new InvalidEntityException("L'utilisateur n'est pas valide ", ErrorCodes.UTILISATEUR_NOT_VALID,errors);
         }
         Optional<Utilisateur> util = utilisateurRepository.findUtilisateurByEmail(dto.getEmail());
@@ -301,7 +300,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     public UtilisateurDto findByEmail(String email) {
         return utilisateurRepository.findUtilisateurByEmail(email)
                 .map(UtilisateurDto::fromEntity)
-                .orElseThrow(()-> new EntityNotFoundException("Aucun utiliseur trouver pour : "+email+"dans " +
+                .orElseThrow(()-> new EntityNotFoundException("Aucun utilisateur trouver pour : "+email+"dans " +
                         "la base de donnée", ErrorCodes.UTILISATEUR_NOT_FOUND)
                 );
 
@@ -365,5 +364,21 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         }
 
         utilisateurRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean passwordReset(ChangePassWordDto changePassWordDto) {
+        BCryptPasswordEncoder passwordEncoder= new BCryptPasswordEncoder();
+        String criptpasswd=passwordEncoder.encode(changePassWordDto.getPassword());
+        Optional<Utilisateur> utilisateur=utilisateurRepository.findById(changePassWordDto.getUserId());
+        log.error("Verification");
+        if (passwordEncoder.matches(changePassWordDto.getPassword(),utilisateur.get().getMotDePasse())){
+            utilisateur.get().setMotDePasse(passwordEncoder.encode(utilisateur.get().getMotDePasse()));
+            utilisateurRepository.save(utilisateur.get());
+            log.info("Modification effectuer");
+            return true;
+        }
+        log.info("echec de la verification");
+        return false;
     }
 }
