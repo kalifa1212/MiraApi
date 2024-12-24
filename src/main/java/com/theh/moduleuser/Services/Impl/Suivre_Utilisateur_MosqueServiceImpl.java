@@ -1,12 +1,12 @@
 package com.theh.moduleuser.Services.Impl;
 
-import com.theh.moduleuser.Dto.MosqueDto;
 import com.theh.moduleuser.Dto.SuivreDto;
 import com.theh.moduleuser.Exceptions.EntityNotFoundException;
 import com.theh.moduleuser.Exceptions.ErrorCodes;
 import com.theh.moduleuser.Exceptions.InvalidEntityException;
 import com.theh.moduleuser.Model.Mosque;
 import com.theh.moduleuser.Model.Suivre;
+import com.theh.moduleuser.Model.TypeCompte;
 import com.theh.moduleuser.Model.Utilisateur;
 import com.theh.moduleuser.Repository.MosqueRepository;
 import com.theh.moduleuser.Repository.SuivreRepository;
@@ -54,10 +54,14 @@ public class Suivre_Utilisateur_MosqueServiceImpl implements Suivre_Utilisateur_
             }
         }
 
-        if(dto.getUtilisateur()!=0){
+         if(dto.getUtilisateur()!=0){
             utilisateur=utilisateurRepository.findById(dto.getUtilisateur());
             if(utilisateur.isEmpty()) {
                 throw new EntityNotFoundException("Aucun utilisateur avec l'id "+dto.getUtilisateur()+" n'a ete trouver",ErrorCodes.MOSQUE_NOT_EXIST);
+            }
+            if(utilisateur.get().getTypecompte()!= TypeCompte.PREDICATEUR && utilisateur.get().getTypecompte()!=TypeCompte.IMAM){
+                throw new EntityNotFoundException("Aucun utilisateur n'est pas predicateur ni Imam",ErrorCodes.SIMPLE_UTILISATEUR);
+
             }
         }
 
@@ -72,13 +76,22 @@ public class Suivre_Utilisateur_MosqueServiceImpl implements Suivre_Utilisateur_
 
     @Override
     public void delete(Integer id) {
-
+        Optional<Utilisateur> utilisateur= utilisateurRepository.findById(id);
+        utilisateurRepository.delete(utilisateur.get());
     }
 
     public static List<String> validate(SuivreDto suivreDto){
         List<String> errors = new ArrayList<>();
         if(suivreDto==null ) {
             errors.add("veullez renseigner les données");
+        }
+        if (suivreDto.getMosque()==null&&suivreDto.getIdimamsuivie()==null)
+        {
+            errors.add("veullez entrer la mosque ou l'imam");
+        }
+        if (suivreDto.getUtilisateur()==null)
+        {
+            errors.add("veullez entrer l'utilisateur");
         }
         return errors;
     }

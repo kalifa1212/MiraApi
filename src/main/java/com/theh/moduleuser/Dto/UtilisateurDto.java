@@ -3,10 +3,7 @@ package com.theh.moduleuser.Dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.theh.moduleuser.Model.Mosque;
-import com.theh.moduleuser.Model.Role;
-import com.theh.moduleuser.Model.Suivre;
-import com.theh.moduleuser.Model.Utilisateur;
+import com.theh.moduleuser.Model.*;
 import com.theh.moduleuser.Repository.MosqueRepository;
 import com.theh.moduleuser.Repository.SuivreRepository;
 import com.theh.moduleuser.Repository.UtilisateurRepository;
@@ -37,7 +34,7 @@ public class UtilisateurDto {
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date dateDeNaissance;
     private String photo;
-    private String typecompte;
+    private TypeCompte typecompte;
     private String phone;
     private String imageUrl;
     private String secret;

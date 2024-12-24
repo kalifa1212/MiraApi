@@ -44,7 +44,7 @@ public class Utilisateur extends AbstractEntity{
     private byte[] imagedata;
 
     @Column(name="typecompte")
-    private String typecompte;
+    private TypeCompte typecompte;
 
     @Column(length = 15)
     private String phone;

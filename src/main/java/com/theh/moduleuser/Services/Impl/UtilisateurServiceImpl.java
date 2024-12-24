@@ -8,6 +8,7 @@ import com.theh.moduleuser.Exceptions.ErrorCodes;
 import com.theh.moduleuser.Exceptions.InvalidEntityException;
 import com.theh.moduleuser.Model.MetaData.PasswordResetToken;
 import com.theh.moduleuser.Model.Role;
+import com.theh.moduleuser.Model.TypeCompte;
 import com.theh.moduleuser.Model.Utilisateur;
 import com.theh.moduleuser.Model.MetaData.VerificationToken;
 import com.theh.moduleuser.Repository.*;
@@ -273,7 +274,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         String passwd=dto.getMotDePasse();
         BCryptPasswordEncoder passwordEncoder= new BCryptPasswordEncoder();
         dto.setMotDePasse(passwordEncoder.encode(passwd));
-        dto.setTypecompte(Type_User);
+        dto.setTypecompte(TypeCompte.USER);
         dto.setRoles(Arrays.asList(RoleDto.fromEntity(role)));
         dto.getNom().toLowerCase();
         dto.getPrenom().toLowerCase();

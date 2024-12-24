@@ -37,7 +37,7 @@ public class SuivreController implements SuivreApi {
     }
 
     @Override
-    public SuivreDto findById(Integer id) {
+    public SuivreDto findBySuivreId(Integer id) {
         // TODO rechercher par id
         Optional<Suivre> suivre =suivreRepository.findById(id);
         if(suivre.isEmpty()){

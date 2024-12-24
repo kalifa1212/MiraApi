@@ -20,7 +20,7 @@ public interface SuivreApi {
     // find by id
 
     @GetMapping(value=APP_ROOT+"suivre/find/id/{id}")
-    SuivreDto findById(@PathVariable("id") Integer id);
+    SuivreDto findBySuivreId(@PathVariable("id") Integer id);
 
     @GetMapping(value=APP_ROOT+"suivre/find/id/utilisateur/{idutilisateur}")
     List<SuivreDto> findByIdUtilisateur(@PathVariable("idutilisateur") Integer id);
