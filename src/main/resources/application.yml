@@ -89,7 +89,7 @@ server:
 #file stage location
 file:
   storage:
-    location: fileStorage
+    location: fileStorageDir
   ## File path config
 project:
   poster: fileStorage/

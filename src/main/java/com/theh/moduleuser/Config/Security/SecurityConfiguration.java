@@ -132,6 +132,7 @@ public class SecurityConfiguration {
                                 "/muslimApi/v1/mosque/find/all/",
                                 "/muslimApi/v1/mosque/find/",
                                 "/muslimApi/v1/mosque/find/nom/{nom}",
+                                "/muslimApi/v1/mosque/display/{id}",
                                 "/muslimApi/v1/localisation/all",
                                 "/muslimApi/v1/localisation/all/pages/",
                                 "/muslimApi/v1/localisation/{idmosque}",

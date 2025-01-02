@@ -49,8 +49,8 @@ public interface MosqueApi {//kjlkjskfsfskdfksjdfkl
 											@RequestParam(defaultValue = "ascending") String sortDirection);
 
 	@Operation(summary = "Display ",description = "Display Mosque Image ")
-	@GetMapping(value = "display/",produces= MediaType.IMAGE_JPEG_VALUE)
-	ResponseEntity getFile(@RequestParam Integer id);
+	@GetMapping(value = "display/{id}",produces= MediaType.IMAGE_JPEG_VALUE)
+	ResponseEntity getFile(@PathVariable("id") Integer id);
 
     @Operation(summary = "Recherche Mosque du vendredi ",description = "True pour les mosque du Vendredi et false pour les autres ")
 	@GetMapping(value="find/vendredi/{vendredi}",produces=MediaType.APPLICATION_JSON_VALUE)

@@ -2,6 +2,7 @@ package com.theh.moduleuser.Controller;
 
 import com.theh.moduleuser.Controller.Api.FileApi;
 import com.theh.moduleuser.Dto.MosqueDto;
+import com.theh.moduleuser.Dto.PredicationDto;
 import com.theh.moduleuser.Dto.UtilisateurDto;
 import com.theh.moduleuser.Exceptions.ErrorCodes;
 import com.theh.moduleuser.Exceptions.InvalidEntityException;
@@ -63,11 +64,26 @@ public class FileController implements FileApi {
                 return ResponseEntity.ok()
                         .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\" profile \"")
                         .body(resourceM);
+                case "preche":
+                PredicationDto predicationDto=(PredicationDto) strategyPhotoContext.displayPhoto(id,context);
+                Resource resourceP=uploadingGeneralObjetFule(predicationDto);
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, " attachment; filename=\" profile \"")
+                        .body(resourceP);
             default: throw new InvalidEntityException("Context inconnue pour l'enregistrement de la photo", ErrorCodes.UNKNOW_CONTEXT);
         }
     }
     public Resource uploadingFile(MosqueDto mosqueDto){
         Path path = Paths.get(mosqueDto.getPhoto());
+        Resource resource = null;
+        try {
+            resource = (Resource) new UrlResource(path.toUri());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return  resource;
+    } public Resource uploadingGeneralObjetFule(PredicationDto object){
+        Path path = Paths.get(object.getFichier());
         Resource resource = null;
         try {
             resource = (Resource) new UrlResource(path.toUri());

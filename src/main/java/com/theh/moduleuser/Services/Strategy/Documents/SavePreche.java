@@ -26,13 +26,13 @@ public class SavePreche implements StrategyPhoto<PredicationDto> {
         String Nom= StringUtils.cleanPath(multipartFile.getOriginalFilename());
         String extension=Nom.substring(Nom.lastIndexOf(".")+1);
         PredicationDto predicationDto = predicationService.findById(id);
-        String uploadDir=FilePath+"predication/"+predicationDto.getType();
+        String uploadDir=FilePath+"predication/"+predicationDto.getType()+"/";
         String FileName=""+id+"."+extension;
         if(predicationDto.equals(null)){
             throw new EntityNotFoundException("Aucune predication pour l'id entrer");
         }
         //MosqueDto mosque2 = MosqueDto.fromEntity(mosque.get());
-        predicationDto.setFichier(FileName);
+        predicationDto.setFichier(uploadDir+FileName);
 
         FileUpload.saveFile(uploadDir, FileName,multipartFile);
         return predicationService.save(predicationDto);
@@ -40,6 +40,7 @@ public class SavePreche implements StrategyPhoto<PredicationDto> {
 
     @Override
     public PredicationDto downloadPhoto(Integer id) {
-        return null;
+
+        return predicationService.findById(id);
     }
 }

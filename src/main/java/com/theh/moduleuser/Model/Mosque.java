@@ -85,9 +85,5 @@ public class Mosque extends AbstractEntity {
 	@ManyToOne
 	private Localisation localisation;
 
-	// test
-//	@OneToMany(mappedBy = "mosq")
-//	private Set<Suivre> followers;
-
 
 }
