@@ -85,15 +85,6 @@
             <version>2.3.1</version>
         </dependency>
 
-<!--        MappStruc depend-->
-<!--        <dependency>-->
-<!--            <groupId>org.mapstruct</groupId>-->
-<!--            <artifactId>mapstruct</artifactId>-->
-<!--            <version>1.6.0.Beta1</version>-->
-<!--        </dependency>-->
-<!--         end-->
-
-        <!--							end swagger 3-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
