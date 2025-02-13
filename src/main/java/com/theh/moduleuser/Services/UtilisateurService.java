@@ -1,9 +1,12 @@
 package com.theh.moduleuser.Services;
 
 import com.theh.moduleuser.Dto.UtilisateurDto;
+import com.theh.moduleuser.Dto.auth.ChangePassWordDto;
 import com.theh.moduleuser.Model.MetaData.PasswordResetToken;
 import com.theh.moduleuser.Model.Utilisateur;
 import com.theh.moduleuser.Model.MetaData.VerificationToken;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -56,7 +59,9 @@ public interface    UtilisateurService {
     UtilisateurDto save(UtilisateurDto  dto,boolean update);
     UtilisateurDto findById(Integer id);
     UtilisateurDto findByEmail(String email);
-    List<UtilisateurDto> findAll();
+    Page<UtilisateurDto> findAll(Pageable page);
     Boolean GranteRole(String Email,String role);
     void delete(Integer id);
+
+    boolean passwordReset(ChangePassWordDto changePassWordDto);
 }

@@ -2,21 +2,32 @@ package com.theh.moduleuser.Controller;
 import com.theh.moduleuser.Controller.Api.MosqueApi;
 import com.theh.moduleuser.Dto.MosqueDto;
 import com.theh.moduleuser.Dto.MosqueInfoDto;
+import com.theh.moduleuser.Exceptions.ErrorCodes;
 import com.theh.moduleuser.Exceptions.InvalidEntityException;
 import com.theh.moduleuser.Model.Mosque;
 import com.theh.moduleuser.Repository.MosqueRepository;
 import com.theh.moduleuser.Services.MosqueService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @RestController
 @Slf4j
 public class MosqueController implements MosqueApi {
@@ -46,36 +57,61 @@ public class MosqueController implements MosqueApi {
 
 
 	@Override
-	public List<MosqueDto> findMosqueByVilleOrPays(String str) {
+	public Page<MosqueDto> findMosqueByVilleOrPays(String str,String sortColumn, int page, int taille, String sortDirection) {
 		// TODO Rechercher des mosque par ville ou pays
-		List<MosqueDto> mosqueList=mosqueRepository.findMosqueByLocalisationVilleContaining(str).stream()
-				.map(MosqueDto::fromEntity)
-				.collect(Collectors.toList());
-		mosqueList.addAll(mosqueRepository.findMosqueByLocalisationPaysContaining(str).stream()
-				.map(MosqueDto::fromEntity)
-				.collect(Collectors.toList()));
+		Sort.Direction direction = sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+		Pageable paging = PageRequest.of(page, taille,Sort.by(direction,sortColumn));
+		String pays=str;
+		Page<MosqueDto> mosqueList=mosqueRepository.findMosqueByLocalisationVilleContainingOrLocalisationPays(str,pays,paging).map(MosqueDto::fromEntity);
+//		mosqueList.addAll(mosqueRepository.findMosqueByLocalisationPaysContaining(str,paging).stream()
+//				.map(MosqueDto::fromEntity)
+//				.collect(Collectors.toList()));
 		//return mosqueService.findMosqueByVilleOrQuartier(str);
+
 		return mosqueList;
 	}
 
+
 	@Override
-	public List<MosqueDto> findByVendredis(Boolean a) {
+	public ResponseEntity getFile(Integer id) {
+		MosqueDto mosque= mosqueService.findById(id);
+		//log.error("image data {} ",mosque.getImagedata());
+		if(mosque==null){
+			throw new InvalidEntityException("Image non disponible", ErrorCodes.FILE_NOT_FOUND);
+		}
+		Resource resourceM=uploadingFile(mosque);
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\" profile \"")
+				.body(resourceM);
+	}
+	public Resource uploadingFile(MosqueDto mosqueDto){
+		Path path = Paths.get(mosqueDto.getPhoto());
+		Resource resource = null;
+		try {
+			resource = (Resource) new UrlResource(path.toUri());
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return  resource;
+	}
+
+	@Override
+	public Page<MosqueDto> findByVendredis(Boolean a,String sortColumn, int page, int taille, String sortDirection) {
+
 		// TODO Rechercher des mosqué par leur type : mosque du vendredi
-		return  mosqueService.findByVendredis(a);
+		Sort.Direction direction = sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+		Pageable paging = PageRequest.of(page, taille,Sort.by(direction,sortColumn));
+
+		return  mosqueService.findByVendredis(a,paging);
 	}
 	
 	@Override
-	public List<Mosque> findAll(String type) {
+	public Page<MosqueDto> findAll(String sortColumn, int page, int taille, String sortDirection) {
 		// TODO afficher toutes les mosque par nouveauté et ancienneté
-		if(type.contentEquals("old")){
-			return mosqueRepository.findByOrderByCreationDateAsc(); // TODO a implementé dans service Mosque
-		}
-			else if(type.contentEquals("new")){
-			return mosqueRepository.findByOrderByCreationDateDesc();// TODO idem
-		}
-				else {throw new InvalidEntityException("Le type entrée n'est pas en compte (new or old)");}
-		//  Auto-generated method stub
-		//return mosqueService.findAll();
+		Sort.Direction direction = sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+		Pageable paging = PageRequest.of(page, taille,Sort.by(direction,sortColumn));
+
+		return mosqueService.findAll(paging);
 
 	}
 
@@ -104,18 +140,11 @@ public class MosqueController implements MosqueApi {
 	}
 
 	@Override
-	public List<MosqueDto> find(String str) {
+	public Page<MosqueDto> find(String str,String sortColumn, int page, int taille, String sortDirection) {
 		// TODO rechercher les mosque par nom et localisation
-		List<MosqueDto> mosqueList=mosqueRepository.findMosqueByNomContaining(str).stream()
-				.map(MosqueDto::fromEntity)
-				.collect(Collectors.toList());
-		mosqueList.addAll(mosqueRepository.findMosqueByLocalisationVilleContaining(str).stream()
-				.map(MosqueDto::fromEntity)
-				.collect(Collectors.toList()));
-		mosqueList.addAll(mosqueRepository.findMosqueByLocalisationPaysContaining(str).stream()
-				.map(MosqueDto::fromEntity)
-				.collect(Collectors.toList()));
-		return mosqueList;
+		Sort.Direction direction = sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+		Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).ascending());
+		return mosqueService.findAllByName(str,paging);
 	}
 
 	@Override
@@ -140,9 +169,6 @@ public class MosqueController implements MosqueApi {
 			throw new InvalidEntityException("Le type entrée n'est pas en compte (new or old)");
 		}
 
-		//List<MosqueDto> mosqueDtoLastModified=mosqueRepository.findByLastModifiedDateAfter(date);
-
-		//mosqueInfoDto.setMosqueAfterLastModifiedDate(mosqueDtoLastModified);
 	}
 
 	@Override

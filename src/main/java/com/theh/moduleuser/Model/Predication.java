@@ -1,9 +1,7 @@
 package com.theh.moduleuser.Model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import com.theh.moduleuser.Dto.TypePredication;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,6 +21,14 @@ public class Predication extends AbstractEntity {
 
 	@Column(name="date")
 	private Date date;
+
+	@Column(name="heure")
+	@Temporal(TemporalType.TIME)
+	private Date heure;
+
+	@Column(name="duree")
+	@Temporal(TemporalType.TIME)
+	private Date duree;
 	
 	@Column(name="theme")
 	private String theme;
@@ -31,7 +37,7 @@ public class Predication extends AbstractEntity {
 	private String fichier;
 	
 	@Column(name="type")// sermon, preche ou conference.
-	private String type;
+	private TypePredication type;
 	
 	@Column(name="idimam")
 	private Integer idImam;
@@ -41,6 +47,12 @@ public class Predication extends AbstractEntity {
 
 	@Column(name="info")
 	private String  Info;
+
+	@Column(name="nomimam")
+	private String  nomImam;
+
+	@Column(name="nommosque")
+	private String  nomMosque;
 
 	@Column(name="type_doc")
 	private String type_doc;

@@ -30,9 +30,4 @@ public class Localisation extends AbstractEntity{
 	@Column(name="description")
 	private String description;
 
-//	@OneToMany
-//	private List<Mosque> mosque;
-
-//	@OneToMany
-//	private List<Utilisateur> utilisateurs;
 }

@@ -2,6 +2,10 @@ package com.theh.moduleuser.Repository;
 
 import com.theh.moduleuser.Dto.MosqueDto;
 import com.theh.moduleuser.Model.Mosque;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.Instant;
@@ -26,9 +30,9 @@ public interface MosqueRepository extends JpaRepository<Mosque,Integer>{
 	List<Mosque> findMosqueByIsVendredi(Boolean Vendredi);// a supprimer
 
 		// rechercher par localisastion
-	List<Mosque> findMosqueByLocalisationVilleContaining(String ville);
+	Page<Mosque> findMosqueByLocalisationVilleContainingOrLocalisationPays(String ville,String pays,Pageable pageable);
 	//List<MosqueDto> findMosqueByLocalisationContaining(String pays);
-	List<Mosque> findMosqueByLocalisationPaysContaining(String pays);
+	Page<Mosque> findMosqueByLocalisationPaysContaining(String pays,Pageable pageable);
 
 		// Operation sur les dates de creation
 	List<Mosque> findByCreationDateAfter(Instant date);
@@ -39,4 +43,12 @@ public interface MosqueRepository extends JpaRepository<Mosque,Integer>{
 //	List<MosqueDto> findByLastModifiedDateBetween(Instant start, Instant end);
 	List<Mosque> findByLastModifiedDateGreaterThanEqual(Instant date);
 
+	//TODO test de pagination
+	Pageable firstPageWithTwoElements = PageRequest.of(0, 10);
+	List<Mosque> findAll(Sort sort);
+	Page<Mosque> findAll(Pageable page);
+	Page<Mosque> findByOrderByCreationDateAsc(Pageable page);
+	Page<Mosque> findByOrderByCreationDateDesc(Pageable page);
+	Page<Mosque> findMosqueByNomContaining(Pageable page,String nom);
+	Page<Mosque> findMosqueByIsVendredi(Boolean Vendredi,Pageable page);
 }

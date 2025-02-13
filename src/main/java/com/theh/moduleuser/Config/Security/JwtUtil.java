@@ -1,6 +1,7 @@
 package com.theh.moduleuser.Config.Security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,9 +31,15 @@ public class JwtUtil {
     public Claims extractAllClaims(String token){
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
+//TODO si necessaire changé Public to private
+    public Boolean isTokenExpired(String token){
+        try {
+            return extractExpiration(token).before(new Date());
+        }catch (ExpiredJwtException e){
+            return true;
+        }
 
-    private Boolean isTokenExpired(String token){
-        return extractExpiration(token).before(new Date());
+        //return extractExpiration(token).before(new Date());
     }
     public String generateToken(UserDetails userDetails){
         Map<String, Object> claims=new HashMap<>();

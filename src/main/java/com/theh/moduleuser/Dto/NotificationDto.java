@@ -1,10 +1,14 @@
 package com.theh.moduleuser.Dto;
 
 import com.theh.moduleuser.Model.Notification;
+import com.theh.moduleuser.Model.TypeNotification;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
 public class NotificationDto {
@@ -12,12 +16,9 @@ public class NotificationDto {
     private Integer id;
 
     private String message;
-
-    private String type;
-
-    private String destinateur;
-
-    private UtilisateurDto utilisateurDto;
+    private TypeNotification type;
+    private boolean isRead;
+    private LocalDateTime dateTime;
 
     public static NotificationDto fromEntity(Notification notification) {
         if (notification==null) {
@@ -27,10 +28,11 @@ public class NotificationDto {
 
         return NotificationDto.builder()
                 .id(notification.getId())
-                .utilisateurDto(UtilisateurDto.fromEntity(notification.getUtilisateur()))
                 .message(notification.getMessage())
                 .type(notification.getType())
-                .destinateur(notification.getDestinateur())
+                .isRead(notification.isRead())
+                .dateTime(notification.getDateTime())
+                .type(notification.getType())
                 .build();
     }
 
@@ -42,9 +44,10 @@ public class NotificationDto {
 
         Notification notification = new Notification();
         notification.setId(notificationDto.getId());
-        notification.setUtilisateur(UtilisateurDto.toEntity(notificationDto.getUtilisateurDto()));
         notification.setMessage(notificationDto.getMessage());
-        notification.setDestinateur(notificationDto.getDestinateur());
+        notification.setType(notificationDto.getType());
+        notification.setRead(notificationDto.isRead());
+        notification.setDateTime(notificationDto.getDateTime());
         notification.setType(notificationDto.getType());
         return notification;
     }

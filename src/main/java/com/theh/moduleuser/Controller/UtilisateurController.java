@@ -3,12 +3,21 @@ package com.theh.moduleuser.Controller;
 import com.theh.moduleuser.Config.Security.JwtUtil;
 import com.theh.moduleuser.Config.Security.MyUserDetailsService;
 import com.theh.moduleuser.Controller.Api.UtilisateurApi;
+import com.theh.moduleuser.Dto.MosqueDto;
+import com.theh.moduleuser.Dto.SuivreDto;
 import com.theh.moduleuser.Dto.auth.AuthenticationRequest;
 import com.theh.moduleuser.Dto.auth.AuthenticationResponse;
 import com.theh.moduleuser.Dto.UtilisateurDto;
+import com.theh.moduleuser.Dto.auth.ChangePassWordDto;
 import com.theh.moduleuser.Exceptions.InvalidEntityException;
+import com.theh.moduleuser.Model.Mosque;
+import com.theh.moduleuser.Model.Suivre;
+import com.theh.moduleuser.Model.TypeCompte;
 import com.theh.moduleuser.Model.Utilisateur;
+import com.theh.moduleuser.Repository.MosqueRepository;
+import com.theh.moduleuser.Repository.SuivreRepository;
 import com.theh.moduleuser.Repository.UtilisateurRepository;
+import com.theh.moduleuser.Services.MosqueService;
 import com.theh.moduleuser.Services.UtilisateurService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -18,6 +27,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,11 +44,10 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RestController
 @OpenAPIDefinition(info = @Info(title = "Muslem API", version = "1.2.0"))
 @Slf4j
@@ -52,30 +64,33 @@ public class UtilisateurController  implements UtilisateurApi {
     private final SecurityContextHolderStrategy securityContextHolderStrategy =
             SecurityContextHolder.getContextHolderStrategy();
     private UtilisateurRepository utilisateurRepository;
+    private MosqueRepository mosqueRepository;
+    private MosqueService mosqueService;
     private UtilisateurService utilisateurService;
+    private SuivreRepository suivreRepository;
 
     @Autowired
     public UtilisateurController(
             UtilisateurRepository utilisateurRepository,
             UtilisateurService utilisateurService,
-            AuthenticationManager authenticationManager
+            AuthenticationManager authenticationManager,
+            MosqueRepository mosqueRepository,
+            MosqueService mosqueService,
+            SuivreRepository suivreRepository
     ) {
         this.utilisateurRepository = utilisateurRepository;
         this.utilisateurService=utilisateurService;
         this.authenticationManager=authenticationManager;
+        this.mosqueRepository=mosqueRepository;
+        this.mosqueService=mosqueService;
+        this.suivreRepository=suivreRepository;
     }
 
 
-    public ResponseEntity<AuthenticationResponse> authentification(@RequestBody AuthenticationRequest authenticationRequestrequest,
-                                                                   HttpSession session,HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<AuthenticationResponse> authentification(@RequestBody AuthenticationRequest authenticationRequestrequest) {
 
         final UserDetails userDetails= userDetailsService.loadUserByUsername(authenticationRequestrequest.getLogin());
-//        Authentication authentication = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(
-//                        request.getLogin(),
-//                        request.getPassword()
-//                )
-//        );
+
         Authentication authenticationRequest =
                 UsernamePasswordAuthenticationToken.unauthenticated(
                         authenticationRequestrequest.getLogin(), authenticationRequestrequest.getPassword());
@@ -98,6 +113,20 @@ public class UtilisateurController  implements UtilisateurApi {
             return ResponseEntity.ok(AuthenticationResponse.builder().accessToken(jwt).email(email).build());
         }
     }
+
+    @Override
+    public ResponseEntity<Boolean> PasswordReset(ChangePassWordDto changePassWordDto) {
+
+        return ResponseEntity.ok(utilisateurService.passwordReset(changePassWordDto));
+    }
+
+    @Override
+    public ResponseEntity<Boolean> VerifyToken(String jwtToken) {
+        boolean isExpired=jwtUtil.isTokenExpired(jwtToken);
+        //log.error("test verification {}",isExpired);
+        return ResponseEntity.ok(isExpired);
+    }
+
     @Override
     public ResponseEntity<UtilisateurDto> save(UtilisateurDto dto,Boolean update) {
         // TODO Enregistrement d'un utilisateur ou mis a jour utilisateur
@@ -118,14 +147,8 @@ public class UtilisateurController  implements UtilisateurApi {
 
     @Override
     public UtilisateurDto findByEmail(String email, HttpServletRequest request) {
-        // TODO Recherche Utilisateur by email
-//        List greetings = (List) request.getSession().getAttribute("GREETING_MESSAGES");
-//        if(greetings == null) {
-//            greetings = new ArrayList<>();
-//            request.getSession().setAttribute("GREETING_MESSAGES", greetings);
-//        }
-//        greetings.add(greetings);
-        //log.error("ip addesse is {}",request.getLocalAddr());
+        // TODO Recherche  Utilisateur by email
+
         Optional<Utilisateur> util = utilisateurRepository.findUtilisateurByEmail(email);
         if(util.isEmpty()){
             throw new InvalidEntityException("L'email n'existe pas");
@@ -148,7 +171,7 @@ public class UtilisateurController  implements UtilisateurApi {
         UtilisateurDto utilisateur=utilisateurService.findByEmail(email);
         String Type_Imam="IMAM";
         if(type=='I'){
-            utilisateur.setTypecompte(Type_Imam);
+            utilisateur.setTypecompte(TypeCompte.IMAM);
             boolean update=true;
             return utilisateurService.save(utilisateur,update);
         }
@@ -156,18 +179,18 @@ public class UtilisateurController  implements UtilisateurApi {
     }
 
     @Override
-    public List<UtilisateurDto> findAll() {
+    public Page<UtilisateurDto> findAll(String sortColumn, int page, int taille, String sortDirection) {
+        Pageable paging = PageRequest.of(page, taille, Sort.by(sortColumn).ascending());
         // TODO afficher tout les utilisateurs
-        return utilisateurService.findAll();
+        return utilisateurService.findAll(paging);
     }
 
     @Override
-    public List<UtilisateurDto> findAllByType(String type) {
-        type.toUpperCase();
-        return utilisateurRepository.findUtilisateurByTypecompte(type)
-                .stream()
-                .map(UtilisateurDto::fromEntity)
-                .collect(Collectors.toList());
+    public Page<UtilisateurDto> findAllByType(String type,String sortColumn, int page, int taille, String sortDirection) {
+        type=type.toUpperCase();
+        Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).ascending());
+        return utilisateurRepository.findUtilisateurByTypecompte(type,paging)
+                .map(UtilisateurDto::fromEntity);
     }
 
     @Override

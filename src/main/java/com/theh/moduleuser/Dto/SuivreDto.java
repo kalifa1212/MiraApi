@@ -1,6 +1,10 @@
 package com.theh.moduleuser.Dto;
 
+import com.theh.moduleuser.Model.Mosque;
 import com.theh.moduleuser.Model.Suivre;
+import com.theh.moduleuser.Model.Utilisateur;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +25,10 @@ public class SuivreDto {
 
     private Integer mosque;
 
+//    private UtilisateurDto user;
+//
+//    private MosqueDto mosq;
+
     public static SuivreDto fromEntity(Suivre suivre) {
         if(suivre==null) {
             return null;
@@ -30,6 +38,8 @@ public class SuivreDto {
                 .idimamsuivie(suivre.getIdimamsuivie())
                 .utilisateur(suivre.getUtilisateur())
                 .mosque(suivre.getMosque())
+//                .mosq(MosqueDto.fromEntity(suivre.getMosq()))
+//                .user(UtilisateurDto.fromEntity(suivre.getUser()))
                 .build();
     }
 
@@ -42,6 +52,8 @@ public class SuivreDto {
         suivre.setUtilisateur(suivreDto.getUtilisateur());
         suivre.setMosque(suivreDto.getMosque());
         suivre.setIdimamsuivie(suivreDto.getIdimamsuivie());
+//        suivre.setUser(UtilisateurDto.toEntity(suivreDto.getUser()));
+//        suivre.setMosq(MosqueDto.toEntity(suivreDto.getMosq()));
         return suivre;
     }
 }

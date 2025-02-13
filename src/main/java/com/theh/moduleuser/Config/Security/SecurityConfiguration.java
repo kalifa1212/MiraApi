@@ -3,10 +3,7 @@ package com.theh.moduleuser.Config.Security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.HttpMethod;
-import org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -15,12 +12,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,6 +22,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -51,13 +51,7 @@ public class SecurityConfiguration {
         return new ProviderManager(authenticationProvider);
     }
     // TODO bean pour la hierarchie des role et implementation
-//    @Bean
-//    public RoleHierarchy roleHierarchy(){
-//        RoleHierarchyImpl roleHierarchy=new RoleHierarchyImpl();
-//        String hierarchie="ROLE_ADMIN > ROLE_USER";
-//        roleHierarchy.setHierarchy(hierarchie);
-//        return roleHierarchy;
-//    }
+
     @Bean
     static RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
@@ -95,13 +89,40 @@ public class SecurityConfiguration {
 //        return new InMemoryUserDetailsManager(admin, user);
         return new MyUserDetailsService();
     }
+
+    //TODO desactivation du cors avant spring security
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf-> csrf.disable())
+                .cors(cors -> cors.disable())
                 .authorizeHttpRequests((authz) -> authz
                         .requestMatchers(HttpMethod.POST,"/nouveau/").hasRole("ADMIN")
-                        .requestMatchers("/muslimApi/v1/utilisateur/muslimApi/v1/authentication/authenticate",
+                        .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
+                        .requestMatchers("/muslimApi/v1/authentication/authenticate",
+                                //--
+                                "/muslimApi/v1/mosque/find/{idmosque}",
+                                "/muslimApi/v1/mosque/find/localisation/{villeOrPays}",
+                                "/muslimApi/v1/mosque/find/vendredi/{vendredi}",
+                                "/muslimApi/v1/mosque/find/all/",
+                                "/muslimApi/v1/mosque/find/",
+                                "/muslimApi/v1/mosque/find/nom/{nom}",
+                                "/muslimApi/v1/mosque/display/{id}",
+                                "/muslimApi/v1/localisation/all",
+                                "/muslimApi/v1/localisation/all/pages/",
+                                "/muslimApi/v1/localisation/{idmosque}",
+                                "/muslimApi/v1/predication/{idpredication}",
+                                "/muslimApi/v1/predication/find/{nom}",
+                                "/muslimApi/v1/predication/find/type/{type}",
+                                "/muslimApi/v1/predication/find/theme/{theme}",
+                                "/muslimApi/v1/predication/all",
+                                "/muslimApi/v1/mosque/",
+                                "/muslimApi/v1/mosque/",
+                                //--
+                                "/muslimApi/v1/authentication/token/verify/{jwtToken}",
+                                "/muslimApi/v1/image/display/{id}/{context}",
+                                "/muslimApi/v1/documents/downloads/{id}/",
                                 "/v2/api-docs/**",
                                 "/health",
                                 "/swagger-ui.html",
@@ -117,10 +138,9 @@ public class SecurityConfiguration {
                 )
 
                 //TODO logout implementation fonctionne mais pas a 100%
-//                .sessionManagement(session->
-//                        session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-//                )
-                .cors(Customizer.withDefaults())
+                .sessionManagement(session->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(applicationRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

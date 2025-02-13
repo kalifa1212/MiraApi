@@ -1,6 +1,7 @@
 package com.theh.moduleuser.Validation;
 
 import com.theh.moduleuser.Dto.PredicationDto;
+import com.theh.moduleuser.Dto.TypePredication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,10 @@ public class PredicationValidator {
 			errors.add("Veuillez renseigner ....");
 			errors.add("Veuillez renseigner ....");
 			errors.add("Veuillez renseigner ....");
+		}
+		if (predicationDto.getType()!= TypePredication.PRECHE &&predicationDto.getType()!= TypePredication.SERMON
+				&& predicationDto.getType()!= TypePredication.CONFERENCE) {
+			errors.add("Veuillez renseigner le type PRECHE,SERMON,CONFERENCE ....");
 		}
 //		if(StringUtils.hasLength(predicationDto.getVille())) {
 //			errors.add("Veuillez renseigner la ville de la mosque");

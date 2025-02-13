@@ -1,8 +1,6 @@
 package com.theh.moduleuser.Model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,9 +23,12 @@ public class Suivre extends AbstractEntity{
 
     @Column(name="mosque")
     private Integer mosque;
+
 //    @ManyToOne
-//    private Utilisateur utilisateur;
+//    @JoinColumn(name = "utilisateur_id")
+//    private Utilisateur user;
 //
 //    @ManyToOne
-//    private Mosque mosque;
+//    @JoinColumn(name = "mosque_id")
+//    private Mosque mosq;
 }

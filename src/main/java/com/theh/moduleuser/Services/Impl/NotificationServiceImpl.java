@@ -8,6 +8,8 @@ import com.theh.moduleuser.Repository.NotificationRepository;
 import com.theh.moduleuser.Repository.UtilisateurRepository;
 import com.theh.moduleuser.Services.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,28 +39,23 @@ public class NotificationServiceImpl implements NotificationService {
             //log.error("La mosque est non valide {}",dto);
             throw new InvalidEntityException("Les information entrer ne sont pas valide ", ErrorCodes.NOTIFICATION_NOT_VALID,errors);
         }
-        Optional<Utilisateur> utilisateur = utilisateurRepository.findById(dto.getUtilisateurDto().getId());
-
-        if(utilisateur.isEmpty()){
-            throw new InvalidEntityException("Utilisateur non trouver", ErrorCodes.UTILISATEUR_NOT_FOUND,errors);
-        }
         return NotificationDto.fromEntity(notificationRepository.save(NotificationDto.toEntity(dto)));
     }
 
 
     @Override
-    public List<NotificationDto> findAll() {
-        return notificationRepository.findAll().stream().map(NotificationDto::fromEntity).collect(Collectors.toList());
+    public Page<NotificationDto> findAll(Pageable pageable) {
+        return notificationRepository.findAll(pageable).map(NotificationDto::fromEntity);
     }
 
     @Override
-    public List<NotificationDto> findByUtilisateur(Integer id) {
-        return notificationRepository.findByUtilisateurId(id).stream().map(NotificationDto::fromEntity).collect(Collectors.toList());
+    public List<NotificationDto> findById(Integer id) {
+        return notificationRepository.findById(id).stream().map(NotificationDto::fromEntity).collect(Collectors.toList());
     }
 
     @Override
-    public List<NotificationDto> findByType(String type) {
-        return notificationRepository.findByType(type).stream().map(NotificationDto::fromEntity).collect(Collectors.toList());
+    public Page<NotificationDto> findByType(String type,Pageable pageable) {
+        return notificationRepository.findByType(type,pageable).map(NotificationDto::fromEntity);
     }
 
     @Override

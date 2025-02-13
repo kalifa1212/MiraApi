@@ -4,16 +4,19 @@ import com.theh.moduleuser.Exceptions.EntityNotFoundException;
 import com.theh.moduleuser.Exceptions.ErrorCodes;
 import com.theh.moduleuser.Exceptions.Errors.ApiError;
 import com.theh.moduleuser.Exceptions.InvalidEntityException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,4 +70,10 @@ public class RestExceptionHandler {
         return new ResponseEntity<Object>(
                 apiError, new HttpHeaders(), apiError.getStatus());
     }
+
+//    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+//    public ModelAndView handle405(HttpServletRequest request, Exception ex) {
+//        ModelAndView modelAndView = new ModelAndView("erreur-405");
+//        return modelAndView;
+//    }
 }

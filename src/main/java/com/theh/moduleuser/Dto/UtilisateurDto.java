@@ -1,18 +1,26 @@
 package com.theh.moduleuser.Dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.theh.moduleuser.Model.Role;
-import com.theh.moduleuser.Model.Utilisateur;
+import com.theh.moduleuser.Model.*;
+import com.theh.moduleuser.Repository.MosqueRepository;
+import com.theh.moduleuser.Repository.SuivreRepository;
+import com.theh.moduleuser.Repository.UtilisateurRepository;
+import com.theh.moduleuser.Services.MosqueService;
+import com.theh.moduleuser.Services.UtilisateurService;
 import jakarta.persistence.Column;
 import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.security.authentication.AuthenticationManager;
 
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Data @Builder
@@ -23,9 +31,10 @@ public class UtilisateurDto {
     private String prenom;
     private String email;
     private String motDePasse;
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date dateDeNaissance;
     private String photo;
-    private String typecompte;
+    private TypeCompte typecompte;
     private String phone;
     private String imageUrl;
     private String secret;
@@ -38,6 +47,10 @@ public class UtilisateurDto {
     private boolean isUsing2FA;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Collection<RoleDto> roles;
+
+    private List<SuivreDto> followedMosques;
+//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+//    private Set<Mosque> followedMosques  = new HashSet<>();
 
     public static UtilisateurDto fromEntity(Utilisateur utilisateur) {
         if(utilisateur==null) {
@@ -54,6 +67,9 @@ public class UtilisateurDto {
                 .imageUrl(utilisateur.getImageUrl())
                 .typecompte(utilisateur.getTypecompte())
                 .imagedata(utilisateur.getImagedata())
+//                .followedMosques(utilisateur.getFollowedMosques().stream().map(SuivreDto::fromEntity).collect(Collectors.toList()))
+                //.followedMosques(utilisateur.getFollowedMosques().stream().map(Mosque::getId).collect(Collectors.toSet()))
+                //.followedMosques(utilisateur.getFollowedMosques().stream().map(SuivreDto::fromEntity).collect(Collectors.toSet()))
                 .roles(
                                 //utilisateur.getRoles().stream().toList()
                         utilisateur.getRoles() != null ?
@@ -62,11 +78,11 @@ public class UtilisateurDto {
                 )
                 .build();
     }
-
     public static Utilisateur toEntity(UtilisateurDto utilisateurDto) {
         if(utilisateurDto==null) {
             return null;
         }
+        //retourneMosque(utilisateurDto.getFollowedMosques());
         Utilisateur utilisateur = new Utilisateur();
         utilisateur.setId(utilisateurDto.getId());
         utilisateur.setNom(utilisateurDto.getNom());
@@ -79,21 +95,8 @@ public class UtilisateurDto {
         utilisateur.setImagedata(utilisateurDto.getImagedata());
         utilisateur.setLocalisation(LocalisationDto.toEntity(utilisateurDto.getLocalisation()));
         utilisateur.setRoles(utilisateurDto.getRoles().stream().map(RoleDto::toEntity).collect(Collectors.toList()));
+        //utilisateur.setFollowedMosques(retourneMosque(utilisateurDto.getFollowedMosques()));
+//        utilisateur.setFollowedMosques( utilisateurDto.getFollowedMosques().stream().map(SuivreDto::toEntity).collect(Collectors.toSet()));
         return utilisateur;
     }
-
-//    public String toString() {
-//        final StringBuilder builder = new StringBuilder();
-//        builder.append("UtilisateurDto [firstName=")
-//                .append(nom)
-//                .append(", lastName=")
-//                .append(prenom)
-//                .append(", email=")
-//                .append(email)
-//                .append(", isUsing2FA=")
-//                .append(isUsing2FA)
-//                .append(", role=")
-//                .append(roles).append("]");
-//        return builder.toString();
-//    }
 }

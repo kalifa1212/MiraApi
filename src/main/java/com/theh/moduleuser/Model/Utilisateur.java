@@ -5,10 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Table(name = "utilisateur")
 @Entity @EqualsAndHashCode(callSuper=true)
@@ -41,7 +44,7 @@ public class Utilisateur extends AbstractEntity{
     private byte[] imagedata;
 
     @Column(name="typecompte")
-    private String typecompte;
+    private TypeCompte typecompte;
 
     @Column(length = 15)
     private String phone;
@@ -65,5 +68,6 @@ public class Utilisateur extends AbstractEntity{
 
     @ManyToOne
     private Localisation localisation;
+
 
 }

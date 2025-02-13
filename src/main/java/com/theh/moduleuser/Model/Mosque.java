@@ -7,6 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="mosque")
@@ -21,7 +23,7 @@ public class Mosque extends AbstractEntity {
 	@Column(name="nom",length = 50)
 	private String nom;
 
-	@Column(name="code",length = 10)
+	@Column(name="code",length = 20)
 	private String code;
 	
 	@Column(name="superficie")
@@ -30,7 +32,14 @@ public class Mosque extends AbstractEntity {
 	@Column(name="photo")
 	private String photo;
 
+	@Column(name="description")
+	private String description;
+
+	@Column(name="imam")
+	private String imam;
+
 	@Lob
+	//@Column(name = "imagedata", columnDefinition="BLOB")
 	private byte[] imagedata;
 	
 	@Column(name="balte")
@@ -75,5 +84,6 @@ public class Mosque extends AbstractEntity {
 
 	@ManyToOne
 	private Localisation localisation;
-	
+
+
 }
