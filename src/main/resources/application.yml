@@ -41,7 +41,7 @@ spring:
           timeout: 8000
     ## End
   jpa:
-    ##show-sql: true
+#    show-sql: true
     ##  Hibernate DDL create, update...
     hibernate:
       ddl-auto: update

@@ -59,7 +59,8 @@ public class MosqueController implements MosqueApi {
 	@Override
 	public Page<MosqueDto> findMosqueByVilleOrPays(String str,String sortColumn, int page, int taille, String sortDirection) {
 		// TODO Rechercher des mosque par ville ou pays
-		Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).ascending());
+		Sort.Direction direction = sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+		Pageable paging = PageRequest.of(page, taille,Sort.by(direction,sortColumn));
 		String pays=str;
 		Page<MosqueDto> mosqueList=mosqueRepository.findMosqueByLocalisationVilleContainingOrLocalisationPays(str,pays,paging).map(MosqueDto::fromEntity);
 //		mosqueList.addAll(mosqueRepository.findMosqueByLocalisationPaysContaining(str,paging).stream()
@@ -79,9 +80,6 @@ public class MosqueController implements MosqueApi {
 			throw new InvalidEntityException("Image non disponible", ErrorCodes.FILE_NOT_FOUND);
 		}
 		Resource resourceM=uploadingFile(mosque);
-//		return ResponseEntity.ok()
-//				.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + mosque.getPhoto() + "\"")
-//				.body(mosque.getImagedata());
 		return ResponseEntity.ok()
 				.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\" profile \"")
 				.body(resourceM);
@@ -101,44 +99,20 @@ public class MosqueController implements MosqueApi {
 	public Page<MosqueDto> findByVendredis(Boolean a,String sortColumn, int page, int taille, String sortDirection) {
 
 		// TODO Rechercher des mosqué par leur type : mosque du vendredi
-		Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).ascending());
+		Sort.Direction direction = sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+		Pageable paging = PageRequest.of(page, taille,Sort.by(direction,sortColumn));
 
 		return  mosqueService.findByVendredis(a,paging);
 	}
 	
 	@Override
-	public Page<MosqueDto> findAll(String type,String sortColumn, int page, int taille, String sortDirection) {
+	public Page<MosqueDto> findAll(String sortColumn, int page, int taille, String sortDirection) {
 		// TODO afficher toutes les mosque par nouveauté et ancienneté
-		Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).ascending());
-		if(type.contentEquals("old")){
-			//return mosqueRepository.findByOrderByCreationDateAsc(paging).map(MosqueDto::fromEntity); // TODO a implementé dans service Mosque
-			return mosqueService.findAll(paging);
-		}
-			else if(type.contentEquals("new")){
-			//return mosqueRepository.findByOrderByCreationDateDesc(paging).map(MosqueDto::fromEntity);// TODO idem
-			return mosqueService.findAll(paging);
-			}
-				else {
-					throw new InvalidEntityException("Le type entrée n'est pas en compte (new or old)");}
-		//  Auto-generated method stub
-		//return mosqueService.findAll();
+		Sort.Direction direction = sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+		Pageable paging = PageRequest.of(page, taille,Sort.by(direction,sortColumn));
 
-	}
+		return mosqueService.findAll(paging);
 
-	@Override
-	public Page<MosqueDto> findAllPagingAndSorting(String sortColumn, int page, int taille, String sortDirection) {
-		String ascending="ascending";String descending="descending";
-
-		if(sortDirection.equals("ascending")){
-			Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).ascending());
-			return mosqueRepository.findAll(paging).map(MosqueDto::fromEntity);
-		} else if (sortDirection.equals("descending")) {
-			Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).descending());
-			return mosqueRepository.findAll(paging).map(MosqueDto::fromEntity);
-		}else {
-			Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).ascending());
-			return mosqueRepository.findAll(paging).map(MosqueDto::fromEntity);
-		}
 	}
 
 	@Override
@@ -168,9 +142,8 @@ public class MosqueController implements MosqueApi {
 	@Override
 	public Page<MosqueDto> find(String str,String sortColumn, int page, int taille, String sortDirection) {
 		// TODO rechercher les mosque par nom et localisation
+		Sort.Direction direction = sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
 		Pageable paging = PageRequest.of(page, taille,Sort.by(sortColumn).ascending());
-		//Page<MosqueDto> mosqueList=mosqueRepository.findMosqueByNomContaining(str,paging).map(MosqueDto::fromEntity);
-		//log.info("test lob strem {}",mosqueList);
 		return mosqueService.findAllByName(str,paging);
 	}
 
@@ -196,9 +169,6 @@ public class MosqueController implements MosqueApi {
 			throw new InvalidEntityException("Le type entrée n'est pas en compte (new or old)");
 		}
 
-		//List<MosqueDto> mosqueDtoLastModified=mosqueRepository.findByLastModifiedDateAfter(date);
-
-		//mosqueInfoDto.setMosqueAfterLastModifiedDate(mosqueDtoLastModified);
 	}
 
 	@Override

@@ -60,20 +60,13 @@ public interface MosqueApi {//kjlkjskfsfskdfksjdfkl
 									@RequestParam(defaultValue = "2") int taille,
 									@RequestParam(defaultValue = "ascending") String sortDirection);
 
-    @Operation(summary = "Tout afficher ",description = "Paramettre old/new  pour l'ordre d'affichage ")
+    @Operation(summary = "Tout afficher ",description = "Paramettre asc (plus petit au plus grand)")
 	@GetMapping(value="find/all/",produces=MediaType.APPLICATION_JSON_VALUE)
-	Page<MosqueDto> findAll(@RequestParam(defaultValue = "new") String type,
-							@RequestParam(required = false,defaultValue = "nom") String sortColumn,
+	Page<MosqueDto> findAll(
+							@RequestParam(required = false,defaultValue = "creationDate") String sortColumn,
 							@RequestParam(defaultValue = "0") int page,
-							@RequestParam(defaultValue = "2") int taille,
-							@RequestParam(defaultValue = "ascending") String sortDirection);
-
-    @Operation(summary = "Test",description = "Test")
-	@GetMapping(value="find/",produces=MediaType.APPLICATION_JSON_VALUE)
-	Page<MosqueDto> findAllPagingAndSorting(@RequestParam(required = false,defaultValue = "nom") String sortColumn,
-											@RequestParam(defaultValue = "0") int page,
-											@RequestParam(defaultValue = "2") int taille,
-											@RequestParam(defaultValue = "ascending") String sortDirection);
+							@RequestParam(defaultValue = "5") int taille,
+							@RequestParam(defaultValue = "desc") String sortDirection);
 
     @Operation(summary = "Count ",description = "le nombre total des mosques enregistrer")
 	@GetMapping(value="count",produces=MediaType.APPLICATION_JSON_VALUE)
@@ -98,7 +91,7 @@ public interface MosqueApi {//kjlkjskfsfskdfksjdfkl
 						 @RequestParam(required = false,defaultValue = "nom") String sortColumn,
 						 @RequestParam(defaultValue = "0") int page,
 						 @RequestParam(defaultValue = "2") int taille,
-						 @RequestParam(defaultValue = "ascending") String sortDirection);
+						 @RequestParam(defaultValue = "asc") String sortDirection);
 
     @Operation(summary = "Recherche par date",description = "Recherche apres la date, yyyy-MM-ddThh:mm:ss.sssZ type=(create ou modified)")
 	@GetMapping(value="find/date/{date}/{type}",produces=MediaType.APPLICATION_JSON_VALUE)

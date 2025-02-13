@@ -70,8 +70,4 @@ public class Utilisateur extends AbstractEntity{
     private Localisation localisation;
 
 
-    // test
-//    @OneToMany(mappedBy = "user")
-//    private Set<Suivre> followedMosques;
-
 }

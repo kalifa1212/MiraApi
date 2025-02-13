@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name="Notification")
 @EqualsAndHashCode(callSuper=true)
@@ -21,12 +23,12 @@ public class Notification extends AbstractEntity{
     private String message;
 
     @Column(name="type")
-    private String type;
+    private TypeNotification type;
 
-    @Column(name="destinateur")
-    private String destinateur;
+    @Column(name="isRead")
+    private boolean isRead;
 
+    @Column(name="dateTime")
+    private LocalDateTime dateTime;
 
-    @ManyToOne
-    private Utilisateur utilisateur;
 }

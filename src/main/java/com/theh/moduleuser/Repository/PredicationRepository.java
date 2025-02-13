@@ -1,6 +1,7 @@
 package com.theh.moduleuser.Repository;
 
 
+import com.theh.moduleuser.Dto.TypePredication;
 import com.theh.moduleuser.Model.Predication;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,9 +13,9 @@ public interface PredicationRepository extends JpaRepository<Predication, Intege
 
 	List<Predication> findById(int a);
 	//Predication findById(int a);
-	Page<Predication> findPredicationByIdMosque(int a,Pageable page);
+	Page<Predication> findPredicationByNomImam(String nomImam,Pageable pageable);
 	Page<Predication> findPredicationByThemeContaining(String str,Pageable pageable);
-	Page<Predication> findPredicationByTypeContaining(String str, Pageable pageable);
+	Page<Predication> findPredicationByType(TypePredication type, Pageable pageable);
 	Page<Predication> findPredicationByIdImam(int a,Pageable pageable);
 
 }

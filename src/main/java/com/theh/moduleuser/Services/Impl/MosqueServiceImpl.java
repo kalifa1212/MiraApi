@@ -1,13 +1,11 @@
 package com.theh.moduleuser.Services.Impl;
 
 import com.theh.moduleuser.Dto.MosqueDto;
+import com.theh.moduleuser.Dto.NotificationDto;
 import com.theh.moduleuser.Exceptions.EntityNotFoundException;
 import com.theh.moduleuser.Exceptions.ErrorCodes;
 import com.theh.moduleuser.Exceptions.InvalidEntityException;
-import com.theh.moduleuser.Model.Localisation;
-import com.theh.moduleuser.Model.Mosque;
-import com.theh.moduleuser.Model.Notification;
-import com.theh.moduleuser.Model.Utilisateur;
+import com.theh.moduleuser.Model.*;
 import com.theh.moduleuser.Repository.*;
 import com.theh.moduleuser.Services.MosqueService;
 import com.theh.moduleuser.Validation.MosqueValidator;
@@ -19,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -152,25 +151,16 @@ public class MosqueServiceImpl implements MosqueService {
 
 	}
 	void Notification(MosqueDto dto,Boolean update){
-		dto.getLocalisation().getVille();
-		String type="Nouvelle Mosque";
-		List<Utilisateur> utilisateur= utilisateurRepository.findUtilisateurByLocalisationId(dto.getLocalisation().getId());
-		//log.warn("la taille {} utilisateurs : {}",utilisateur.size(),utilisateur);
-		Boolean isvendredi=dto.getIsVendredi();
+		NotificationDto notificationDto= new NotificationDto();
+		notificationDto.setType(TypeNotification.MOSQUE);
+		notificationDto.setRead(false);
+		notificationDto.setDateTime(LocalDateTime.now());
 		if(update){
-			type="Mise a jour d'une mosque";
+		notificationDto.setMessage("les Information de la mosque "+dto.getNom()+"de la ville "+
+				dto.getLocalisation().getVille()+ " quartier "+ dto.getQuartier()+" On eté modifier");
 		}
-		for (int i=0; i<utilisateur.size();i++){
-			Notification notification=new Notification();
-			if(isvendredi && update){
-				notification.setMessage("La mosquée "+dto.getNom()+" du vendredi a modifier certains information.");
-			}else {
-				notification.setMessage("La Mosque "+dto.getNom()+ " de votre localitée a du nouveau. ");
-			}
-			notification.setType(type);
-			// log.warn("tour {} ,notification : ",i,utilisateur.get(i));
-			notification.setUtilisateur(utilisateur.get(i));
-			notificationRepository.save(notification);
-		}
+		notificationDto.setMessage("Creation d'une nouvelle mosque a "+dto.getLocalisation().getVille()+" quartier "+
+				dto.getQuartier()+"");
+		notificationRepository.save(NotificationDto.toEntity(notificationDto));
 	}
 }
