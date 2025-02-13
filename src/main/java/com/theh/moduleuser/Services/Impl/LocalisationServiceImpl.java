@@ -40,6 +40,7 @@ public class LocalisationServiceImpl implements LocalisationService {
 			//log.error("La localisation est non valid {}",dto);
 			throw new InvalidEntityException("Les information de la  localisation ne sont pas valide ", ErrorCodes.LOCALISATION_NOT_VALID,errors);
 		}
+		//gestion email operationnel
 		//emailService.sendEmail("kalifakalifh12@gmail.com","test","test");
 
 		return LocalisationDto.fromEntity(localisationRepository.save(LocalisationDto.toEntity(dto)));

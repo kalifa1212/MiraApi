@@ -1,5 +1,6 @@
 package com.theh.moduleuser.Config.Security;
 
+import com.theh.moduleuser.Exceptions.InvalidEntityException;
 import com.theh.moduleuser.Model.Privilege;
 import com.theh.moduleuser.Model.Role;
 import com.theh.moduleuser.Model.Utilisateur;
@@ -100,16 +101,17 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     @Transactional
     Utilisateur createUserIfNotFound(final String email, final String firstName, final String lastName, final String password, final Collection<Role> roles) {
         Utilisateur user1 = utilisateurRepository.findByEmail(email);
-        Utilisateur user = new Utilisateur();
+        //Utilisateur user = new Utilisateur();
         if (user1==null) {
-            user.setNom(firstName);
-            user.setPrenom(lastName);
-            user.setMotDePasse(passwordEncoder.encode(password));
-            user.setEmail(email);
-            user.setEnabled(true);
+            user1= new Utilisateur();
+            user1.setNom(firstName);
+            user1.setPrenom(lastName);
+            user1.setMotDePasse(passwordEncoder.encode(password));
+            user1.setEmail(email);
+            user1.setEnabled(true);
+            user1.setRoles(roles);
+            user1 = utilisateurRepository.save(user1);
         }
-        user.setRoles(roles);
-        user = utilisateurRepository.save(user);
-        return user;
+        return user1;
     }
 }

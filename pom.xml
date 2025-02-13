@@ -26,6 +26,18 @@
             <artifactId>spring-boot-starter-web</artifactId>
             <version>3.0.0</version>
         </dependency>
+<!--        dependency for date time using jackson-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+<!--        end-->
+<!--        gestion actuator-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-actuator</artifactId>-->
+<!--        </dependency>-->
+<!--        end-->
 <!--        gestion session -->
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.session</groupId>-->

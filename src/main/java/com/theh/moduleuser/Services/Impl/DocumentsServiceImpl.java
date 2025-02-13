@@ -1,17 +1,30 @@
 package com.theh.moduleuser.Services.Impl;
 
 import com.theh.moduleuser.Dto.DocumentsDto;
+import com.theh.moduleuser.Dto.PredicationDto;
 import com.theh.moduleuser.Exceptions.EntityNotFoundException;
 import com.theh.moduleuser.Exceptions.ErrorCodes;
 import com.theh.moduleuser.Exceptions.InvalidEntityException;
+import com.theh.moduleuser.File.FileUploader;
 import com.theh.moduleuser.Model.Documents;
+import com.theh.moduleuser.Model.Predication;
 import com.theh.moduleuser.Repository.DocumentsRepository;
+import com.theh.moduleuser.Repository.PredicationRepository;
 import com.theh.moduleuser.Services.DocumentsService;
+import com.theh.moduleuser.Services.File.FileUpload;
+import com.theh.moduleuser.Services.PredicationService;
 import com.theh.moduleuser.Validation.DocumentsValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InvalidClassException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,23 +34,39 @@ import java.util.stream.Collectors;
 public class DocumentsServiceImpl implements DocumentsService {
 	
 	private DocumentsRepository documentsRepository;
+	private PredicationService predicationService;
+	private PredicationRepository predicationRepository;
 	
 	@Autowired
 	public DocumentsServiceImpl(
-			DocumentsRepository documentsRepository
+			DocumentsRepository documentsRepository,
+			PredicationRepository predicationRepository,
+			PredicationService predicationService
 	) {
 		this.documentsRepository=documentsRepository;
+		this.predicationService=predicationService;
+		this.predicationRepository=predicationRepository;
 	}
 	
 	@Override
-	public DocumentsDto save(DocumentsDto dto) {
+	public DocumentsDto save(Integer idPredication, MultipartFile multipartFile) throws IOException {
 		// TODO Auto-generated method stub
-		List<String> errors = DocumentsValidator.validate(dto);
-		if(!errors.isEmpty()) {
-			log.error("La documents est non valide {}",dto);
-			throw new InvalidEntityException("La documents n'est pas valide ", ErrorCodes.DOCUMENTS_NOT_VALID,errors);
+		PredicationDto predication=predicationService.findById(idPredication);
+		DocumentsDto dto=new DocumentsDto();
+		if(predication==null){
+			throw new InvalidClassException("aucune predicaiton n'existe avec l'id donnée");
 		}
-		return DocumentsDto.fromEntity(documentsRepository.save(DocumentsDto.toEntity(dto)));
+		String FileName= StringUtils.cleanPath(multipartFile.getOriginalFilename());
+		String extension=FileName.substring(FileName.lastIndexOf(".")+1);
+		String uploadDir="Documents/Predication/";
+		dto.setType_doc(multipartFile.getContentType());
+		dto.setNom(predication.getTheme()+"-"+predication.getDate());
+		dto.setPredication(predication);
+		FileName=dto.getId().toString()+"."+extension;
+		dto.setFichier(uploadDir+FileName);
+		dto=DocumentsDto.fromEntity(documentsRepository.save(DocumentsDto.toEntity(dto)));
+		FileUploader.saveFile(uploadDir,FileName,multipartFile);
+		return dto;
 	}
 
 	@Override

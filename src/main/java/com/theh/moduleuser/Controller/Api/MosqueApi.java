@@ -2,6 +2,7 @@ package com.theh.moduleuser.Controller.Api;
 import com.theh.moduleuser.Dto.MosqueDto;
 import com.theh.moduleuser.Dto.MosqueInfoDto;
 import com.theh.moduleuser.Model.Mosque;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import static com.theh.moduleuser.Constant.Constants.MOSQUE_ENDPOINT;
 
 @CrossOrigin(origins = "*")
 @RequestMapping(MOSQUE_ENDPOINT)
+@SecurityRequirement(name = "Bearer Authentication")
 public interface MosqueApi {
 
 	@PostMapping(value = "nouveau/{update}",consumes=MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)

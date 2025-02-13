@@ -27,7 +27,7 @@ public class FileUpload {
     }
 
     public static Resource Download() {
-        String url ="G://HAMIDOU/Projets/ProjetPersonnel/API/test/Documents/photo/19/";
+        String url ="D://HAMIDOU/Projets/Projet_Personnel/API/test/Documents/photo/19/";
         Path path = Paths.get(url).toAbsolutePath().resolve("img.jpg");
 
         Resource resource = null;

@@ -1,10 +1,15 @@
 package com.theh.moduleuser.Dto;
 
 import com.theh.moduleuser.Model.Documents;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-@Data @Builder 
+@Slf4j
+@Data @Builder  @AllArgsConstructor
+@NoArgsConstructor
 public class DocumentsDto {
 
 	private Integer id;
@@ -17,13 +22,13 @@ public class DocumentsDto {
 
 	private PredicationDto predication;
 
-	public boolean isEmpty() {
-		if(id==null) {
-		return true;}
-		else {
-			return false;
-		}
-	}
+//	public boolean isEmpty() {
+//		if(id==null) {
+//		return true;}
+//		else {
+//			return false;
+//		}
+//	}
 
 	public static DocumentsDto fromEntity(Documents documents) {
 		if(documents==null) {

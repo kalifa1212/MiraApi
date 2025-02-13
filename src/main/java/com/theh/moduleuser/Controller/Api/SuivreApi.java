@@ -1,5 +1,6 @@
 package com.theh.moduleuser.Controller.Api;
 import com.theh.moduleuser.Dto.SuivreDto;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +9,7 @@ import java.util.List;
 
 import static com.theh.moduleuser.Constant.Constants.APP_ROOT;
 
+@SecurityRequirement(name = "Bearer Authentication")
 @CrossOrigin(origins = "*")
 public interface SuivreApi {
 
