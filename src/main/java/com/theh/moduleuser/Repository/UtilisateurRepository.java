@@ -12,6 +12,7 @@ import java.util.Optional;
 
 public interface UtilisateurRepository extends JpaRepository<Utilisateur, Integer> {
     Utilisateur findByEmail(String email);
+   // Optional<Utilisateur> findByEmail(String email);
     @Query(value = "select u from Utilisateur u where u.email=:email")
     Optional<Utilisateur> findUtilisateurByEmail(@Param("email") String email);
     Page<Utilisateur> findUtilisateurByTypecompte(String typecompte,Pageable page);

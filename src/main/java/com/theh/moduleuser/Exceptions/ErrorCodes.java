@@ -33,7 +33,8 @@ public enum ErrorCodes {
 	BAD_CREDENTIAL(1000),
 	SUIVRE_NOT_VALID(2000),
 	NOTIFICATION_NOT_VALID(3000),
-	FILE_NOT_FOUND(4000)
+	FILE_NOT_FOUND(4000),
+	UNAUTHORIZE(5000)
 	;
 	private int code;
 	ErrorCodes(int code){

@@ -24,11 +24,4 @@ public class Suivre extends AbstractEntity{
     @Column(name="mosque")
     private Integer mosque;
 
-//    @ManyToOne
-//    @JoinColumn(name = "utilisateur_id")
-//    private Utilisateur user;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "mosque_id")
-//    private Mosque mosq;
 }

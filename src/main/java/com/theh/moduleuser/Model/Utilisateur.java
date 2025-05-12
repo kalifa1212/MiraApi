@@ -1,21 +1,20 @@
 package com.theh.moduleuser.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
 @Table(name = "utilisateur")
 @Entity @EqualsAndHashCode(callSuper=true)
-@Data @NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor @AllArgsConstructor
 public class Utilisateur extends AbstractEntity{
     /**
      *
@@ -24,6 +23,8 @@ public class Utilisateur extends AbstractEntity{
 
     @Column(name = "nom")
     private String nom;
+    
+    private String refreshToken;
 
     @Column(name = "prenom")
     private String prenom;
@@ -60,14 +61,29 @@ public class Utilisateur extends AbstractEntity{
     private boolean isUsingMfa;
     private boolean isUsing2FA;
 
-
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
 
+    @JsonIgnore
     @ManyToOne
     private Localisation localisation;
 
+    // TODO follow implementation
+    @ManyToMany
+    @JoinTable(
+            name = "user_mosque_follow",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "mosque_id")
+    )
+    private Set<Mosque> followedMosques= new HashSet<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "user_user_follow",
+            joinColumns = @JoinColumn(name = "follower_id"),
+            inverseJoinColumns = @JoinColumn(name = "following_id")
+    )
+    private Set<Utilisateur> followingUsers= new HashSet<>();
 }

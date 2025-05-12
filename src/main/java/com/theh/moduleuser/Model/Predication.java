@@ -57,6 +57,12 @@ public class Predication extends AbstractEntity {
 	@Column(name="type_doc")
 	private String type_doc;
 
+	private String mimeType; // pour stocker le type de fichier (video/mp4, etc.)
+	private Long size;       // taille en octets
+	private String resolution; // ex: "1920x1080"
+	private String thumbnailUrl; // lien de l'image si video
+	private String ressourceUrl;
+
 	@OneToOne(mappedBy = "predication")
 	private Documents documents ;
 	

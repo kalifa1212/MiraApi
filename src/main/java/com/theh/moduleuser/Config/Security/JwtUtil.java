@@ -1,9 +1,9 @@
 package com.theh.moduleuser.Config.Security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.theh.moduleuser.Exceptions.EntityNotFoundException;
+import com.theh.moduleuser.Exceptions.ErrorCodes;
+import com.theh.moduleuser.Exceptions.JwtValidationException;
+import io.jsonwebtoken.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -29,25 +29,44 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
     public Claims extractAllClaims(String token){
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        //return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        try {
+            return Jwts.parser()
+                    .setSigningKey(SECRET_KEY)
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            throw new JwtValidationException("Le token JWT est expiré", e);
+        } catch (SignatureException | MalformedJwtException | UnsupportedJwtException | IllegalArgumentException e) {
+            throw new JwtValidationException("Le token JWT est invalide : " + e.getMessage(), e);
+        }
     }
 //TODO si necessaire changé Public to private
-    public Boolean isTokenExpired(String token){
+    public boolean isTokenExpired(String token){
         try {
             return extractExpiration(token).before(new Date());
-        }catch (ExpiredJwtException e){
+        } catch (ExpiredJwtException e){
             return true;
         }
-
-        //return extractExpiration(token).before(new Date());
     }
+
     public String generateToken(UserDetails userDetails){
         Map<String, Object> claims=new HashMap<>();
         return creatToken(claims,userDetails.getUsername());
     }
+    public String generateRefreshToken(UserDetails userDetails){
+        Map<String, Object> claims=new HashMap<>();
+        return creatRefreshToken(claims,userDetails.getUsername());
+    }
+
     private String creatToken(Map<String, Object> claims, String subject){
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+1000*60*60*10))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 15)) //TODO 15 minute
+                .signWith(SignatureAlgorithm.HS256,SECRET_KEY).compact();
+    }
+    private String creatRefreshToken(Map<String, Object> claims, String subject){
+        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7)) // TODO 7jours
                 .signWith(SignatureAlgorithm.HS256,SECRET_KEY).compact();
     }
     public Boolean validToken(String token,UserDetails userDetails){

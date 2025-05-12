@@ -61,7 +61,11 @@ public interface    UtilisateurService {
     UtilisateurDto findByEmail(String email);
     Page<UtilisateurDto> findAll(Pageable page);
     Boolean GranteRole(String Email,String role);
+    String followMosque(Integer userId,Integer mosqueId);
+    String unfollowMosque(Integer userId,Integer mosqueId);
+    String unfollowUser(Integer userId,Integer targetUserId);
+    String followUser(Integer userId,Integer targetUserId);
     void delete(Integer id);
-
+    void setRefreshToken(String email,String Token);
     boolean passwordReset(ChangePassWordDto changePassWordDto);
 }

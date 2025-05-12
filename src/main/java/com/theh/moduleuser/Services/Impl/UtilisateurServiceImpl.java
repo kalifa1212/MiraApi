@@ -7,6 +7,7 @@ import com.theh.moduleuser.Exceptions.EntityNotFoundException;
 import com.theh.moduleuser.Exceptions.ErrorCodes;
 import com.theh.moduleuser.Exceptions.InvalidEntityException;
 import com.theh.moduleuser.Model.MetaData.PasswordResetToken;
+import com.theh.moduleuser.Model.Mosque;
 import com.theh.moduleuser.Model.Role;
 import com.theh.moduleuser.Model.TypeCompte;
 import com.theh.moduleuser.Model.Utilisateur;
@@ -38,6 +39,8 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
     @Autowired
     private UtilisateurRepository utilisateurRepository;
+    @Autowired
+    private MosqueRepository mosqueRepository;
     @Autowired
     private VerificationTokenRepository tokenRepository;
     @Autowired
@@ -354,6 +357,62 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         return reussit;
     }
 
+    @Override
+    public String followMosque(Integer userId, Integer mosqueId) {
+        Utilisateur utilisateur =utilisateurRepository.findById(userId).orElseThrow(()->
+                new EntityNotFoundException("Utilisateur non trouver"));
+        Mosque mosque = mosqueRepository.findById(mosqueId).orElseThrow(()->
+                new EntityNotFoundException("Mosque non trouver"));
+        utilisateur.getFollowedMosques().add(mosque);
+       if(utilisateurRepository.save(utilisateur)!=null){
+           return "Réussi";
+       }
+       return "Echec";
+    }
+
+    @Override
+    public String unfollowMosque(Integer userId, Integer mosqueId) {
+        Utilisateur utilisateur =utilisateurRepository.findById(userId).orElseThrow(()->
+                new EntityNotFoundException("Utilisateur non trouver"));
+        Mosque mosque = mosqueRepository.findById(mosqueId).orElseThrow(()->
+                new EntityNotFoundException("Mosque non trouver"));
+        utilisateur.getFollowedMosques().remove(mosque);
+        if(utilisateurRepository.save(utilisateur)!=null){
+            return "Réussi";
+        }
+        return "Echec";
+    }
+
+    @Override
+    public String followUser(Integer userId, Integer targetUserId) {
+        if(userId==targetUserId){
+            return "Impossible de vous abonnée a  vous meme ";
+        }
+        Utilisateur utilisateur = utilisateurRepository.findById(userId).orElseThrow(()->
+                new EntityNotFoundException("Utilisateur non trouver"));
+        Utilisateur targetUser= utilisateurRepository.findById(targetUserId).orElseThrow(()->
+                new EntityNotFoundException("Utilisateur non trouver"));
+        utilisateur.getFollowingUsers().add(targetUser);
+       // utilisateurRepository.save(utilisateur);
+        if(utilisateurRepository.save(utilisateur)!=null){
+            return "Réussi";
+        }
+        return "Echec";
+    }
+    @Override
+    public String unfollowUser(Integer userId, Integer targetUserId) {
+        Utilisateur utilisateur = utilisateurRepository.findById(userId).orElseThrow(()->
+                new EntityNotFoundException("Utilisateur non trouver"));
+        Utilisateur targetUser= utilisateurRepository.findById(targetUserId).orElseThrow(()->
+                new EntityNotFoundException("Utilisateur non trouver"));
+        utilisateur.getFollowingUsers().remove(targetUser);
+       // utilisateurRepository.save(utilisateur);
+        if(utilisateurRepository.save(utilisateur)!=null){
+            return "Réussi";
+        }
+        return "Echec";
+    }
+
 
 
     @Override
@@ -364,6 +423,30 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         }
 
         utilisateurRepository.deleteById(id);
+    }
+
+    @Override
+    public void setRefreshToken(String email, String Token) {
+       // log.error("error in the service setrefresh");
+        utilisateurRepository.findUtilisateurByEmail(email).ifPresentOrElse(utilisateur -> {
+            utilisateur.setRefreshToken(Token);
+           // log.error("token set loc {}",utilisateur);
+            try {
+                utilisateurRepository.save(utilisateur);
+                log.info("Refresh Token save successfully");
+            } catch (Exception e) {
+                log.error("Erreur lors du save :", e);  // affiche toute la stack
+                Throwable cause = e.getCause();
+                while (cause != null) {
+                    log.error("Cause: ", cause);
+                    cause = cause.getCause();
+                    log.error("Cause---: ", cause);
+                }
+            }
+           // log.error("Refresh token mis à jour pour l'utilisateur : {}", utilisateur);
+        }, () -> {
+            log.warn("Aucun utilisateur trouvé avec l'email : {}", email);
+        });
     }
 
     @Override

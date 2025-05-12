@@ -46,17 +46,7 @@ public class UtilisateurValidation {
         if(utilisateurDto.getDateDeNaissance()==null) {
             errors.add("Veuillez renseigner la date de naissance");
         }
-//		if(utilisateurDto.getAdresse()==null) {
-//			errors.add("Veuillez renseigner l'adresse ");
-//		}
-//		else {
-////			if (utilisateurDto.getAdresse().getAdresse1() == null) {
-////				errors.add("Veuillez renseigner la premiere adresse ");
-////			}
-//			if(utilisateurDto.getAdresse().getVille()==null) {
-//				errors.add("Veuillez renseigner la la ville ");
-//			}
-//		}
+
 
         return errors;
     }

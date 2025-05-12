@@ -22,11 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -78,15 +73,6 @@ public class SecurityConfiguration {
     @Bean
     //authentication
     public UserDetailsService userDetailsService() {
-//        UserDetails admin = Utilisateur.withUsername("Basant")
-//                .password(encoder.encode("Pwd1"))
-//                .roles("ADMIN")
-//                .build();
-//        UserDetails user = Utilisateur.withUsername("John")
-//                .password(encoder.encode("Pwd2"))
-//                .roles("USER","ADMIN","HR")
-//                .build();
-//        return new InMemoryUserDetailsManager(admin, user);
         return new MyUserDetailsService();
     }
 
@@ -102,10 +88,13 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                         .requestMatchers("/muslimApi/v1/authentication/authenticate",
                                 //--
-                                "/muslimApi/v1/mosque/find/{idmosque}",
-                                "/muslimApi/v1/mosque/find/localisation/{villeOrPays}",
-                                "/muslimApi/v1/mosque/find/vendredi/{vendredi}",
+                                "/muslimApi/v1/utilisateur/authenticate/refresh/",
+                                "/muslimApi/v1/file/stream",
+                                //"/muslimApi/v1/mosque/find/{idmosque}",
+                                //"/muslimApi/v1/mosque/find/localisation/{villeOrPays}",
+                                //"/muslimApi/v1/mosque/find/vendredi/{vendredi}",
                                 "/muslimApi/v1/mosque/find/all/",
+                                "/muslimApi/v1/utilisateur/find/all/", //
                                 "/muslimApi/v1/mosque/find/",
                                 "/muslimApi/v1/mosque/find/nom/{nom}",
                                 "/muslimApi/v1/mosque/display/{id}",

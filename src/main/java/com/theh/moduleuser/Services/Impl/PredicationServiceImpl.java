@@ -158,7 +158,7 @@ public class PredicationServiceImpl implements PredicationService {
 		notificationDto.setType(TypeNotification.PREDICATION);
 		notificationDto.setRead(false);
 		notificationDto.setDateTime(LocalDateTime.now());
-		notificationDto.setMessage("Une nouvelle predication  Type:"+dto.getType()+" Date: "+
-				dto.getDate()+" theme: "+dto.getTheme()+" Par l'imam: "+dto.getNomImam());
+		notificationDto.setMessage("Une nouvelle predication de Type:"+dto.getType()+" Date: "+
+				dto.getDate()+" theme: "+dto.getTheme()+" Par l'imam: "+dto.getNomImam()+" Lieux: "+dto.getNomMosque());
 	}
 }

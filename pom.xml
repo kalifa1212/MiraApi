@@ -56,7 +56,13 @@
             <artifactId>hibernate-envers</artifactId>
             <version>${hibernate.version}</version>
         </dependency>
-<!--        end-->
+<!--        end csv and env dependency-->
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>5.7.1</version>
+        </dependency>
+
         <dependency>
             <groupId>io.github.cdimascio</groupId>
             <artifactId>dotenv-java</artifactId>
@@ -106,6 +112,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+<!--         map struck-->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.5.5.Final</version> <!-- version stable actuelle -->
         </dependency>
     </dependencies>
 

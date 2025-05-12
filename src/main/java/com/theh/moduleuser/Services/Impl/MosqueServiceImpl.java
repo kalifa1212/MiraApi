@@ -1,5 +1,11 @@
 package com.theh.moduleuser.Services.Impl;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvValidationException;
+import com.theh.moduleuser.Dto.LocalisationDto;
 import com.theh.moduleuser.Dto.MosqueDto;
 import com.theh.moduleuser.Dto.NotificationDto;
 import com.theh.moduleuser.Exceptions.EntityNotFoundException;
@@ -16,8 +22,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -66,18 +79,104 @@ public class MosqueServiceImpl implements MosqueService {
 	}
 
 	@Override
+	public void exportData(PrintWriter writer) throws IOException {
+
+			List<MosqueDto> mosques = mosqueRepository.findAll().stream().map(MosqueDto::fromEntity).collect(Collectors.toList());
+
+			CSVWriter csvWriter = new CSVWriter(writer);
+
+			// Écrire l'en-tête du CSV
+			String[] header = {
+					"id","nom","code","imam","superficie","description",
+					"balte","asr","magrib","icha","soub","zour","djouma","isVendredi",
+					"quartier", "Ville","pays"
+			};
+			csvWriter.writeNext(header);
+
+			// Écrire les données
+			for (MosqueDto mosque : mosques) {
+				String[] data = {
+						String.valueOf(mosque.getId()),
+						mosque.getNom(),
+						mosque.getCode(),
+						mosque.getImam(),
+						String.valueOf(mosque.getSuperficie()),
+						mosque.getDescription(),
+						String.valueOf(mosque.getBalte()),
+						String.valueOf(mosque.getAsr()),
+						String.valueOf(mosque.getMagrib()),
+						String.valueOf(mosque.getIcha()),
+						String.valueOf(mosque.getSoub()),
+						String.valueOf(mosque.getZour()),
+						String.valueOf(mosque.getDjouma()),
+						String.valueOf(mosque.getIsVendredi()),
+						mosque.getQuartier(),
+						mosque.getLocalisation().getVilleDto().getName(),
+						mosque.getLocalisation().getVilleDto().getCountry().getName()
+				};
+				csvWriter.writeNext(data);
+			}
+
+			csvWriter.close();
+
+	}
+
+	@Override
+	public void importDataToDB(MultipartFile file) throws IOException {
+		log.info("Demararge du processus");
+		try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
+			 CSVReader csvReader = new CSVReader(reader))
+		{
+			SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+			String[] nextRecord;
+			boolean isHeader = true;
+
+			List<MosqueDto> mosques = new ArrayList<>();
+			log.info("verification terminer debu de l'exttraction des données");
+			int i=1;
+			while ((nextRecord = csvReader.readNext()) != null) {
+				if (isHeader) {  // Ignorer l'en-tête
+					isHeader = false;
+					continue;
+				}
+				log.info("Extraction de l'element numero :",i);
+				Localisation local =localisationRepository.findByVille_NameIgnoreCase(nextRecord[15]);
+				Mosque newMosque= new Mosque();
+				newMosque.setNom(nextRecord[1]);
+				newMosque.setCode(nextRecord[2]);
+				newMosque.setImam(nextRecord[3]);
+				newMosque.setSuperficie(Integer.parseInt(nextRecord[4]));
+				newMosque.setDescription(nextRecord[5]);
+				//newMosque.setBalte(nextRecord[6]);
+				newMosque.setBalte(format.parse(nextRecord[6]));
+				newMosque.setAsr(format.parse(nextRecord[7]));
+				newMosque.setMagrib(format.parse(nextRecord[8]));
+				newMosque.setIcha(format.parse(nextRecord[9]));
+				newMosque.setSoub(format.parse(nextRecord[10]));
+				newMosque.setZour(format.parse(nextRecord[11]));
+				newMosque.setDjouma(format.parse(nextRecord[12]));
+				newMosque.setIsVendredi(Boolean.parseBoolean(nextRecord[13]));
+				newMosque.setLocalisation(local);
+				mosqueRepository.save(newMosque);
+				log.info("extraction terminer numero {}",i,"terminer");
+				i++;
+
+			}
+		} catch (CsvValidationException e) {
+			throw new RuntimeException(e);
+		} catch (ParseException e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+
+	@Override
 	public MosqueDto findById(Integer id) {
 		//  Auto-generated method stub
 		if(id==null ) {
 			throw new InvalidEntityException("L'id entre est NULL");
 		}
 		Optional<Mosque> mosque= mosqueRepository.findById(id);
-		//log.error("test {}",mosque.get().getNom());
-//		if(!mosque.isPresent()) {
-//			log.error("inside test {}",mosque);
-//			throw new InvalidEntityException("Aucune mosque avec l'id "+id+" n'a ete trouver dans la BD",
-//					ErrorCodes.MOSQUE_NOT_FOUND);
-//		}
 		
 		return Optional.of(MosqueDto.fromEntity(mosque.get())).orElseThrow(() ->
 				new EntityNotFoundException(
@@ -124,12 +223,6 @@ public class MosqueServiceImpl implements MosqueService {
 	@Override
 	public Page<MosqueDto> findAllByName(String str, Pageable page) {
 		Page<MosqueDto> mosqueList=mosqueRepository.findMosqueByNomContaining(page,str).map(MosqueDto::fromEntity);
-//		List<MosqueDto> mosqueList= mosqueRepository.findMosqueByNomContaining(str)
-//				.stream()
-//				.map(MosqueDto::fromEntity)
-//				.collect(Collectors.toList());
-		//Page <MosqueDto> mosquePage= convertListToPage(mosqueList,page);
-		//return mosqueRepository.findMosqueByNomContaining(page,str).map(MosqueDto::fromEntity);
 		return mosqueList;
 	}
 	// TODO Conversion Function
@@ -155,11 +248,12 @@ public class MosqueServiceImpl implements MosqueService {
 		notificationDto.setType(TypeNotification.MOSQUE);
 		notificationDto.setRead(false);
 		notificationDto.setDateTime(LocalDateTime.now());
+		Localisation localisation=localisationRepository.findById(dto.getLocalisation().getId()).orElseThrow();
 		if(update){
 		notificationDto.setMessage("les Information de la mosque "+dto.getNom()+"de la ville "+
-				dto.getLocalisation().getVille()+ " quartier "+ dto.getQuartier()+" On eté modifier");
+				localisation.getVille().getName()+ " quartier "+ dto.getQuartier()+" On eté modifier");
 		}
-		notificationDto.setMessage("Creation d'une nouvelle mosque a "+dto.getLocalisation().getVille()+" quartier "+
+		notificationDto.setMessage("Creation d'une nouvelle mosque a "+localisation.getVille().getName()+" quartier "+
 				dto.getQuartier()+"");
 		notificationRepository.save(NotificationDto.toEntity(notificationDto));
 	}

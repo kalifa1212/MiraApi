@@ -13,14 +13,11 @@ public class LocalisationValidator {
 		if(localisationDto==null) {
 			errors.add("Veuillez renseigner les Information de la localisation");
 		}
-//		if(localisationDto.getId()==null) {
-//			errors.add("Veuillez renseigner l'id de l'entité");
-//		}
-		if(!StringUtils.hasLength(localisationDto.getVille())) {
+		if(!StringUtils.hasLength(localisationDto.getVilleDto().getName())) {
 			errors.add("Veuillez renseigner la ville de la mosque");
 		}
 		else
-			if(!StringUtils.hasLength(localisationDto.getPays())) {
+			if(!StringUtils.hasLength(localisationDto.getVilleDto().getCountry().getName())) {
 				errors.add("Veuillez renseigner le quartier ou se situe la mosque");
 			}
 		

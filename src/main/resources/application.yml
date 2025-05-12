@@ -87,9 +87,9 @@ server:
 #      enabled: false
 # application information
 #file stage location
-file:
-  storage:
-    location: fileStorageDir
+#file:
+#  storage:
+#    location: fileStorageDir
   ## File path config
 project:
   poster: fileStorage/
@@ -97,3 +97,16 @@ project:
 application:
   title: muslimApp
   version: 1.0
+#  debuggin sql
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        sql: DEBUG
+#        type:
+#          descriptor:
+#            sql: TRACE
+#      springframework:
+#        transaction: DEBUG
+#        orm:
+#          jpa: DEBUG

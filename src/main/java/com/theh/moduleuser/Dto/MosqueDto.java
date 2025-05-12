@@ -4,24 +4,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.theh.moduleuser.Model.Mosque;
-import com.theh.moduleuser.Model.Suivre;
-import com.theh.moduleuser.Model.Utilisateur;
-import com.theh.moduleuser.Services.MosqueService;
-import com.theh.moduleuser.Services.UtilisateurService;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @Data @Builder  @AllArgsConstructor @NoArgsConstructor
@@ -60,7 +48,7 @@ public class MosqueDto {
 
 	private String quartier;
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	//@JsonIgnore
+	@JsonIgnore
 	private byte[] imagedata;
 
 	private double longitude;
@@ -68,11 +56,6 @@ public class MosqueDto {
 	private double latitude;
 
 	private LocalisationDto localisation;
-
-	//private List<SuivreDto> followers;
-
-//	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
-//	private Set<Utilisateur> followers = new HashSet<>() ;
 	public static MosqueDto fromEntity(Mosque mosque) {
 		if(mosque==null) {
 			return null;
@@ -97,8 +80,6 @@ public class MosqueDto {
 				.imagedata(mosque.getImagedata())
 				.imam(mosque.getImam())
 				.description(mosque.getDescription())
-				//.followers(mosque.getFollowers().stream().map(SuivreDto::fromEntity).collect(Collectors.toList()))
-				//.followers(mosque.getFollowers().stream().map(Utilisateur::getId).collect(Collectors.toSet()))
 				.build();
 	}
 	

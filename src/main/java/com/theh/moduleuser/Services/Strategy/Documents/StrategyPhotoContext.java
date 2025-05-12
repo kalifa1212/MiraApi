@@ -2,6 +2,7 @@ package com.theh.moduleuser.Services.Strategy.Documents;
 
 import com.theh.moduleuser.Exceptions.ErrorCodes;
 import com.theh.moduleuser.Exceptions.InvalidEntityException;
+import com.theh.moduleuser.Model.Context;
 import lombok.Setter;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,8 @@ public class StrategyPhotoContext {
         this.beanFactory=beanFactory;
     }
 
-    public Object savePhoto(String context,Integer id, MultipartFile multipartFile) throws IOException {
-        determinContext(context);
+    public Object savePhoto(Context context, Integer id, MultipartFile multipartFile) throws IOException {
+        determinContext(context.toString());
         return strategyPhoto.savePhoto(id,multipartFile);
     }
     public Object displayPhoto(Integer id,String context){

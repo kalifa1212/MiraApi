@@ -71,7 +71,7 @@ public class LocalisationServiceImpl implements LocalisationService {
 		}
 		//Optional<Localisation> localisation= localisationRepository.findLocalisationByVille(ville);
 		
-		return this.localisationRepository.findLocalisationByVilleLike(ville,page)
+		return this.localisationRepository.findByVille_NameIgnoreCase(ville,page)
 				.map(LocalisationDto::fromEntity);
 	}
 

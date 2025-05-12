@@ -1,4 +1,5 @@
 package com.theh.moduleuser.Controller;
+import com.opencsv.exceptions.CsvValidationException;
 import com.theh.moduleuser.Controller.Api.MosqueApi;
 import com.theh.moduleuser.Dto.MosqueDto;
 import com.theh.moduleuser.Dto.MosqueInfoDto;
@@ -16,11 +17,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
@@ -62,7 +69,8 @@ public class MosqueController implements MosqueApi {
 		Sort.Direction direction = sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
 		Pageable paging = PageRequest.of(page, taille,Sort.by(direction,sortColumn));
 		String pays=str;
-		Page<MosqueDto> mosqueList=mosqueRepository.findMosqueByLocalisationVilleContainingOrLocalisationPays(str,pays,paging).map(MosqueDto::fromEntity);
+		//Page<MosqueDto> mosqueList=mosqueRepository.findMosqueByLocalisationVilleContainingOrLocalisationPays(str,pays,paging).map(MosqueDto::fromEntity);
+		Page<MosqueDto> mosqueList=mosqueRepository.findByLocalisation_Ville_NameContainingOrLocalisation_Ville_Pays_Name(str,pays,paging).map(MosqueDto::fromEntity);
 //		mosqueList.addAll(mosqueRepository.findMosqueByLocalisationPaysContaining(str,paging).stream()
 //				.map(MosqueDto::fromEntity)
 //				.collect(Collectors.toList()));
@@ -84,6 +92,36 @@ public class MosqueController implements MosqueApi {
 				.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\" profile \"")
 				.body(resourceM);
 	}
+
+	@Override
+	public ResponseEntity<byte[]> exportTableToCsv() throws IOException {
+		StringWriter stringWriter = new StringWriter();
+		mosqueService.exportData(new PrintWriter(stringWriter));
+
+		byte[] csvBytes = stringWriter.toString().getBytes(StandardCharsets.UTF_8);
+
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=mosque.csv")
+				.contentType(MediaType.parseMediaType("text/csv"))
+				.body(csvBytes);
+
+	}
+
+	@Override
+	public ResponseEntity<String> importTablefromCsv(MultipartFile file) throws IOException {
+		if (file.isEmpty()) {
+			return ResponseEntity.badRequest().body("Fichier CSV manquant !");
+		}
+
+		try {
+			mosqueService.importDataToDB(file);
+			return ResponseEntity.ok("Importation des mosquées réussie !");
+		} catch (IOException e) {
+			return ResponseEntity.status(500).body("Erreur d'importation : " + e.getMessage());
+		}
+
+	}
+
 	public Resource uploadingFile(MosqueDto mosqueDto){
 		Path path = Paths.get(mosqueDto.getPhoto());
 		Resource resource = null;
@@ -125,18 +163,21 @@ public class MosqueController implements MosqueApi {
 	public int countAllMosqueVendredi(Boolean bool) {
 		// TODO nombre des mosques du vendredi
 		return mosqueRepository.countByIsVendredi(bool);
+
 	}
 
 	@Override
 	public int countAllMosqueVendrediByLocation(Boolean bool, String ville) {
 		// TODO nombre de mosque du vendredi par localisation
-		return mosqueRepository.countMosqueByIsVendrediAndLocalisation_VilleContaining(bool,ville);
+		return mosqueRepository.countMosqueByIsVendrediAndLocalisation_Ville_NameContaining(bool,ville);
+		//return 0;
 	}
 
 	@Override
 	public int countAllMosqueByLocalisation(String bool) {
 		// TODO  nombre de mosque par localisation
-		return mosqueRepository.countMosqueByLocalisation_VilleContaining(bool);
+		return mosqueRepository.countMosqueByLocalisation_Ville_NameContaining(bool);
+		//return 0;
 	}
 
 	@Override

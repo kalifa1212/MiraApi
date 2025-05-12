@@ -9,44 +9,39 @@ import lombok.NoArgsConstructor;
 
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
 public class LocalisationDto {
-
 	private Integer id;
+	private String rue;
+	private String latitude;
+	private String longitude;
+	private VilleDto villeDto;
 
-	private String ville;
-
-	private String pays;
-
-	private String description;
-	
 	public static LocalisationDto fromEntity(Localisation localisation) {
-		if (localisation==null) {
+		if (localisation == null) {
 			return null;
-			//  throw an exception
 		}
-		
+
 		return LocalisationDto.builder()
 				.id(localisation.getId())
-				.ville(localisation.getVille())
-				.pays(localisation.getPays())
-				.description(localisation.getDescription())
-//				.longitude(localisation.getLongitude())
-//				.latitude(localisation.getLatitude())
+				.rue(localisation.getRue())
+				.latitude(localisation.getLatitude())
+				.longitude(localisation.getLongitude())
+				.villeDto(VilleDto.fromEntity(localisation.getVille()))
 				.build();
 	}
-	
+
 	public static Localisation toEntity(LocalisationDto localisationDto) {
-		if (localisationDto==null) {
+		if (localisationDto == null) {
 			return null;
-			//  throw an exception
 		}
-		
+
 		Localisation localisation = new Localisation();
 		localisation.setId(localisationDto.getId());
-		localisation.setVille(localisationDto.getVille());
-		localisation.setPays(localisationDto.getPays());
-		localisation.setDescription(localisationDto.getDescription());
-//		localisation.setLongitude(localisationDto.getLongitude());
-//		localisation.setLatitude(localisationDto.getLatitude());
+		localisation.setRue(localisationDto.getRue());
+		localisation.setLatitude(localisationDto.getLatitude());
+		localisation.setLongitude(localisationDto.getLongitude());
+		localisation.setVille(VilleDto.toEntity(localisationDto.getVilleDto()));
+
 		return localisation;
 	}
+
 }

@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,6 +36,11 @@ public interface UtilisateurApi {
     @PostMapping(value = UTILISATEUR_ENDPOINT+"account/password/reset")
     ResponseEntity<Boolean> PasswordReset(@RequestBody ChangePassWordDto changePassWordDto);
 
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "refresh token ",description = "Refresh token")
+    @PostMapping(value = UTILISATEUR_ENDPOINT+"authenticate/refresh/", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<?> refreshToken(@RequestParam String refreshToken);
+
     @Operation(summary = "Authentication ",description = "Veritfy token : False pour valid and true to obselet")
     @PostMapping(value = AUTHENTICATION_ENDPOINT+"token/verify/{jwtToken}")
     ResponseEntity<Boolean> VerifyToken(@PathVariable("jwtToken") String jwtToken);
@@ -52,12 +58,13 @@ public interface UtilisateurApi {
     ResponseEntity<UtilisateurDto> save(@RequestBody UtilisateurDto  dto, @PathVariable("update") Boolean update);
 
     //@SecurityRequirement(name = "Bearer Authentication")
-   // @PreAuthorize("hasAuthority('READ_PRIVILEGE')")
+   // @PreAuthorize("hasAuthority('ROLE_STAFF')")
     @GetMapping()
     String test();
 
     @Operation(summary = "Recherche ",description = "Recherche par ID")
     @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(value=UTILISATEUR_ENDPOINT+"find/id/{idutilisateur}")
     UtilisateurDto findById(@PathVariable("idutilisateur") Integer id);
 
@@ -71,6 +78,26 @@ public interface UtilisateurApi {
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping(value=UTILISATEUR_ENDPOINT+"grantrole/{email}/{role}")
     Boolean GranteCompteRole(@PathVariable("email") String email,@PathVariable("role") String role);
+
+    @Operation(summary = "Suivre ",description = "Suivre une mosque ")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PostMapping(value = APP_ROOT+"suivre/{userid}/follow-mosque/{mosqueId}")
+    String followMosque(@PathVariable("userid") Integer userid,@PathVariable("mosqueId") Integer mosqueId);
+
+    @Operation(summary = "Suivre ",description = "Ne plus suivre une mosque ")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PostMapping(value = APP_ROOT+"suivre/{userid}/unfollow-mosque/{mosqueId}")
+    String unfollowMosque(@PathVariable("userid") Integer userid,@PathVariable("mosqueId") Integer mosqueId);
+
+    @Operation(summary = "Suivre ",description = "Suivre une mosque ")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PostMapping(value = APP_ROOT+"suivre/{userid}/follow-user/{usertarget}")
+    String followUser(@PathVariable("userid") Integer userid,@PathVariable("usertarget") Integer usertarget);
+
+    @Operation(summary = "Suivre ",description = "Suivre une mosque ")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PostMapping(value = APP_ROOT+"suivre/{userid}/unfollow-user/{usertarget}")
+    String unfollowUser(@PathVariable("userid") Integer userid,@PathVariable("usertarget") Integer usertarget);
     //find all
 
     @Operation(summary = "Grant ",description = "Grant type Compte, U for User and I for Imam")

@@ -5,6 +5,9 @@ import com.theh.moduleuser.Model.Privilege;
 import com.theh.moduleuser.Model.Role;
 import com.theh.moduleuser.Model.Utilisateur;
 import com.theh.moduleuser.Repository.UtilisateurRepository;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,9 +28,6 @@ import java.util.List;
 public class   MyUserDetailsService implements UserDetailsService {
     @Autowired
     private UtilisateurRepository utilisateurRepository;
-
-//    @Autowired
-//    private LoginAttemptService loginAttemptService;
 
     public MyUserDetailsService() {
         super();
