@@ -1,6 +1,6 @@
 # 🌙 MIRA API – Muslim Information Resources and Assistance
 MIRA API est une solution développée par **H Technologies**, conçue pour fournir des ressources et une assistance aux musulmans, incluant le suivi des mosquées, les notifications et bien plus encore.
-
+HForge	"Nous forgeons vos idées numériques"
 ---
 
 ## 📌 État du Projet

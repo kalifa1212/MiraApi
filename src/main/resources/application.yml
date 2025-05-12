@@ -97,6 +97,7 @@ project:
 application:
   title: muslimApp
   version: 1.0
+
 #  debuggin sql
 #logging:
 #  level:
@@ -110,3 +111,14 @@ application:
 #        transaction: DEBUG
 #        orm:
 #          jpa: DEBUG
+
+#actuator management
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always

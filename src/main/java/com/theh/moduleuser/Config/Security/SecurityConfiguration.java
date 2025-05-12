@@ -109,6 +109,7 @@ public class SecurityConfiguration {
                                 "/muslimApi/v1/mosque/",
                                 "/muslimApi/v1/mosque/",
                                 //--
+                                "/actuator/**",
                                 "/muslimApi/v1/authentication/token/verify/{jwtToken}",
                                 "/muslimApi/v1/image/display/{id}/{context}",
                                 "/muslimApi/v1/documents/downloads/{id}/",
