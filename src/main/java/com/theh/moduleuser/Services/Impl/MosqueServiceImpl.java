@@ -1,7 +1,5 @@
 package com.theh.moduleuser.Services.Impl;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
@@ -87,7 +85,7 @@ public class MosqueServiceImpl implements MosqueService {
 
 			// Écrire l'en-tête du CSV
 			String[] header = {
-					"id","nom","code","imam","superficie","description",
+					"nom","code","imam","superficie","description",
 					"balte","asr","magrib","icha","soub","zour","djouma","isVendredi",
 					"quartier", "Ville","pays"
 			};
@@ -96,7 +94,6 @@ public class MosqueServiceImpl implements MosqueService {
 			// Écrire les données
 			for (MosqueDto mosque : mosques) {
 				String[] data = {
-						String.valueOf(mosque.getId()),
 						mosque.getNom(),
 						mosque.getCode(),
 						mosque.getImam(),
@@ -132,7 +129,6 @@ public class MosqueServiceImpl implements MosqueService {
 			boolean isHeader = true;
 
 			List<MosqueDto> mosques = new ArrayList<>();
-			log.info("verification terminer debu de l'exttraction des données");
 			int i=1;
 			while ((nextRecord = csvReader.readNext()) != null) {
 				if (isHeader) {  // Ignorer l'en-tête
@@ -140,22 +136,22 @@ public class MosqueServiceImpl implements MosqueService {
 					continue;
 				}
 				log.info("Extraction de l'element numero :",i);
-				Localisation local =localisationRepository.findByVille_NameIgnoreCase(nextRecord[15]);
+				Localisation local =localisationRepository.findByVille_NameIgnoreCase(nextRecord[14]);
 				Mosque newMosque= new Mosque();
-				newMosque.setNom(nextRecord[1]);
-				newMosque.setCode(nextRecord[2]);
-				newMosque.setImam(nextRecord[3]);
-				newMosque.setSuperficie(Integer.parseInt(nextRecord[4]));
-				newMosque.setDescription(nextRecord[5]);
+				newMosque.setNom(nextRecord[0]);
+				newMosque.setCode(nextRecord[1]);
+				newMosque.setImam(nextRecord[2]);
+				newMosque.setSuperficie(Integer.parseInt(nextRecord[3]));
+				newMosque.setDescription(nextRecord[4]);
 				//newMosque.setBalte(nextRecord[6]);
-				newMosque.setBalte(format.parse(nextRecord[6]));
-				newMosque.setAsr(format.parse(nextRecord[7]));
-				newMosque.setMagrib(format.parse(nextRecord[8]));
-				newMosque.setIcha(format.parse(nextRecord[9]));
-				newMosque.setSoub(format.parse(nextRecord[10]));
-				newMosque.setZour(format.parse(nextRecord[11]));
-				newMosque.setDjouma(format.parse(nextRecord[12]));
-				newMosque.setIsVendredi(Boolean.parseBoolean(nextRecord[13]));
+				newMosque.setBalte(format.parse(nextRecord[5]));
+				newMosque.setAsr(format.parse(nextRecord[6]));
+				newMosque.setMagrib(format.parse(nextRecord[7]));
+				newMosque.setIcha(format.parse(nextRecord[8]));
+				newMosque.setSoub(format.parse(nextRecord[9]));
+				newMosque.setZour(format.parse(nextRecord[10]));
+				newMosque.setDjouma(format.parse(nextRecord[11]));
+				newMosque.setIsVendredi(Boolean.parseBoolean(nextRecord[12]));
 				newMosque.setLocalisation(local);
 				mosqueRepository.save(newMosque);
 				log.info("extraction terminer numero {}",i,"terminer");

@@ -8,7 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 import static com.theh.moduleuser.Constant.Constants.APP_ROOT;
@@ -26,6 +28,15 @@ public interface PredicationApi {
 	@Operation(summary = "Recherche ",description = "Recherche par ID")
 	@GetMapping(value=APP_ROOT+"predication/{idpredication}")
 	PredicationDto findByIdPredication(@PathVariable("idpredication") Integer id);
+
+	@Operation(summary = "Export Data ",description = "export  Predication Data ")
+	@GetMapping(value = "export/")
+	ResponseEntity<byte[]> exportTableToCsv() throws IOException;
+
+	@Operation(summary = "Import Data ",description = "Import  predication Data ")
+	@PostMapping(value = "import/",consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
+	ResponseEntity<String> importTablefromCsv(@RequestPart("file") MultipartFile file) throws IOException;
+
 	//Find by Nom Imam
 
 	@Operation(summary = "Recherche ",description = "Recherche Predication par Nom predicateur ")

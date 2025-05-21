@@ -86,4 +86,31 @@ public class Utilisateur extends AbstractEntity{
             inverseJoinColumns = @JoinColumn(name = "following_id")
     )
     private Set<Utilisateur> followingUsers= new HashSet<>();
+    // TODO new
+    // 🔁 LIKE de mosquées
+    @ManyToMany
+    @JoinTable(
+            name = "user_mosque_like",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "mosque_id")
+    )
+    private Set<Mosque> likedMosques = new HashSet<>();
+    // 🔁 LIKE de predication
+    @ManyToMany
+    @JoinTable(
+            name = "user_predication_like",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "predication_id")
+    )
+    private Set<Predication> likedPredications = new HashSet<>();
+
+    // 🔁 FAVORIS de mosquées
+    @ManyToMany
+    @JoinTable(
+            name = "user_mosque_favorite",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "mosque_id")
+    )
+    private Set<Mosque> favoriteMosques = new HashSet<>();
+
 }

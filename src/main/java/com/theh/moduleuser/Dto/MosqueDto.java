@@ -10,6 +10,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Data @Builder  @AllArgsConstructor @NoArgsConstructor
@@ -56,6 +59,9 @@ public class MosqueDto {
 	private double latitude;
 
 	private LocalisationDto localisation;
+
+	private Set<UtilisateurDto> MosquesFollowers= new HashSet<>();
+
 	public static MosqueDto fromEntity(Mosque mosque) {
 		if(mosque==null) {
 			return null;
@@ -63,6 +69,9 @@ public class MosqueDto {
 
 		return MosqueDto.builder()
 				.id(mosque.getId())
+			//	.MosquesFollowers(mosque.getMosquesFollowers().stream()
+			//			.map(UtilisateurDto::fromEntity)
+			//			.collect(Collectors.toSet()))
 				.nom(mosque.getNom())
 				.superficie(mosque.getSuperficie())
 				.isVendredi(mosque.getIsVendredi())

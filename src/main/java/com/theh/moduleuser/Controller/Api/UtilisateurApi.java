@@ -4,6 +4,7 @@ import com.theh.moduleuser.Dto.UtilisateurDto;
 import com.theh.moduleuser.Dto.auth.AuthenticationRequest;
 import com.theh.moduleuser.Dto.auth.AuthenticationResponse;
 import com.theh.moduleuser.Dto.auth.ChangePassWordDto;
+import com.theh.moduleuser.Model.Mosque;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,6 +20,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.theh.moduleuser.Constant.Constants.*;
 
@@ -79,26 +81,53 @@ public interface UtilisateurApi {
     @GetMapping(value=UTILISATEUR_ENDPOINT+"grantrole/{email}/{role}")
     Boolean GranteCompteRole(@PathVariable("email") String email,@PathVariable("role") String role);
 
-    @Operation(summary = "Suivre ",description = "Suivre une mosque ")
+    @Operation(summary = "Suivre Mosque ",description = "Suivre une mosque ")
     @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping(value = APP_ROOT+"suivre/{userid}/follow-mosque/{mosqueId}")
     String followMosque(@PathVariable("userid") Integer userid,@PathVariable("mosqueId") Integer mosqueId);
 
-    @Operation(summary = "Suivre ",description = "Ne plus suivre une mosque ")
-    @SecurityRequirement(name = "Bearer Authentication")
-    @PostMapping(value = APP_ROOT+"suivre/{userid}/unfollow-mosque/{mosqueId}")
-    String unfollowMosque(@PathVariable("userid") Integer userid,@PathVariable("mosqueId") Integer mosqueId);
-
-    @Operation(summary = "Suivre ",description = "Suivre une mosque ")
+    @Operation(summary = "Suivre Utilisateur ",description = "Suivre une mosque ")
     @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping(value = APP_ROOT+"suivre/{userid}/follow-user/{usertarget}")
     String followUser(@PathVariable("userid") Integer userid,@PathVariable("usertarget") Integer usertarget);
 
-    @Operation(summary = "Suivre ",description = "Suivre une mosque ")
+
+    //TODO impl
+
+    @Operation(summary = "Like Mosque ",description = "Like une mosque ")
     @SecurityRequirement(name = "Bearer Authentication")
-    @PostMapping(value = APP_ROOT+"suivre/{userid}/unfollow-user/{usertarget}")
-    String unfollowUser(@PathVariable("userid") Integer userid,@PathVariable("usertarget") Integer usertarget);
-    //find all
+    @PostMapping(value = APP_ROOT+"like/{userid}/{mosqueId}")
+    ResponseEntity<String>  likeMosque(@PathVariable("userid") Integer userid,@PathVariable("mosqueId") Integer mosqueId);
+
+    @Operation(summary = "Like Predication ",description = "Like une predication ")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PostMapping(value = APP_ROOT+"like/predication/{userid}/{predicationId}")
+    ResponseEntity<String>  likePredication(@PathVariable("userid") Integer userid,@PathVariable("predicationId") Integer PredicationId);
+
+    @Operation(summary = "Favorite Mosque ",description = "Favorite mosque ")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PostMapping(value = APP_ROOT+"favorite/{userid}/{mosqueId}")
+    ResponseEntity<String> favoriteMosque(@PathVariable("userid") Integer userid,@PathVariable("mosqueId") Integer mosqueId);
+
+    @Operation(summary = "Liste like mosque ",description = "Like mosque ")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @GetMapping(value =APP_ROOT+ "liked-mosques/{userId}")
+     ResponseEntity<Set<Mosque>> getLikedMosques(@PathVariable Integer userId);
+
+    @Operation(summary = "Liste favorite mosque ",description = "favorite mosque ")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @GetMapping(value =APP_ROOT+ "favorite-mosques/{userId}")
+     ResponseEntity<Set<Mosque>> getFavoriteMosques(@PathVariable Integer userId);
+
+    @Operation(summary = "Liste like mosque ",description = "Like mosque ")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @GetMapping(value = APP_ROOT+"has-liked/{userid}/{mosqueId}")
+    ResponseEntity<Boolean> hasLiked(@PathVariable("userid") Integer userId, @PathVariable("mosqueId") Integer mosqueId);
+
+    @Operation(summary = "Liste like mosque ",description = "Like mosque ")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @GetMapping(value = APP_ROOT+"has-favorited/{userId}/{mosqueId}")
+    ResponseEntity<Boolean> hasFavorited(@PathVariable("userId")  Integer userId, @PathVariable("mosqueId")  Integer mosqueId);
 
     @Operation(summary = "Grant ",description = "Grant type Compte, U for User and I for Imam")
     @SecurityRequirement(name = "Bearer Authentication")

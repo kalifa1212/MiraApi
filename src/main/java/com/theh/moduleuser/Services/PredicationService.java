@@ -5,7 +5,10 @@ import com.theh.moduleuser.Dto.TypePredication;
 import com.theh.moduleuser.Model.Predication;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 public interface PredicationService {
@@ -18,4 +21,7 @@ public interface PredicationService {
 	Page<PredicationDto> findByType(TypePredication type, Pageable page);
 	Page<PredicationDto> findAll(Pageable page);
 	void delete(Integer id);
+
+	void exportData(PrintWriter writer) throws IOException;
+	void importDataToDB(MultipartFile file)throws IOException;
 }

@@ -8,11 +8,8 @@ import com.theh.moduleuser.Dto.auth.AuthenticationResponse;
 import com.theh.moduleuser.Dto.UtilisateurDto;
 import com.theh.moduleuser.Dto.auth.ChangePassWordDto;
 import com.theh.moduleuser.Exceptions.InvalidEntityException;
+import com.theh.moduleuser.Model.*;
 import com.theh.moduleuser.Model.Mapper.UtilisateurMapper;
-import com.theh.moduleuser.Model.Privilege;
-import com.theh.moduleuser.Model.Role;
-import com.theh.moduleuser.Model.TypeCompte;
-import com.theh.moduleuser.Model.Utilisateur;
 import com.theh.moduleuser.Repository.MosqueRepository;
 import com.theh.moduleuser.Repository.SuivreRepository;
 import com.theh.moduleuser.Repository.UtilisateurRepository;
@@ -187,18 +184,46 @@ public class UtilisateurController  implements UtilisateurApi {
     }
 
     @Override
-    public String unfollowMosque(Integer userid, Integer mosqueId) {
-        return utilisateurService.unfollowMosque(userid,mosqueId);
-    }
-
-    @Override
     public String followUser(Integer userid, Integer usertarget) {
         return utilisateurService.followUser(userid,usertarget);
     }
 
+
     @Override
-    public String unfollowUser(Integer userid, Integer usertarget) {
-        return utilisateurService.unfollowUser(userid,usertarget);
+    public ResponseEntity<String> likeMosque(Integer userid, Integer mosqueId) {
+
+        return ResponseEntity.ok(utilisateurService.toggleLike(userid,mosqueId));
+    }
+
+    @Override
+    public ResponseEntity<String> likePredication(Integer userid, Integer PredicationId) {
+        return ResponseEntity.ok(utilisateurService.toggleLikePredication(userid,PredicationId));
+    }
+
+    @Override
+    public ResponseEntity<String> favoriteMosque(Integer userid, Integer mosqueId) {
+
+        return ResponseEntity.ok( utilisateurService.toggleFavorite(userid,mosqueId));
+    }
+
+    @Override
+    public ResponseEntity<Set<Mosque>> getLikedMosques(Integer userId) {
+        return ResponseEntity.ok(utilisateurService.getLikedMosques(userId));
+    }
+
+    @Override
+    public ResponseEntity<Set<Mosque>> getFavoriteMosques(Integer userId) {
+        return ResponseEntity.ok(utilisateurService.getFavoriteMosques(userId));
+    }
+
+    @Override
+    public ResponseEntity<Boolean> hasLiked(Integer userId, Integer mosqueId) {
+        return ResponseEntity.ok(utilisateurService.hasLikedMosque(userId, mosqueId));
+    }
+
+    @Override
+    public ResponseEntity<Boolean> hasFavorited(Integer userId, Integer mosqueId) {
+        return ResponseEntity.ok(utilisateurService.hasFavoritedMosque(userId, mosqueId));
     }
 
     @Override

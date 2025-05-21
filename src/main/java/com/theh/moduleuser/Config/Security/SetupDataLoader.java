@@ -47,7 +47,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             return;
         }
         //TODO Initializing data
-
+        log.info("Initializing data ");
         // == create initial privileges
         final Privilege readPrivilege = createPrivilegeIfNotFound("READ_PRIVILEGE");
         final Privilege writePrivilege = createPrivilegeIfNotFound("WRITE_PRIVILEGE");
@@ -118,7 +118,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             role = new Role(name);
             role.setPrivileges(privileges);
             role = roleRepository.save(role);
-            log.error("save role ");
+          //  log.info("save role ");
         }
 
         return role;

@@ -54,12 +54,28 @@ public class UtilisateurDto {
     private Set<Integer> followedMosquesId= new HashSet<>();
     private Set<Integer> followingUsersId= new HashSet<>();
 
+    private Set<MosqueDto> favoriteMosques = new HashSet<>();
+    private Set<MosqueDto> likedMosques = new HashSet<>();
+
+    private Set<PredicationDto> likedPredications = new HashSet<>();
+
     public static UtilisateurDto fromEntity(Utilisateur utilisateur) {
         if(utilisateur==null) {
             return null;
         }
         return UtilisateurDto.builder()
                 .id(utilisateur.getId())
+                .likedPredications(utilisateur.getLikedPredications().stream()
+                        .map(PredicationDto::fromEntity)
+                        .collect(Collectors.toSet()))
+                .favoriteMosques(utilisateur.getFavoriteMosques()
+                        .stream()
+                        .map(MosqueDto::fromEntity)
+                        .collect(Collectors.toSet()))
+                .likedMosques(utilisateur.getLikedMosques()
+                        .stream()
+                        .map(MosqueDto::fromEntity)
+                        .collect(Collectors.toSet()))
                 .followedMosquesId(utilisateur.getFollowedMosques().stream()
                         .map(mosque -> mosque.getId()).collect(Collectors.toSet()))
                 .followingUsersId(utilisateur.getFollowingUsers().stream()

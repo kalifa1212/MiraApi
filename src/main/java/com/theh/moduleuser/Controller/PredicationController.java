@@ -8,10 +8,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @RestController
@@ -37,6 +44,34 @@ public class PredicationController implements PredicationApi {
 	public PredicationDto findByIdPredication(Integer id) {
 		// TODO rechercher par id
 		return predicationService.findById(id);
+	}
+
+	@Override
+	public ResponseEntity<byte[]> exportTableToCsv() throws IOException {
+		StringWriter stringWriter = new StringWriter();
+		predicationService.exportData(new PrintWriter(stringWriter));
+
+		byte[] csvBytes = stringWriter.toString().getBytes(StandardCharsets.UTF_8);
+
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=predication.csv")
+				.contentType(MediaType.parseMediaType("text/csv"))
+				.body(csvBytes);
+	}
+
+	@Override
+	public ResponseEntity<String> importTablefromCsv(MultipartFile file) throws IOException {
+
+		if (file.isEmpty()) {
+			return ResponseEntity.badRequest().body("Fichier CSV manquant !");
+		}
+
+		try {
+			predicationService.importDataToDB(file);
+			return ResponseEntity.ok("Importation des Predication réussie !");
+		} catch (IOException e) {
+			return ResponseEntity.status(500).body("Erreur d'importation : " + e.getMessage());
+		}
 	}
 
 	@Override

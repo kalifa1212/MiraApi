@@ -6,11 +6,8 @@ import com.theh.moduleuser.Dto.auth.ChangePassWordDto;
 import com.theh.moduleuser.Exceptions.EntityNotFoundException;
 import com.theh.moduleuser.Exceptions.ErrorCodes;
 import com.theh.moduleuser.Exceptions.InvalidEntityException;
+import com.theh.moduleuser.Model.*;
 import com.theh.moduleuser.Model.MetaData.PasswordResetToken;
-import com.theh.moduleuser.Model.Mosque;
-import com.theh.moduleuser.Model.Role;
-import com.theh.moduleuser.Model.TypeCompte;
-import com.theh.moduleuser.Model.Utilisateur;
 import com.theh.moduleuser.Model.MetaData.VerificationToken;
 import com.theh.moduleuser.Repository.*;
 import com.theh.moduleuser.Repository.Metadata.NewLocationTokenRepository;
@@ -41,6 +38,8 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     private UtilisateurRepository utilisateurRepository;
     @Autowired
     private MosqueRepository mosqueRepository;
+    @Autowired
+    private PredicationRepository predicationRepository;
     @Autowired
     private VerificationTokenRepository tokenRepository;
     @Autowired
@@ -77,12 +76,14 @@ public class UtilisateurServiceImpl implements UtilisateurService {
             UtilisateurRepository utilisateurRepository,
             RoleRepository roleRepository,
             VerificationTokenRepository tokenRepository,
-            PasswordResetTokenRepository passwordTokenRepository
+            PasswordResetTokenRepository passwordTokenRepository,
+            PredicationRepository predicationRepository
     ) {
         this.utilisateurRepository=utilisateurRepository;
         this.roleRepository=roleRepository;
         this.tokenRepository=tokenRepository;
         this.passwordTokenRepository=passwordTokenRepository;
+        this.predicationRepository=predicationRepository;
     }
 
     // definition des methode
@@ -363,24 +364,16 @@ public class UtilisateurServiceImpl implements UtilisateurService {
                 new EntityNotFoundException("Utilisateur non trouver"));
         Mosque mosque = mosqueRepository.findById(mosqueId).orElseThrow(()->
                 new EntityNotFoundException("Mosque non trouver"));
-        utilisateur.getFollowedMosques().add(mosque);
-       if(utilisateurRepository.save(utilisateur)!=null){
-           return "Réussi";
-       }
-       return "Echec";
-    }
 
-    @Override
-    public String unfollowMosque(Integer userId, Integer mosqueId) {
-        Utilisateur utilisateur =utilisateurRepository.findById(userId).orElseThrow(()->
-                new EntityNotFoundException("Utilisateur non trouver"));
-        Mosque mosque = mosqueRepository.findById(mosqueId).orElseThrow(()->
-                new EntityNotFoundException("Mosque non trouver"));
-        utilisateur.getFollowedMosques().remove(mosque);
-        if(utilisateurRepository.save(utilisateur)!=null){
-            return "Réussi";
+        if (utilisateur.getFollowedMosques().contains(mosque)) {
+            utilisateur.getFollowedMosques().remove(mosque);
+            utilisateurRepository.save(utilisateur);
+            return "desabonné";
+        } else {
+            utilisateur.getFollowedMosques().add(mosque);
+            utilisateurRepository.save(utilisateur);
+            return "abonnée";
         }
-        return "Echec";
     }
 
     @Override
@@ -392,28 +385,17 @@ public class UtilisateurServiceImpl implements UtilisateurService {
                 new EntityNotFoundException("Utilisateur non trouver"));
         Utilisateur targetUser= utilisateurRepository.findById(targetUserId).orElseThrow(()->
                 new EntityNotFoundException("Utilisateur non trouver"));
-        utilisateur.getFollowingUsers().add(targetUser);
-       // utilisateurRepository.save(utilisateur);
-        if(utilisateurRepository.save(utilisateur)!=null){
-            return "Réussi";
-        }
-        return "Echec";
-    }
-    @Override
-    public String unfollowUser(Integer userId, Integer targetUserId) {
-        Utilisateur utilisateur = utilisateurRepository.findById(userId).orElseThrow(()->
-                new EntityNotFoundException("Utilisateur non trouver"));
-        Utilisateur targetUser= utilisateurRepository.findById(targetUserId).orElseThrow(()->
-                new EntityNotFoundException("Utilisateur non trouver"));
-        utilisateur.getFollowingUsers().remove(targetUser);
-       // utilisateurRepository.save(utilisateur);
-        if(utilisateurRepository.save(utilisateur)!=null){
-            return "Réussi";
-        }
-        return "Echec";
-    }
 
-
+        if (utilisateur.getFollowingUsers().contains(targetUser)) {
+            utilisateur.getFollowingUsers().remove(targetUser);
+            utilisateurRepository.save(utilisateur);
+            return "desabonné";
+        } else {
+            utilisateur.getFollowingUsers().add(targetUser);
+            utilisateurRepository.save(utilisateur);
+            return "abonnée";
+        }
+    }
 
     @Override
     public void delete(Integer id) {
@@ -463,5 +445,85 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         }
         log.info("echec de la verification");
         return false;
+    }
+
+    @Override
+    public String toggleLike(Integer userid, Integer mosqueId) {
+        log.warn("debu du like");
+        Utilisateur user = utilisateurRepository.findById(userid)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        Mosque mosque = mosqueRepository.findById(mosqueId)
+                .orElseThrow(() -> new RuntimeException("Mosquée non trouvée"));
+
+        if (user.getLikedMosques().contains(mosque)) {
+            user.getLikedMosques().remove(mosque);
+            utilisateurRepository.save(user);
+            return "dislike";
+        } else {
+            user.getLikedMosques().add(mosque);
+            utilisateurRepository.save(user);
+            return "liked";
+        }
+    }
+
+    @Override
+    public String toggleFavorite(Integer userid, Integer mosqueId) {
+        log.warn("debu du favorite");
+        Utilisateur user = utilisateurRepository.findById(userid)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        Mosque mosque = mosqueRepository.findById(mosqueId)
+                .orElseThrow(() -> new RuntimeException("Mosquée non trouvée"));
+
+        if (user.getFavoriteMosques().contains(mosque)) {
+            user.getFavoriteMosques().remove(mosque);
+            utilisateurRepository.save(user);
+            return "remove to favorite";
+        } else {
+            user.getFavoriteMosques().add(mosque);
+            utilisateurRepository.save(user);
+            return "add to fovorite";
+        }
+    }
+    // TODO other methode
+    public boolean hasLikedMosque(Integer userId, Integer mosqueId) {
+        Utilisateur user = utilisateurRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        return user.getLikedMosques().stream().anyMatch(m -> m.getId().equals(mosqueId));
+    }
+
+    public boolean hasFavoritedMosque(Integer userId, Integer mosqueId) {
+        Utilisateur user = utilisateurRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        return user.getFavoriteMosques().stream().anyMatch(m -> m.getId().equals(mosqueId));
+    }
+
+    public Set<Mosque> getLikedMosques(Integer userId) {
+        return utilisateurRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"))
+                .getLikedMosques();
+    }
+
+    public Set<Mosque> getFavoriteMosques(Integer userId) {
+        return utilisateurRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"))
+                .getFavoriteMosques();
+    }
+
+    @Override
+    public String toggleLikePredication(Integer userid, Integer predicationId) {
+        Utilisateur user = utilisateurRepository.findById(userid)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        Predication predication = predicationRepository.findById(predicationId)
+                .orElseThrow(() -> new RuntimeException("Predication non trouvée"));
+
+        if (user.getLikedPredications().contains(predication)) {
+            user.getLikedPredications().remove(predication);
+            utilisateurRepository.save(user);
+            return "dislike";
+        } else {
+            user.getLikedPredications().add(predication);
+            utilisateurRepository.save(user);
+            return "liked";
+        }
     }
 }
