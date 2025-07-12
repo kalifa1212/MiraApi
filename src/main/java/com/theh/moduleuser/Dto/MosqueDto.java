@@ -60,7 +60,7 @@ public class MosqueDto {
 
 	private LocalisationDto localisation;
 
-	private Set<UtilisateurDto> MosquesFollowers= new HashSet<>();
+//	private Set<UtilisateurDto> MosquesFollowers= new HashSet<>();
 
 	public static MosqueDto fromEntity(Mosque mosque) {
 		if(mosque==null) {
@@ -69,9 +69,6 @@ public class MosqueDto {
 
 		return MosqueDto.builder()
 				.id(mosque.getId())
-			//	.MosquesFollowers(mosque.getMosquesFollowers().stream()
-			//			.map(UtilisateurDto::fromEntity)
-			//			.collect(Collectors.toSet()))
 				.nom(mosque.getNom())
 				.superficie(mosque.getSuperficie())
 				.isVendredi(mosque.getIsVendredi())
@@ -115,8 +112,6 @@ public class MosqueDto {
 		mosque.setImagedata(mosqueDto.getImagedata());
 		mosque.setImam(mosqueDto.getImam());
 		mosque.setDescription(mosqueDto.getDescription());
-		//mosque.setFollowers(retourneUtilisateur(mosqueDto.getFollowers()));
-		//mosque.setFollowers(mosqueDto.getFollowers().stream().map(SuivreDto::toEntity).collect(Collectors.toSet()));
 		return mosque;
 	}
 }

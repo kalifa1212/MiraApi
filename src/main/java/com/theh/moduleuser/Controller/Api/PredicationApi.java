@@ -30,11 +30,11 @@ public interface PredicationApi {
 	PredicationDto findByIdPredication(@PathVariable("idpredication") Integer id);
 
 	@Operation(summary = "Export Data ",description = "export  Predication Data ")
-	@GetMapping(value = "export/")
+	@GetMapping(value = APP_ROOT+"export/")
 	ResponseEntity<byte[]> exportTableToCsv() throws IOException;
 
 	@Operation(summary = "Import Data ",description = "Import  predication Data ")
-	@PostMapping(value = "import/",consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(value = APP_ROOT+"import/",consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
 	ResponseEntity<String> importTablefromCsv(@RequestPart("file") MultipartFile file) throws IOException;
 
 	//Find by Nom Imam

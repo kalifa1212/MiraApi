@@ -1,23 +1,11 @@
 package com.theh.moduleuser.Dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.theh.moduleuser.Model.*;
-import com.theh.moduleuser.Repository.MosqueRepository;
-import com.theh.moduleuser.Repository.SuivreRepository;
-import com.theh.moduleuser.Repository.UtilisateurRepository;
-import com.theh.moduleuser.Services.MosqueService;
-import com.theh.moduleuser.Services.UtilisateurService;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.security.authentication.AuthenticationManager;
 
 import java.util.*;
 import java.util.stream.Collectors;

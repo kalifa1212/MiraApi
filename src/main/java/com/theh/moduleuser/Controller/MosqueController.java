@@ -207,7 +207,7 @@ public class MosqueController implements MosqueApi {
 			return mosqueInfoDto;
 		}
 		else {
-			throw new InvalidEntityException("Le type entrée n'est pas en compte (new or old)");
+			throw new InvalidEntityException("Le type entrée n'est pas pris en compte (new or old)");
 		}
 
 	}

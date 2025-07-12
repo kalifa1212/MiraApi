@@ -37,17 +37,11 @@ public class StrategyPhotoContext {
     private void determinContext(String Context){
         final String beanName=Context+"Strategy";
         switch (Context){
-            case "imam":
-                strategyPhoto = beanFactory.getBean(beanName,SaveUserPhoto.class);
-                break;
             case "user":
                 strategyPhoto = beanFactory.getBean(beanName,SaveUserPhoto.class);
                 break;
             case "mosque":
                 strategyPhoto = beanFactory.getBean(beanName,SaveMosquePhoto.class);
-                break;
-            case "sermont":
-                strategyPhoto = beanFactory.getBean(beanName,SavePreche.class);
                 break;
             case "preche":
                 strategyPhoto = beanFactory.getBean(beanName,SavePreche.class);

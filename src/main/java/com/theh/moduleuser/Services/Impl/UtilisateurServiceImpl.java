@@ -319,6 +319,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     @Override
     public Boolean GranteRole(String Email, String roleName) {
         //TODO passage de role
+        log.info("Granted Role");
         roleName.toLowerCase();
         Boolean reussit=false;
         Optional<Utilisateur> util = utilisateurRepository.findUtilisateurByEmail(Email);
@@ -415,7 +416,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
            // log.error("token set loc {}",utilisateur);
             try {
                 utilisateurRepository.save(utilisateur);
-                log.info("Refresh Token save successfully");
+              //  log.info("Refresh Token save successfully");
             } catch (Exception e) {
                 log.error("Erreur lors du save :", e);  // affiche toute la stack
                 Throwable cause = e.getCause();
@@ -436,11 +437,11 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         BCryptPasswordEncoder passwordEncoder= new BCryptPasswordEncoder();
         String criptpasswd=passwordEncoder.encode(changePassWordDto.getPassword());
         Optional<Utilisateur> utilisateur=utilisateurRepository.findById(changePassWordDto.getUserId());
-        log.error("Verification");
+       // log.error("Verification");
         if (passwordEncoder.matches(changePassWordDto.getPassword(),utilisateur.get().getMotDePasse())){
             utilisateur.get().setMotDePasse(passwordEncoder.encode(utilisateur.get().getMotDePasse()));
             utilisateurRepository.save(utilisateur.get());
-            log.info("Modification effectuer");
+            log.info("Password Change");
             return true;
         }
         log.info("echec de la verification");
@@ -449,7 +450,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
     @Override
     public String toggleLike(Integer userid, Integer mosqueId) {
-        log.warn("debu du like");
+
         Utilisateur user = utilisateurRepository.findById(userid)
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
         Mosque mosque = mosqueRepository.findById(mosqueId)
@@ -468,7 +469,6 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
     @Override
     public String toggleFavorite(Integer userid, Integer mosqueId) {
-        log.warn("debu du favorite");
         Utilisateur user = utilisateurRepository.findById(userid)
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
         Mosque mosque = mosqueRepository.findById(mosqueId)

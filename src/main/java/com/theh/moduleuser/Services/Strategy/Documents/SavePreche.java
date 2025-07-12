@@ -7,6 +7,7 @@ import com.theh.moduleuser.Model.Predication;
 import com.theh.moduleuser.Services.File.FileService;
 import com.theh.moduleuser.Services.File.FileUpload;
 import com.theh.moduleuser.Services.PredicationService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+@Slf4j
 @Service("precheStrategy")
 public class SavePreche implements StrategyPhoto<PredicationDto> {
 
@@ -38,6 +40,11 @@ public class SavePreche implements StrategyPhoto<PredicationDto> {
         Path filePath = new File(ressourceUrl).toPath();
         predication.setMimeType(getMimeType(filePath));
         predication.setRessourceUrl(ressourceUrl);
+        if(predication.getIdImam()==null||predication.getIdMosque()==null){
+            predication.setIdMosque(0);
+            predication.setIdImam(0);
+        }
+        log.info("all done saving {}",predication.toString());
         return predicationService.save(PredicationDto.fromEntity(predication));
     }
     private String saveVideoFile(MultipartFile file,Integer id,String context) {

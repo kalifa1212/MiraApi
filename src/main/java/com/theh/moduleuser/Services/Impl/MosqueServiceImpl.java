@@ -72,13 +72,14 @@ public class MosqueServiceImpl implements MosqueService {
 		}
 
 		//TODO Notification pour la creation d'une mosque
+		log.info("Notification ....");
 		Notification(dto,update);
 		return MosqueDto.fromEntity(mosqueRepository.save(MosqueDto.toEntity(dto)));
 	}
 
 	@Override
 	public void exportData(PrintWriter writer) throws IOException {
-
+		log.info("Exporting Mosque Data ....");
 			List<MosqueDto> mosques = mosqueRepository.findAll().stream().map(MosqueDto::fromEntity).collect(Collectors.toList());
 
 			CSVWriter csvWriter = new CSVWriter(writer);
@@ -120,11 +121,11 @@ public class MosqueServiceImpl implements MosqueService {
 
 	@Override
 	public void importDataToDB(MultipartFile file) throws IOException {
-		log.info("Demararge du processus");
+		log.info("Importing Mosque Data ....");
 		try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
 			 CSVReader csvReader = new CSVReader(reader))
 		{
-			SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+			SimpleDateFormat format = new SimpleDateFormat("HH:mm");
 			String[] nextRecord;
 			boolean isHeader = true;
 
@@ -135,7 +136,6 @@ public class MosqueServiceImpl implements MosqueService {
 					isHeader = false;
 					continue;
 				}
-				log.info("Extraction de l'element numero :",i);
 				Localisation local =localisationRepository.findByVille_NameIgnoreCase(nextRecord[14]);
 				Mosque newMosque= new Mosque();
 				newMosque.setNom(nextRecord[0]);
@@ -154,7 +154,6 @@ public class MosqueServiceImpl implements MosqueService {
 				newMosque.setIsVendredi(Boolean.parseBoolean(nextRecord[12]));
 				newMosque.setLocalisation(local);
 				mosqueRepository.save(newMosque);
-				log.info("extraction terminer numero {}",i,"terminer");
 				i++;
 
 			}

@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -70,6 +71,10 @@ public class PredicationServiceImpl implements PredicationService {
 		Utilisateur util=new Utilisateur();
 		Optional<Utilisateur> imam= Optional.of(new Utilisateur());
 		Optional<Mosque> mosque= Optional.of(new Mosque());
+		if(dto.getIdImam()==null||dto.getIdMosque()==null){
+			dto.setIdImam(0);
+			dto.setIdMosque(0);
+		}
 		if(dto.getIdImam()!=0){
 			 imam=utilisateurRepository.findById(dto.getIdImam());
 			if(imam.isEmpty()) {
@@ -85,6 +90,7 @@ public class PredicationServiceImpl implements PredicationService {
 			}
 		}
 		//TODO Notification
+		log.info("Notification for Predication ....");
 		Notification(dto);
 
 		return PredicationDto.fromEntity(predicationRepository.save(PredicationDto.toEntity(dto)));
@@ -124,11 +130,11 @@ public class PredicationServiceImpl implements PredicationService {
 
 	@Override
 	public void exportData(PrintWriter writer) throws IOException {
+		log.info("Exporting Predication Data ....");
 		List<PredicationDto> listall =predicationRepository.findAll().stream()
 				.map(PredicationDto::fromEntity)
 				.collect(Collectors.toList());
 		CSVWriter csvWriter = new CSVWriter(writer);
-		log.info("Exporting Predication Data");
 		// Écrire l'en-tête du CSV
 		String[] header = {
 				"theme","type","date","heure","duree","nom Imam",
@@ -155,12 +161,12 @@ public class PredicationServiceImpl implements PredicationService {
 
 	@Override
 	public void importDataToDB(MultipartFile file) throws IOException {
-		log.info("Importing data process");
+		log.info("Important Predication Data ....");
 		try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
 			 CSVReader csvReader = new CSVReader(reader))
 		{
-			SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-			SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss.s");
+			SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+			SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd");
 			String[] nextRecord;
 			boolean isHeader = true;
 			int i=1;
@@ -175,7 +181,7 @@ public class PredicationServiceImpl implements PredicationService {
 				};
 				Predication predication= new Predication();
 				predication.setTheme(nextRecord[0]);
-				predication.setType(TypePredication.valueOf(nextRecord[1]));
+				predication.setType(TypePredication.valueOf(removeAccents(nextRecord[1])));
 				predication.setDate(dateFormat.parse(nextRecord[2]));
 				predication.setHeure(format.parse(nextRecord[3]));
 				predication.setDuree(format.parse(nextRecord[4]));
@@ -238,5 +244,9 @@ public class PredicationServiceImpl implements PredicationService {
 		notificationDto.setDateTime(LocalDateTime.now());
 		notificationDto.setMessage("Une nouvelle predication de Type:"+dto.getType()+" Date: "+
 				dto.getDate()+" theme: "+dto.getTheme()+" Par l'imam: "+dto.getNomImam()+" Lieux: "+dto.getNomMosque());
+	}
+	 String removeAccents(String input) {
+		return Normalizer.normalize(input, Normalizer.Form.NFD)
+				.replaceAll("\\p{M}", ""); // Supprime les marques diacritiques
 	}
 }

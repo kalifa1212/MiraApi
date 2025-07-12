@@ -44,7 +44,7 @@ spring:
 #    show-sql: true
     ##  Hibernate DDL create, update...
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     ## Generation du schemat de la base de donnee;
     properties:
       hibernate:
@@ -95,8 +95,8 @@ project:
   poster: fileStorage/
 #end
 application:
-  title: muslimApp
-  version: 1.0
+  title: MIRA API
+  version: 2.5
 
 #  debuggin sql
 #logging:

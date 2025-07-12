@@ -84,7 +84,7 @@ public class FileService {
             @Nonnull String userId,
             @Nonnull String predicationType
     ) {
-        final String fileUploadSubPath = "predication" + separator +predicationType+ separator +userId;
+        final String fileUploadSubPath = "predication" + "/" +predicationType+ "/" +userId;
         return uploadFile(sourceFile, fileUploadSubPath);
     }
 
@@ -92,7 +92,7 @@ public class FileService {
             @Nonnull MultipartFile sourceFile,
             @Nonnull String fileUploadSubPath
     ) {
-        final String finalUploadPath = fileUploadPath + separator + fileUploadSubPath;
+        final String finalUploadPath = fileUploadPath + fileUploadSubPath;
         File targetFolder = new File(finalUploadPath);
 
         if (!targetFolder.exists()) {
@@ -103,7 +103,7 @@ public class FileService {
             }
         }
         final String fileExtension = getFileExtension(sourceFile.getOriginalFilename());
-        String targetFilePath = finalUploadPath + separator + currentTimeMillis() + "." + fileExtension;
+        String targetFilePath = finalUploadPath + "/" + currentTimeMillis() + "." + fileExtension;
         Path targetPath = Paths.get(targetFilePath);
         try {
             Files.write(targetPath, sourceFile.getBytes());
