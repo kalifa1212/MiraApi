@@ -10,7 +10,7 @@ spring:
 #     password: ${DB_PASSWORD}
 #     driver-class-name: org.postgresql.Driver
     #render connexion reussi
-   url: jdbc:postgresql://dpg-d213orumcj7s73eddd80-a.oregon-postgres.render.com:5432/mira_db_7p18
+   url: jdbc:postgresql://dpg-d213orumcj7s73eddd80-a.oregon-postgres.render.com:5432/mira_data_base
    username: mira_data_base_user
    password: 0Pa5i0iAzbhyRfPrs2icLe8V8WD9Jeeq
    driver-class-name: org.postgresql.Driver
