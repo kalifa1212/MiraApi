@@ -1,5 +1,5 @@
 # 🌙 MIRA API – Muslim Information Resources and Assistance
-MIRA API est une solution développée par **H Technologies**, conçue pour fournir des ressources et une assistance aux musulmans, incluant le suivi des mosquées, les notifications et bien plus encore.
+MIRA API est une solution développée par **HForge**, conçue pour fournir des ressources et une assistance aux musulmans, incluant le suivi des mosquées, les notifications et bien plus encore.
 HForge	"Nous forgeons vos idées numériques"
 ---
 
@@ -22,7 +22,7 @@ HForge	"Nous forgeons vos idées numériques"
 ### 📥 Installation locale
 1. **Cloner le projet**
    ```bash
-   git clone https://github.com/ton-repo/mira-api.git
+   git clone https://github.com/kalifa1212/MiraApi.git 
    cd mira-api
    ```
 
@@ -132,4 +132,4 @@ MIT License – Vous êtes libre de modifier et utiliser ce projet tant que vous
 📌 Documentation complète : [Lien vers Swagger/Postman](#)
 
 ---
-## Developed by H Technologies
+## Developed by HForge

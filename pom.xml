@@ -67,12 +67,12 @@
             <artifactId>opencsv</artifactId>
             <version>5.7.1</version>
         </dependency>
-
-        <dependency>
-            <groupId>io.github.cdimascio</groupId>
-            <artifactId>dotenv-java</artifactId>
-            <version>3.1.0</version>
-        </dependency>
+<!--            dependance pour fichier .env-->
+<!--        <dependency>-->
+<!--            <groupId>io.github.cdimascio</groupId>-->
+<!--            <artifactId>dotenv-java</artifactId>-->
+<!--            <version>3.1.0</version>-->
+<!--        </dependency>-->
 <!--        web Token dependence-->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
