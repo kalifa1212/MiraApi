@@ -97,9 +97,6 @@ Authorization: Bearer <your_jwt_token>
 
 ---
 
-## 📂 Fonctionnalités à implémenter
-- 📌 **DocumentController** : Téléchargement et streaming live des fichiers audio/vidéo
-- 📌 **FileController** : Importation et exportation de données
 
 ---
 

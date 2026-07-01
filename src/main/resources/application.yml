@@ -96,7 +96,7 @@ project:
 #end
 application:
   title: MIRA API
-  version: 2.5
+  version: 2.0
 
 #  debuggin sql
 #logging:
